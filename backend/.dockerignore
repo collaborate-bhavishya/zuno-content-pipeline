@@ -8,3 +8,5 @@ storage/runs.json
 storage/evals/
 *.log
 .DS_Store
+prod.env
+gcp-key.json

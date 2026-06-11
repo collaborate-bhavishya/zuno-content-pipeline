@@ -12,3 +12,7 @@ frontend/.env.local
 
 # misc
 .DS_Store
+
+# Deploy-time secrets (created on the server, never committed)
+backend/prod.env
+backend/gcp-key.json
