@@ -1,0 +1,20 @@
+version: 1
+applications:
+  # Monorepo: the deployable web app lives in ./frontend (Next.js).
+  - appRoot: frontend
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        # Paths are relative to appRoot (frontend), so this is frontend/.next
+        baseDirectory: .next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
