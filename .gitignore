@@ -16,3 +16,4 @@ frontend/.env.local
 # Deploy-time secrets (created on the server, never committed)
 backend/prod.env
 backend/gcp-key.json
+deploy/caddy.env

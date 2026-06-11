@@ -56,18 +56,40 @@ curl http://localhost:8000/api/health        # should return ok
 ```
 Visit `http://<INSTANCE_PUBLIC_IP>:8000/docs` from your browser to confirm.
 
-## 5. Point the frontend at it
-In **Amplify → Environment variables**:
-```
-NEXT_PUBLIC_API_BASE = http://<INSTANCE_PUBLIC_IP>:8000
-```
-Redeploy the Amplify frontend.
+## 5. (Recommended) HTTPS with Caddy — so the Amplify site can reach it
 
-> ⚠️ Plain `http://` is fine for a demo. For production, put the instance behind
-> an ALB or Caddy/Nginx with HTTPS (browsers block http calls from an https site).
+Your Amplify frontend is served over **https**, and browsers **block https→http**
+calls. The fix: run the backend behind **Caddy**, which gets a free auto-renewing
+Let's Encrypt cert. No domain purchase needed — we use **nip.io** (a hostname that
+resolves to your IP).
+
+In the EC2 **security group**, also open inbound **80** and **443** (from anywhere).
+
+Then on the instance:
+```bash
+cd ~/zuno-content-pipeline/deploy
+# turn your IP 13.235.1.2 into a dashed nip.io host:
+echo "SITE_ADDRESS=13-235-1-2.nip.io" > caddy.env     # <-- use YOUR instance IP
+docker compose up -d --build
+```
+Caddy provisions the cert in ~30s. Your API is now at:
+```
+https://13-235-1-2.nip.io
+```
+
+**Point the frontend at the HTTPS URL** — Amplify → Environment variables:
+```
+NEXT_PUBLIC_API_BASE = https://13-235-1-2.nip.io
+```
+Redeploy Amplify. Done — the live site reaches the backend over HTTPS.
+
+> For a quick demo without HTTPS, you can skip Caddy and use
+> `http://<INSTANCE_PUBLIC_IP>:8000` (run-backend.sh), but the Amplify site
+> won't be able to call it from the browser — only a locally-run frontend will.
 
 ## Updating later
 ```bash
 cd ~/zuno-content-pipeline && git pull
-bash deploy/run-backend.sh        # rebuilds + restarts
+cd deploy && docker compose up -d --build     # if using Caddy/compose
+# or: bash deploy/run-backend.sh               # if running the container directly
 ```

@@ -1,0 +1,6 @@
+# Caddy auto-HTTPS reverse proxy in front of the backend container.
+# {$SITE_ADDRESS} is your public hostname (e.g. 13-235-1-2.nip.io).
+# Caddy automatically obtains + renews a Let's Encrypt cert for it.
+{$SITE_ADDRESS} {
+    reverse_proxy backend:8000
+}

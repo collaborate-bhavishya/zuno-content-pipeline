@@ -1,0 +1,35 @@
+# Runs the backend + a Caddy reverse proxy that terminates HTTPS.
+# Usage (on the EC2 instance, from the deploy/ dir):
+#   echo "SITE_ADDRESS=<your-ip-with-dashes>.nip.io" > caddy.env
+#   docker compose up -d --build
+services:
+  backend:
+    build: ../backend
+    env_file: ../backend/prod.env
+    restart: unless-stopped
+    expose:
+      - "8000"
+    # Google service-account key (Vertex/Imagen). Remove these two lines if you
+    # use GOOGLE_API_KEY in prod.env instead of a JSON key.
+    volumes:
+      - ../backend/gcp-key.json:/app/gcp-key.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    env_file: caddy.env          # contains SITE_ADDRESS=<host>.nip.io
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+
+volumes:
+  caddy_data:
+  caddy_config:
