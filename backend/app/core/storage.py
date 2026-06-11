@@ -2,10 +2,11 @@
 Storage abstraction so the rest of the app never cares where files live.
 
 LocalStorage   -> writes to ./storage, served by FastAPI at /files/...
-GCSStorage     -> uploads to a Google Cloud Storage bucket (the S3 equivalent)
+GCSStorage     -> uploads to a Google Cloud Storage bucket
+S3Storage      -> uploads to an AWS S3 bucket / access point (images/ prefix)
 
-Pick via env: STORAGE_BACKEND=local | gcs
-Demo on local; flip to gcs for a public deploy with no code changes elsewhere.
+Pick via env: STORAGE_BACKEND=local | gcs | s3
+Demo on local; flip to s3/gcs for a durable deploy with no code changes elsewhere.
 """
 import os
 import io
@@ -79,6 +80,71 @@ class GCSStorage(Storage):
                 for b in self.bucket.list_blobs(prefix=self.prefix)}
 
 
+class S3Storage(Storage):
+    """AWS S3 (works with a plain bucket name OR an access-point ARN — same
+    target used for run-JSON uploads). Images go under the 'images/' prefix.
+
+    Env:
+      S3_BUCKET             bucket name or access-point ARN (required)
+      AWS_REGION            default ap-south-1
+      S3_IMAGE_PREFIX       default 'images'
+      S3_IMAGE_PUBLIC_BASE  full URL base used to SERVE images in a browser,
+                            e.g. https://dxxxx.cloudfront.net/images
+                            (if unset, falls back to a public-bucket URL built
+                            from S3_PUBLIC_BUCKET)
+      S3_PUBLIC_BUCKET      underlying bucket name for the fallback public URL
+      AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY  (or instance role)
+    """
+    def __init__(self):
+        import boto3
+        self.bucket = os.getenv("S3_BUCKET")
+        if not self.bucket:
+            raise RuntimeError("STORAGE_BACKEND=s3 but S3_BUCKET is not set")
+        self.region = os.getenv("AWS_REGION", "ap-south-1")
+        self.prefix = os.getenv("S3_IMAGE_PREFIX", "images").strip("/")
+        base = os.getenv("S3_IMAGE_PUBLIC_BASE", "").rstrip("/")
+        if not base:
+            pub_bucket = os.getenv("S3_PUBLIC_BUCKET", "prek-zuno-speak-data")
+            base = f"https://{pub_bucket}.s3.{self.region}.amazonaws.com/{self.prefix}"
+        self.public_base = base
+        kw = {"region_name": self.region}
+        ak, sk = os.getenv("AWS_ACCESS_KEY_ID"), os.getenv("AWS_SECRET_ACCESS_KEY")
+        if ak and sk:
+            kw["aws_access_key_id"] = ak
+            kw["aws_secret_access_key"] = sk
+            if os.getenv("AWS_SESSION_TOKEN"):
+                kw["aws_session_token"] = os.getenv("AWS_SESSION_TOKEN")
+        self.s3 = boto3.session.Session(**kw).client("s3")
+
+    def _key(self, filename: str) -> str:
+        return f"{self.prefix}/{filename}" if self.prefix else filename
+
+    def save_image(self, pil_image: Image.Image, filename: str) -> str:
+        buf = io.BytesIO(); pil_image.save(buf, format="PNG"); buf.seek(0)
+        self.s3.upload_fileobj(
+            buf, self.bucket, self._key(filename),
+            ExtraArgs={"ContentType": "image/png"})
+        return f"{self.public_base}/{filename}"
+
+    def exists(self, filename: str) -> bool:
+        try:
+            self.s3.head_object(Bucket=self.bucket, Key=self._key(filename))
+            return True
+        except Exception:
+            return False
+
+    def list_images(self) -> set:
+        out = set()
+        try:
+            paginator = self.s3.get_paginator("list_objects_v2")
+            for page in paginator.paginate(Bucket=self.bucket, Prefix=self.prefix + "/"):
+                for obj in page.get("Contents", []):
+                    out.add(obj["Key"].split("/")[-1])
+        except Exception:
+            pass
+        return out
+
+
 def get_storage() -> Storage:
     backend = os.getenv("STORAGE_BACKEND", "local").lower()
     if backend == "gcs":
@@ -86,6 +152,8 @@ def get_storage() -> Storage:
         if not bucket:
             raise RuntimeError("STORAGE_BACKEND=gcs but GCS_BUCKET is not set")
         return GCSStorage(bucket)
+    if backend == "s3":
+        return S3Storage()
     return LocalStorage()
 
 
