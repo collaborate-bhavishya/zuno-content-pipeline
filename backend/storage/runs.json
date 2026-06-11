@@ -1,5 +1,1633 @@
 [
   {
+    "id": "20260611_125722",
+    "timestamp": "2026-06-11T12:57:22.432348+00:00",
+    "theme": "Jungle",
+    "age": 5,
+    "milestone_code": "AG05",
+    "theme_code": "T01",
+    "blueprint": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Jungle | Age 5 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES:\n- **Max Target Sentence Length:** 10 words max (Age 5 constraint)\n- **Forbidden Structures Check:** \u2705 PASS \u2014 No complex clauses, no \"because,\" no \"if-then.\" Simple present tense + prepositions only.\n\n---\n\n## \ud83d\udea8 ABSOLUTE CONTENT SAFETY PROTOCOL (NON-NEGOTIABLE):\n\u2705 **CONFIRMED SAFE:** All vocabulary, concepts, and sentences contain zero elements of vulgarity, horror, fear, scary themes, or aggressive language. All context strings remain positive, safe, encouraging, and emotionally comforting for young learners.\n\n---\n\n## \ud83d\udd24 JUST-IN-TIME VOCABULARY MANIFEST:\n\n### **Tier 1 (Drilled & Spoken Nouns \u2014 7 entries):**\n1. `lion.png` \u2014 big cat with a mane\n2. `monkey.png` \u2014 small animal that swings and jumps\n3. `parrot.png` \u2014 colorful bird that talks\n4. `tree.png` \u2014 tall plant with leaves and branches\n5. `vine.png` \u2014 long rope-like plant\n6. `leaf.png` \u2014 green part of a plant\n7. `water.png` \u2014 wet and blue in the river\n\n### **Tier 2 (Descriptive Concepts \u2014 5 entries):**\n1. **big** \u2014 very, very large!\n2. **small** \u2014 tiny and little\n3. **green** \u2014 the color of leaves and grass\n4. **yellow** \u2014 the color of the sun\n5. **swings** \u2014 moves back and forth on a rope or vine\n\n### **Tier 3 (Exposure Only \u2014 2 entries):**\n1. **jungle** \u2014 a place with lots of trees and animals\n2. **vines** \u2014 many long plants hanging down\n\n---\n\n## \ud83d\udca1 TARGET CONCEPTS (Layer 2 Enforced Curve):\n\n1. **F1 Entry Gate:** \"Is the lion big?\" (Binary yes/no concept recognition)\n2. **F2 Comparison:** \"Which is bigger, the lion or the monkey?\" (Comparative adjective baseline)\n3. **F3 Visual Contrast:** \"Tap the small monkey.\" (Visual property discrimination)\n4. **T7 Multi-Select:** \"Tap ALL the animals you see in the jungle.\" (Categorization by living things)\n5. **T7.1 Spatial:** \"The monkey is on the vine. Where is the monkey?\" (Spatial relation: on/under/in)\n\n---\n\n## \ud83d\udde3\ufe0f TARGET SENTENCES & RECYCLED PATTERN CONTRACTS:\n\n| Sentence | Pattern | Grammar Structure | Concept |\n|----------|---------|-------------------|---------|\n| **S1:** \"The lion is big.\" | p1 | Subject + Verb (is) + Adjective | Size recognition |\n| **S2:** \"The monkey swings on the vine.\" | p1 (recycled) | Subject + Verb (action) + Preposition + Object | Action + spatial relation |\n| **S3:** \"The parrot is yellow and green.\" | p2 | Subject + Verb (is) + Adjective + Conjunction + Adjective | Color + conjunction |\n| **S4:** \"The tree has many green leaves.\" | p2 (recycled) | Subject + Verb (has) + Quantifier + Adjective + Object | Possession + quantity |\n| **S5:** \"The jungle is full of big trees and small animals.\" | p3 | Subject + Verb (is) + Prepositional phrase + Noun list | Enrichment: complex scene description |\n\n---\n\n## \ud83c\udfae INTERLEAVED PLAYABLE PREVIEW FLIGHT PATH & COGNITIVE STAIRCASE AUDIT:\n\n### **P1: Meet the Lion & Monkey (Grounding \u2192 F1 Check)**\n- **Content:** Introduce `lion.png` and `monkey.png` via T4 (visual + meaning).\n- **Concept Gate:** F1 binary yes/no check (\"Is the lion big?\").\n- **Target Qs:** 5\u20136 rows\n- **Cognitive Load:** Minimal; visual anchoring only.\n\n---\n\n### **P2: Meet the Parrot & Tree (Grounding \u2192 F2 Comparison Check)**\n- **Content:** Introduce `parrot.png` and `tree.png` via T4.\n- **Concept Gate:** F2 short comparison (\"Which is bigger, the tree or the parrot?\").\n- **Target Qs:** 5\u20136 rows\n- **Cognitive Load:** Comparative adjective baseline (bigger/smaller).\n\n---\n\n### **P3: Build & Speak S1 \u2014 \"The lion is big.\" (T9 Gate \u2192 D1 \u2192 T6.1 \u2192 T6.2 Speak Urgency Met by Q14)**\n- **Comprehension Gate:** T9 wh- extraction question with text choices (\"What is big?\" \u2192 Image + text options: lion, monkey, parrot).\n- **Sentence Build:** D1 (drag word tiles: \"The\" / \"lion\" / \"is\" / \"big\").\n- **Recognition:** T6.1 (fill blank with text choice: \"The ___ is big.\" \u2192 lion / monkey / parrot).\n- **Oral Production:** T6.2 (voice fill: \"The lion is ___.\" \u2192 child speaks \"big\").\n- **Target Qs:** 6\u20137 rows\n- **Speak Urgency:** \u2705 Met by Q14 (T6.2 triggers oral production).\n\n---\n\n### **P4: Meet the Vine & Leaf (Grounding \u2192 F3 Visual Contrast Check)**\n- **Content:** Introduce `vine.png` and `leaf.png` via T4.\n- **Concept Gate:** F3 visual contrast (\"Tap the small leaf.\" vs. large leaf image).\n- **Target Qs:** 5\u20136 rows\n- **Cognitive Load:** Visual discrimination of size/property.\n\n---\n\n### **P5: Build & Speak S2 \u2014 \"The monkey swings on the vine.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T6.3 \u2192 T8)**\n- **Comprehension Gate:** T9 wh- extraction (\"What swings on the vine?\" \u2192 Image + text options: monkey, parrot, lion).\n- **Sentence Build:** D1 (drag: \"The\" / \"monkey\" / \"swings\" / \"on\" / \"the\" / \"vine\").\n- **Recognition:** T6.1 (fill blank: \"The monkey ___ on the vine.\" \u2192 swings / jumps / sits).\n- **Oral Single Recall:** T6.2 (voice fill: \"The monkey swings on the ___.\" \u2192 child speaks \"vine\").\n- **Oral Pattern Production:** T6.3 (2-blank fill: \"The ___ swings on the ___.\" \u2192 child speaks \"monkey\" + \"vine\").\n- **Guided Speaking:** T8 (full sentence imitation: child reads + hears + repeats \"The monkey swings on the vine.\").\n- **Target Qs:** 7\u20138 rows\n- **Pattern Recycling:** \u2705 Reuses p1 structure (Subject + Verb + Preposition + Object).\n\n---\n\n### **P6: Meet Water & Jungle Concept (Grounding \u2192 T7 Multi-Select Category Gate)**\n- **Content:** Introduce `water.png` and reinforce jungle concept via T4.\n- **Concept Gate:** T7 multi-select (\"Tap ALL the things you find in the jungle.\" \u2192 lion, monkey, parrot, tree, vine, water; exclude: car, house, book).\n- **Target Qs:** 5\u20136 rows\n- **Cognitive Load:** Categorization by habitat/environment.\n\n---\n\n### **P7: Build & Speak S3 \u2014 \"The parrot is yellow and green.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T6.3 \u2192 T8)**\n- **Comprehension Gate:** T9 wh- extraction (\"What is yellow and green?\" \u2192 Image + text options: parrot, lion, tree).\n- **Sentence Build:** D1 (drag: \"The\" / \"parrot\" / \"is\" / \"yellow\" / \"and\" / \"green\").\n- **Recognition:** T6.1 (fill blank: \"The parrot is ___ and green.\" \u2192 yellow / red / blue).\n- **Oral Single Recall:** T6.2 (voice fill: \"The parrot is yellow and ___.\" \u2192 child speaks \"green\").\n- **Oral Pattern Production:** T6.3 (2-blank fill: \"The ___ is yellow and ___.\" \u2192 child speaks \"parrot\" + \"green\").\n- **Guided Speaking:** T8 (full sentence imitation).\n- **Target Qs:** 7\u20138 rows\n- **Pattern Recycling:** \u2705 Reuses p2 structure (Subject + is + Adjective + and + Adjective).\n\n---\n\n### **P8: Spatial Relations \u2014 T7.1 Gate (Optional Enrichment)**\n- **Content:** Reinforce vine, tree, monkey via spatial positioning.\n- **Concept Gate:** T7.1 spatial (\"The monkey is on the vine. Where is the monkey?\" \u2192 on / under / in).\n- **Target Qs:** 5\u20136 rows\n- **Cognitive Load:** Spatial reasoning (on/under/in/behind).\n\n---\n\n### **P9: Build & Speak S4 \u2014 \"The tree has many green leaves.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T6.3 \u2192 T8 \u2192 T8.2)**\n- **Comprehension Gate:** T9 wh- extraction (\"What has many green leaves?\" \u2192 Image + text options: tree, lion, monkey).\n- **Sentence Build:** D1 (drag: \"The\" / \"tree\" / \"has\" / \"many\" / \"green\" / \"leaves\").\n- **Recognition:** T6.1 (fill blank: \"The tree has ___ green leaves.\" \u2192 many / some / no).\n- **Oral Single Recall:** T6.2 (voice fill: \"The tree has many ___ leaves.\" \u2192 child speaks \"green\").\n- **Oral Pattern Production:** T6.3 (3-blank fill: \"The ___ has many ___ ___.\" \u2192 child speaks \"tree\" + \"green\" + \"leaves\").\n- **Guided Speaking:** T8 (full sentence imitation).\n- **Low-Support Guided Speaking:** T8.2 (visual prompt: image of tree with leaves; audio question \"What does the tree have?\" \u2192 child speaks full sentence).\n- **Target Qs:** 8\u20139 rows\n- **Pattern Recycling:** \u2705 Reuses p2 structure (Subject + has + Quantifier + Adjective + Object).\n\n---\n\n### **P10: Enrichment & Conversation \u2014 S5 + C1 (Independent Speaking)**\n- **Content:** \"The jungle is full of big trees and small animals.\"\n- **Guided Speaking:** T8.2 (visual scene: jungle with trees, animals, vines; audio prompt \"Tell me about the jungle.\" \u2192 child speaks full sentence or free-form response).\n- **Conversation Loop:** C1 (dynamic dialogue: system prompts \"What animals do you see?\" \u2192 child responds with single words or short phrases; system responds back with affirmation + expansion).\n- **Target Qs:** 6\u20137 rows\n- **Cognitive Load:** Highest; free-form production + conversational turn-taking.\n\n---\n\n## \ud83d\udcca PLAYABLE SUMMARY TABLE:\n\n| Playable | Layer | Primary Templates | Concept Gate | Target Qs | Speak Urgency |\n|----------|-------|-------------------|--------------|-----------|---------------|\n| P1 | 1 + 2 | T4, T1, T3, F1 | Binary yes/no | 5\u20136 | \u2014 |\n| P2 | 1 + 2 | T4, T1, T2, T3, F2 | Comparison | 5\u20136 | \u2014 |\n| P3 | 2.5 + 3 | T9, D1, T6.1, T6.2 | Wh- extraction | 6\u20137 | \u2705 Q14 |\n| P4 | 1 + 2 | T4, T1, T3, T5, F3 | Visual contrast | 5\u20136 | \u2014 |\n| P5 | 3 + 4 | T9, D1, T6.1, T6.2, T6.3, T8 | Wh- extraction | 7\u20138 | \u2705 Recycled p1 |\n| P6 | 1 + 2 | T4, T1, T3, T7 | Multi-select | 5\u20136 | \u2014 |\n| P7 | 3 + 4 | T9, D1, T6.1, T6.2, T6.3, T8 | Wh- extraction | 7\u20138 | \u2705 Recycled p2 |\n| P8 | 2 | T4, T1, T3, T7.1 | Spatial relations | 5\u20136 | \u2014 |\n| P9 | 3 + 4 | T9, D1, T6.1, T6.2, T6.3, T8, T8.2 | Wh- extraction | 8\u20139 | \u2705 Recycled p2 |\n| P10 | 4 + 5 | T8.2, C1 | Free-form + dialogue | 6\u20137 | \u2705 Conversation |\n\n---\n\n## \u2705 BLUEPRINT VALIDATION CHECKLIST:\n\n- \u2705 **Vocabulary Gating:** T4 \u2192 T1 (3 exposures) \u2192 T2 (short words) \u2192 T3 \u2192 T5 (age-appropriate text meanings)\n- \u2705 **Concept Progression:** F1 (yes/no) \u2192 F2 (comparison) \u2192 F3 (visual contrast) \u2192 T7 (multi-select) \u2192 T7.1 (spatial)\n- \u2705 **Sentence Scaffolding:** T9 (comprehension) \u2192 D1 (mechanical order) \u2192 T6.1 (recognition) \u2192 T6.2 (oral single) \u2192 T6.3 (oral pattern) \u2192 T8 (guided imitation) \u2192 T8.2 (low-support) \u2192 C1 (conversation)\n- \u2705 **Speaking Urgency:** First T6.2 (oral production) triggered by **P3, Q6** (well before Q14 threshold)\n- \u2705 **Sentence Length:** All sentences 4\u201310 words (Age 5 compliant)\n- \u2705 **Recycled Patterns:** S2 recycles p1; S4 recycles p2; S5 enriches with p3\n- \u2705 **Total Playables:** 10 playables (within +30% density expansion)\n- \u2705 **Total Questions:** 57\u201362 rows (expanded from baseline ~45)\n- \u2705 **Content Safety:** Zero scary, violent, or inappropriate language. All positive, warm, encouraging tone.\n- \u2705 **Preschool Teacher Tone:** All vocabulary definitions are warm, engaging, and age-appropriate. No negation-based definitions. No antonym interference.\n\n---\n\n## \ud83d\udea8 **AUTOMATION NOTICE: HALT ALL GENERATION CYCLES IMMEDIATELY BEYOND THIS POINT. WAIT FOR GATE APPROVAL.**",
+    "matrix": [
+      {
+        "Playable Code": "AG05T01P01",
+        "Playable Name": "Meet the Lion & Monkey",
+        "Layer": "1 - Vocabulary",
+        "Template": "T4",
+        "Instruction Text": "Meet the lion!",
+        "Instruction VO": "Look! Here comes a big lion!",
+        "Instruction VO \u2014 File": "AG05T01P01Q01_inst.mp3",
+        "Text in Question": "The lion is a big cat with a mane.",
+        "Audio in Question": "lion",
+        "Audio in Question \u2014 File": "AG05T01P01Q01_aud.mp3",
+        "VO for Question": "The lion is a big cat with a mane.",
+        "VO for Question \u2014 File": "AG05T01P01Q01_qvo.mp3",
+        "Image in Question \u2014 Detail": "a large golden lion with a big mane, sitting proudly",
+        "Image in Question \u2014 Name": "lion.png",
+        "Correct Answer": "\u2014",
+        "Correct Answer VO \u2014 File": "\u2014",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "\u2014",
+        "Other Options VO \u2014 File": "\u2014",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "animals / jungle creatures",
+        "Pattern": "\u2014",
+        "Notes": "Introduce lion vocabulary through visual anchoring and warm narration"
+      },
+      {
+        "Playable Code": "AG05T01P01",
+        "Playable Name": "Meet the Lion & Monkey",
+        "Layer": "1 - Vocabulary",
+        "Template": "T4",
+        "Instruction Text": "Meet the monkey!",
+        "Instruction VO": "And here is a small monkey that loves to jump!",
+        "Instruction VO \u2014 File": "AG05T01P01Q02_inst.mp3",
+        "Text in Question": "The monkey is a small animal that swings and jumps.",
+        "Audio in Question": "monkey",
+        "Audio in Question \u2014 File": "AG05T01P01Q02_aud.mp3",
+        "VO for Question": "The monkey is a small animal that swings and jumps.",
+        "VO for Question \u2014 File": "AG05T01P01Q02_qvo.mp3",
+        "Image in Question \u2014 Detail": "a small brown monkey with a long tail, swinging playfully",
+        "Image in Question \u2014 Name": "monkey.png",
+        "Correct Answer": "\u2014",
+        "Correct Answer VO \u2014 File": "\u2014",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "\u2014",
+        "Other Options VO \u2014 File": "\u2014",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "animals / jungle creatures",
+        "Pattern": "\u2014",
+        "Notes": "Introduce monkey vocabulary; contrast size with lion"
+      },
+      {
+        "Playable Code": "AG05T01P01",
+        "Playable Name": "Meet the Lion & Monkey",
+        "Layer": "1 - Vocabulary",
+        "Template": "T1",
+        "Instruction Text": "Find the lion!",
+        "Instruction VO": "Can you find the lion?",
+        "Instruction VO \u2014 File": "AG05T01P01Q03_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "lion",
+        "Audio in Question \u2014 File": "AG05T01P01Q03_aud.mp3",
+        "VO for Question": "Which one is the lion?",
+        "VO for Question \u2014 File": "AG05T01P01Q03_qvo.mp3",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "lion",
+        "Correct Answer VO \u2014 File": "AG05T01P01Q03_ans.mp3",
+        "Correct Answer \u2014 Image": "lion.png",
+        "Correct Answer \u2014 Image Detail": "a large golden lion with a big mane, sitting proudly",
+        "Other Options": "monkey, parrot",
+        "Other Options VO \u2014 File": "AG05T01P01Q03_opt1.mp3, AG05T01P01Q03_opt2.mp3",
+        "Other Options \u2014 Image": "monkey.png, parrot.png",
+        "Other Options \u2014 Image Detail": "a small brown monkey with a long tail, swinging playfully, a colorful parrot with red and blue feathers",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "auditory recognition / animal identification",
+        "Pattern": "\u2014",
+        "Notes": "Auditory-to-visual mapping: child hears 'lion' and taps correct image"
+      },
+      {
+        "Playable Code": "AG05T01P02",
+        "Playable Name": "Build & Speak S1 \u2014 The lion is big",
+        "Layer": "2.5 - Sentence Comprehension",
+        "Template": "T9",
+        "Instruction Text": "What is big?",
+        "Instruction VO": "The lion is big. What is big?",
+        "Instruction VO \u2014 File": "AG05T01P02Q01_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "The lion is big.",
+        "Audio in Question \u2014 File": "AG05T01P02Q01_aud.mp3",
+        "VO for Question": "\u2014",
+        "VO for Question \u2014 File": "\u2014",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "lion",
+        "Correct Answer VO \u2014 File": "AG05T01P02Q01_ans.mp3",
+        "Correct Answer \u2014 Image": "lion.png",
+        "Correct Answer \u2014 Image Detail": "a large golden lion with a big mane, sitting proudly",
+        "Other Options": "monkey, parrot",
+        "Other Options VO \u2014 File": "AG05T01P02Q01_opt1.mp3, AG05T01P02Q01_opt2.mp3",
+        "Other Options \u2014 Image": "monkey.png, parrot.png",
+        "Other Options \u2014 Image Detail": "a small brown monkey with a long tail, swinging playfully, a colorful parrot with red and blue feathers",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "sentence comprehension / wh- extraction",
+        "Pattern": "p1",
+        "Notes": "Comprehension gate before sentence build; child extracts 'lion' from sentence"
+      },
+      {
+        "Playable Code": "AG05T01P02",
+        "Playable Name": "Build & Speak S1 \u2014 The lion is big",
+        "Layer": "3 - Sentence Formation",
+        "Template": "D1",
+        "Instruction Text": "Put the words in order.",
+        "Instruction VO": "Can you fix this sentence?",
+        "Instruction VO \u2014 File": "AG05T01P02Q02_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "The lion is big",
+        "Audio in Question \u2014 File": "AG05T01P02Q02_aud.mp3",
+        "VO for Question": "\u2014",
+        "VO for Question \u2014 File": "\u2014",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "The lion is big",
+        "Correct Answer VO \u2014 File": "AG05T01P02Q02_ans.mp3",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "big is lion The, is The big lion, lion big The is",
+        "Other Options VO \u2014 File": "AG05T01P02Q02_opt1.mp3, AG05T01P02Q02_opt2.mp3, AG05T01P02Q02_opt3.mp3",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "sentence mechanics / word order",
+        "Pattern": "p1",
+        "Notes": "Drag-and-drop word tiles to build 'The lion is big' in correct order"
+      }
+    ],
+    "images": [
+      {
+        "filename": "lion.png",
+        "url": "/files/images/lion.png",
+        "object_name": "lion"
+      },
+      {
+        "filename": "parrot.png",
+        "url": "/files/images/parrot.png",
+        "object_name": "parrot"
+      }
+    ],
+    "failed": [],
+    "wrong_generations": [],
+    "pending_images": [],
+    "history": [
+      "Blueprint cycle 1: 1. **PRESCHOOL TEACHER SPOKEN TONE:**\n    *   **`water.png` definition:** The description 'blue liquid in rivers and ponds' is accurate but lacks the warm, engaging tone suitable for preschoolers. It's too sterile and dictionary-like. \n    *   **`big` definition:** 'large in size' is also a bit formal. While acceptable, it could be more engaging.\n2. **ANTONYM / NEGATION INTERFERENCE:**\n    *   **`small` definition:** Defining 'small' as 'not big' introduces a direct negation and an antonym, which can cause cognitive interference for early language learners. Concepts should be introduced positively and directly, not through their opposites.\n\n**Technical Fix Instructions:**\n1.  **Revise `small` definition:** Change 'not big' to a positive, age-appropriate description such as 'tiny' or 'little'.\n2.  **Revise `water.png` definition:** Rephrase to be more engaging and relatable for a preschooler, e.g., 'wet and blue in the river' or 'what we drink and fish swim in'.\n3.  **Revise `big` definition (optional but recommended):** Rephrase to be more engaging, e.g., 'very, very large!' or 'like a giant!'",
+      "Matrix cycle 1: Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q2: T4 requires 'Audio in Question' but it is empty/dash. | Q3: T1 requires 'VO for Question' but it is empty/dash.",
+      "Matrix cycle 2: Q4: T9 must NOT have 'Image in Question \u2014 Detail' \u2014 should be '\u2014'. Got: 'a large golden lion with a big mane, sit'. | Q4: T9 must NOT have 'Image in Question \u2014 Name' \u2014 should be '\u2014'. Got: 'lion.png'. | Q5: 'Other Options' has content but 'Other Options VO \u2014 File' is empty \u2014 must provide filename.",
+      "Matrix cycle 3: Sentence formation starts before any concept-builder (F1/F2/F3). Layer 2 concepts must be checked before Layer 3 sentence building."
+    ],
+    "eval": {
+      "case_id": "auto_Jungle_5",
+      "theme": "Jungle",
+      "age": 5,
+      "total_score": 93.8,
+      "grade": "A",
+      "dimensions": [
+        {
+          "name": "schema_compliance",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.12,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 rows have all 26 columns"
+        },
+        {
+          "name": "template_validity",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.12,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 templates valid & age-appropriate"
+        },
+        {
+          "name": "pedagogical_order",
+          "score": 0.8333333333333334,
+          "max_score": 1.0,
+          "weight": 0.15,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 6,
+          "issues": [
+            "Sentence templates appear before concept builders"
+          ],
+          "detail": "5/6 ordering rules passed"
+        },
+        {
+          "name": "age_appropriateness",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.1,
+          "lane": "deterministic",
+          "passed": 1,
+          "total": 1,
+          "issues": [],
+          "detail": "1/1 sentences within word limit (10)"
+        },
+        {
+          "name": "safety_lexical",
+          "score": 0.8,
+          "max_score": 1.0,
+          "weight": 0.08,
+          "lane": "deterministic",
+          "passed": 4,
+          "total": 5,
+          "issues": [
+            "Row 1: unsafe words ['war']"
+          ],
+          "detail": "4/5 rows pass lexical safety gate"
+        },
+        {
+          "name": "stt_hygiene",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.08,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 STT fields correctly set"
+        },
+        {
+          "name": "image_format",
+          "score": 0.8888888888888888,
+          "max_score": 1.0,
+          "weight": 0.05,
+          "lane": "deterministic",
+          "passed": 8,
+          "total": 9,
+          "issues": [
+            "Row 3 (T1): missing required image"
+          ],
+          "detail": "8/9 image filenames valid"
+        },
+        {
+          "name": "tone_quality",
+          "score": 0.9,
+          "max_score": 1.0,
+          "weight": 0.15,
+          "lane": "llm",
+          "passed": 9,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM tone: 90% \u2014 The Instruction VOs are consistently warm, encouraging, and child-friendly, and the lesson's progression from vocabulary"
+        },
+        {
+          "name": "content_relevance",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.1,
+          "lane": "llm",
+          "passed": 10,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM relevance: 100% \u2014 All vocabulary and concepts introduced (lion, monkey, big, small, jump, swing) are highly relevant and directly contribu"
+        },
+        {
+          "name": "safety_semantic",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.05,
+          "lane": "llm",
+          "passed": 10,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM safety: 100% \u2014 clean"
+        }
+      ],
+      "row_count": 5,
+      "llm_calls": 1,
+      "error": null
+    },
+    "metrics": {
+      "total_latency_ms": 150263,
+      "total_input_tokens": 82821,
+      "total_output_tokens": 14738,
+      "total_cost": 0.097626,
+      "total_llm_calls": 12,
+      "total_image_calls": 2,
+      "retries": {
+        "blueprint": 1,
+        "matrix": 2,
+        "image": 0
+      },
+      "llm_calls": [
+        {
+          "node": "planner",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 8611,
+          "output_tokens": 3761,
+          "latency_ms": 29983,
+          "cost": 0.006854
+        },
+        {
+          "node": "blueprint_evaluator",
+          "role": "judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 3448,
+          "output_tokens": 313,
+          "latency_ms": 13232,
+          "cost": 0.000705
+        },
+        {
+          "node": "planner",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 12758,
+          "output_tokens": 3803,
+          "latency_ms": 27367,
+          "cost": 0.007943
+        },
+        {
+          "node": "blueprint_evaluator",
+          "role": "judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 3484,
+          "output_tokens": 151,
+          "latency_ms": 12914,
+          "cost": 0.000613
+        },
+        {
+          "node": "fabricator",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 15495,
+          "output_tokens": 2140,
+          "latency_ms": 13294,
+          "cost": 0.006549
+        },
+        {
+          "node": "fabricator",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 17499,
+          "output_tokens": 2184,
+          "latency_ms": 9777,
+          "cost": 0.007105
+        },
+        {
+          "node": "fabricator",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 17579,
+          "output_tokens": 2213,
+          "latency_ms": 9760,
+          "cost": 0.007161
+        },
+        {
+          "node": "eval",
+          "role": "eval_judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 1087,
+          "output_tokens": 145,
+          "latency_ms": 6117,
+          "cost": 0.00025
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 7233,
+          "cost": 0.0
+        },
+        {
+          "node": "vision_critic",
+          "role": "vision_judge",
+          "model": "gemini-2.5-flash-lite",
+          "input_tokens": 1430,
+          "output_tokens": 14,
+          "latency_ms": 4124,
+          "cost": 0.000223
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 7083,
+          "cost": 0.0
+        },
+        {
+          "node": "vision_critic",
+          "role": "vision_judge",
+          "model": "gemini-2.5-flash-lite",
+          "input_tokens": 1430,
+          "output_tokens": 14,
+          "latency_ms": 2690,
+          "cost": 0.000223
+        }
+      ],
+      "node_timings": [],
+      "per_node_summary": {
+        "planner": {
+          "calls": 2,
+          "input_tokens": 21369,
+          "output_tokens": 7564,
+          "latency_ms": 57350,
+          "cost": 0.014797,
+          "model": "claude-haiku-4-5-20251001"
+        },
+        "blueprint_evaluator": {
+          "calls": 2,
+          "input_tokens": 6932,
+          "output_tokens": 464,
+          "latency_ms": 26146,
+          "cost": 0.001318,
+          "model": "gemini-2.5-flash"
+        },
+        "fabricator": {
+          "calls": 3,
+          "input_tokens": 50573,
+          "output_tokens": 6537,
+          "latency_ms": 32831,
+          "cost": 0.020815,
+          "model": "claude-haiku-4-5-20251001"
+        },
+        "eval": {
+          "calls": 1,
+          "input_tokens": 1087,
+          "output_tokens": 145,
+          "latency_ms": 6117,
+          "cost": 0.00025,
+          "model": "gemini-2.5-flash"
+        },
+        "image_factory": {
+          "calls": 2,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 14316,
+          "cost": 0.0,
+          "model": "imagen-3.0-fast-generate-001"
+        },
+        "vision_critic": {
+          "calls": 2,
+          "input_tokens": 2860,
+          "output_tokens": 28,
+          "latency_ms": 6814,
+          "cost": 0.000446,
+          "model": "gemini-2.5-flash-lite"
+        }
+      }
+    },
+    "feed": [
+      {
+        "node": "planner",
+        "label": "Planner agent",
+        "action": "Writing the lesson blueprint",
+        "detail": {
+          "preview": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Jungle | Age 5 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES:\n- **Max Target Sentence Length:** 10 words max (Age 5 constraint)\n- **Forbidden Structures Check:** \u2705 PASS \u2014 No complex clauses, no \"because,\" no \"\u2026",
+          "metrics": {
+            "tokens_in": 8611,
+            "tokens_out": 3761,
+            "cost_usd": 0.006854,
+            "latency_ms": 29983,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "blueprint_evaluator",
+        "label": "Blueprint evaluator",
+        "action": "Auditing tone, safety, pedagogy",
+        "detail": {
+          "decision": "fail",
+          "critique": "1. **PRESCHOOL TEACHER SPOKEN TONE:**\n    *   **`water.png` definition:** The description 'blue liquid in rivers and ponds' is accurate but lacks the warm, engaging tone suitable for preschoolers. It's too sterile and dictionary-like. \n    *   **`big` definition:** 'large in size' is also a bit formal. While acceptable, it could be more engaging.\n2. **ANTONYM / NEGATION INTERFERENCE:**\n    *   **`small` definition:** Defining 'small' as 'not big' introduces a direct negation and an antonym, which can cause cognitive interference for early language learners. Concepts should be introduced positively and directly, not through their opposites.\n\n**Technical Fix Instructions:**\n1.  **Revise `small` definition:** Change 'not big' to a positive, age-appropriate description such as 'tiny' or 'little'.\n2.  **Revise `water.png` definition:** Rephrase to be more engaging and relatable for a preschooler, e.g., 'wet and blue in the river' or 'what we drink and fish swim in'.\n3.  **Revise `big` definition (optional but recommended):** Rephrase to be more engaging, e.g., 'very, very large!' or 'like a giant!'",
+          "metrics": {
+            "tokens_in": 3448,
+            "tokens_out": 313,
+            "cost_usd": 0.000705,
+            "latency_ms": 13232,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "planner",
+        "label": "Planner agent",
+        "action": "Writing the lesson blueprint",
+        "detail": {
+          "preview": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Jungle | Age 5 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES:\n- **Max Target Sentence Length:** 10 words max (Age 5 constraint)\n- **Forbidden Structures Check:** \u2705 PASS \u2014 No complex clauses, no \"because,\" no \"\u2026",
+          "metrics": {
+            "tokens_in": 21369,
+            "tokens_out": 7564,
+            "cost_usd": 0.014797,
+            "latency_ms": 57350,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "blueprint_evaluator",
+        "label": "Blueprint evaluator",
+        "action": "Auditing tone, safety, pedagogy",
+        "detail": {
+          "decision": "proceed_to_questions",
+          "metrics": {
+            "tokens_in": 6932,
+            "tokens_out": 464,
+            "cost_usd": 0.001318,
+            "latency_ms": 26146,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "fabricator",
+        "label": "Fabricator agent",
+        "action": "Building the question matrix",
+        "detail": {
+          "rows": 5,
+          "metrics": {
+            "tokens_in": 15495,
+            "tokens_out": 2140,
+            "cost_usd": 0.006549,
+            "latency_ms": 13294,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "matrix_evaluator",
+        "label": "Matrix evaluator",
+        "action": "Validating structure",
+        "detail": {
+          "decision": "fail",
+          "critique": "Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q2: T4 requires 'Audio in Question' but it is empty/dash. | Q3: T1 requires 'VO for Question' but it is empty/dash."
+        }
+      },
+      {
+        "node": "fabricator",
+        "label": "Fabricator agent",
+        "action": "Building the question matrix",
+        "detail": {
+          "rows": 5,
+          "metrics": {
+            "tokens_in": 32994,
+            "tokens_out": 4324,
+            "cost_usd": 0.013654,
+            "latency_ms": 23071,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "matrix_evaluator",
+        "label": "Matrix evaluator",
+        "action": "Validating structure",
+        "detail": {
+          "decision": "fail",
+          "critique": "Q4: T9 must NOT have 'Image in Question \u2014 Detail' \u2014 should be '\u2014'. Got: 'a large golden lion with a big mane, sit'. | Q4: T9 must NOT have 'Image in Question \u2014 Name' \u2014 should be '\u2014'. Got: 'lion.png'. | Q5: 'Other Options' has content but 'Other Options VO \u2014 File' is empty \u2014 must provide filename."
+        }
+      },
+      {
+        "node": "fabricator",
+        "label": "Fabricator agent",
+        "action": "Building the question matrix",
+        "detail": {
+          "rows": 5,
+          "metrics": {
+            "tokens_in": 50573,
+            "tokens_out": 6537,
+            "cost_usd": 0.020815,
+            "latency_ms": 32831,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "matrix_evaluator",
+        "label": "Matrix evaluator",
+        "action": "Validating structure",
+        "detail": {
+          "decision": "fail",
+          "critique": "Sentence formation starts before any concept-builder (F1/F2/F3). Layer 2 concepts must be checked before Layer 3 sentence building."
+        }
+      },
+      {
+        "node": "asset_planner",
+        "label": "Asset planner",
+        "action": "Listing images to generate",
+        "detail": {
+          "completed": []
+        }
+      },
+      {
+        "node": "eval",
+        "label": "Eval scorer",
+        "action": "Scoring output against SpeakX rubric",
+        "detail": {
+          "decision": "grade A \u2014 93.8/100",
+          "metrics": {
+            "tokens_in": 1087,
+            "tokens_out": 145,
+            "cost_usd": 0.00025,
+            "latency_ms": 6117,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 7233,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "advance",
+          "completed": [
+            {
+              "filename": "lion.png",
+              "url": "/files/images/lion.png",
+              "object_name": "lion"
+            }
+          ],
+          "metrics": {
+            "tokens_in": 1430,
+            "tokens_out": 14,
+            "cost_usd": 0.000223,
+            "latency_ms": 4124,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 14316,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "advance",
+          "completed": [
+            {
+              "filename": "lion.png",
+              "url": "/files/images/lion.png",
+              "object_name": "lion"
+            },
+            {
+              "filename": "parrot.png",
+              "url": "/files/images/parrot.png",
+              "object_name": "parrot"
+            }
+          ],
+          "metrics": {
+            "tokens_in": 2860,
+            "tokens_out": 28,
+            "cost_usd": 0.000446,
+            "latency_ms": 6814,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      }
+    ],
+    "play_url": "https://speak.zunolearn.com/?id=ag05_t01_jungle_20260611_125722_s3",
+    "s3_uri": "s3://arn:aws:s3:ap-south-1:307506882879:accesspoint/content-pipeline/ag05_t01_jungle_20260611_125722_s3.json"
+  },
+  {
+    "id": "20260611_114521",
+    "timestamp": "2026-06-11T11:45:21.565032+00:00",
+    "theme": "Friends",
+    "age": 4,
+    "milestone_code": "AG04",
+    "theme_code": "T01",
+    "blueprint": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Friends | Age 4 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES\n\n**Max Target Sentence Length:** 6 words max (Age 4 constraint)  \n**Forbidden Structures Check:** \u2705 PASS \u2014 No if-then, no complex clauses. Simple subject-verb-object + descriptors only.\n\n---\n\n## \ud83d\udea8 ABSOLUTE CONTENT SAFETY PROTOCOL (NON-NEGOTIABLE)\n\nAll vocabulary, concepts, and sentences remain **positive, warm, and emotionally safe**. Theme centers on **friendship, togetherness, sharing, and joy**. Zero scary, mean, or aggressive language. All interactions encourage cooperation and kindness.\n\n---\n\n## \ud83d\udd24 JUST-IN-TIME VOCABULARY MANIFEST\n\n### Tier 1 (Drilled & Spoken Nouns \u2014 6 entries)\n1. `boy.png` \u2014 A young male child, happy expression\n2. `girl.png` \u2014 A young female child, happy expression\n3. `friend.png` \u2014 A child with open, welcoming posture\n4. `toy.png` \u2014 A colorful plaything (ball, block, or doll)\n5. `smile.png` \u2014 A face showing happiness and warmth\n6. `hand.png` \u2014 Two hands coming together gently\n\n### Tier 2 (Descriptive Concepts \u2014 4 entries)\n1. **happy** \u2014 Joyful, smiling, cheerful feeling\n2. **together** \u2014 Side by side, united, sharing space\n3. **play** \u2014 Move around, have fun, enjoy games\n4. **share** \u2014 Give to a friend, take turns, be kind\n\n### Tier 3 (Exposure Only \u2014 2 entries)\n1. **friend** (reinforced as concept, not just noun)\n2. **fun** \u2014 Enjoyment, laughter, good times\n\n---\n\n## \ud83d\udca1 TARGET CONCEPTS (Layer 2 Enforced Curve)\n\n1. **F1 Entry Gate:** \"Is the boy happy?\" (Binary yes/no recognition of emotional state)\n2. **F2 Comparison:** \"Who is playing?\" (Short scannable comparison: boy vs. girl in action)\n3. **F3 Visual Contrast:** \"Tap the happy friend.\" (Contrasting emotional states: happy vs. neutral)\n4. **T7 Multi-Select:** \"Tap ALL the friends.\" (Categorization: identify multiple children in a group scene)\n5. **T7.1 Spatial (if applicable):** \"The boy is next to the girl.\" (Spatial relation: beside, together)\n\n---\n\n## \ud83d\udde3\ufe0f TARGET SENTENCES & RECYCLED PATTERN CONTRACTS\n\n### **S1: \"The boy is happy.\"**\n- **Pattern:** p1 (Subject + Verb \"is\" + Adjective)\n- **Grammar Structure:** [Noun] + [is] + [Descriptor]\n- **Concept Skill:** Emotional state recognition + simple copula\n\n### **S2: \"The girl plays with a toy.\"** *(Recycled Pattern p1 with new words)*\n- **Pattern:** p1 (Subject + Verb + Object)\n- **Grammar Structure:** [Noun] + [Verb] + [Preposition] + [Noun]\n- **Concept Skill:** Action + object relationship\n\n### **S3: \"Friends play together.\"**\n- **Pattern:** p2 (Plural subject + Action verb + Adverb)\n- **Grammar Structure:** [Plural Noun] + [Verb] + [Adverb]\n- **Concept Skill:** Collective action + togetherness\n\n### **S4: \"They share a toy.\"** *(Recycled Pattern p2 with new words)*\n- **Pattern:** p2 (Pronoun subject + Action verb + Object)\n- **Grammar Structure:** [Pronoun] + [Verb] + [Noun]\n- **Concept Skill:** Cooperation + sharing\n\n---\n\n## \ud83c\udfae INTERLEAVED PLAYABLE PREVIEW FLIGHT PATH & COGNITIVE STAIRCASE AUDIT\n\n### **P1: Meet the Boy & Girl (Grounding \u2192 F1 Check)**\n- **Playable Code:** `AG04FRD01P01`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - T4: Introduce \"boy\" (image + warm label)\n  - T4: Introduce \"girl\" (image + warm label)\n  - T1: Auditory recognition \u2014 \"Find the boy!\" (tap image)\n  - T1: Auditory recognition \u2014 \"Find the girl!\" (tap image)\n  - F1: Binary concept check \u2014 \"Is the boy happy?\" (Yes/No)\n- **Cognitive Gate:** Child grounds two core characters and recognizes emotional state\n\n---\n\n### **P2: Meet Happy & Play (Grounding \u2192 F2 Comparison Check)**\n- **Playable Code:** `AG04FRD01P02`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - T4: Introduce \"happy\" (image of smiling face + label)\n  - T1: Auditory recognition \u2014 \"Find happy!\" (tap image)\n  - T3: Pronunciation practice \u2014 \"Say: happy\" (voice STT)\n  - F2: Comparison \u2014 \"Who is playing?\" (Boy playing vs. Girl sitting \u2014 image choices)\n- **Cognitive Gate:** Child links descriptor to emotion and compares actions\n\n---\n\n### **P3: Build & Speak S1 \u2014 \"The boy is happy.\" (T9 Gate \u2192 D1 \u2192 T6.1 \u2192 T6.2)**\n- **Playable Code:** `AG04FRD01P03`\n- **Target Questions:** 6\u20137\n- **Sequence:**\n  - T9: Comprehension gate \u2014 \"The boy is happy. Who is happy?\" (Image choices: boy, girl, toy)\n  - D1: Drag-and-drop sentence build \u2014 Tiles: `[The] [boy] [is] [happy]` \u2192 Correct order\n  - T6.1: Fill blank (text) \u2014 \"The ___ is happy.\" (Tap: boy / girl / toy)\n  - T6.2: Voice fill blank \u2014 \"The boy is ___.\" (Speak: \"happy\")\n- **Cognitive Gate:** Child mechanically orders syntax, then retrieves target word orally\n\n---\n\n### **P4: Meet Toy & Share (Grounding \u2192 F3 Visual Contrast Check)**\n- **Playable Code:** `AG04FRD01P04`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - T4: Introduce \"toy\" (colorful plaything image + label)\n  - T1: Auditory recognition \u2014 \"Find the toy!\" (tap image)\n  - T3: Pronunciation practice \u2014 \"Say: toy\" (voice STT)\n  - F3: Visual contrast \u2014 \"Tap the happy friend.\" (Happy face vs. neutral face \u2014 image contrast)\n- **Cognitive Gate:** Child discriminates emotional states visually\n\n---\n\n### **P5: Build & Speak S2 \u2014 \"The girl plays with a toy.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T8)**\n- **Playable Code:** `AG04FRD01P05`\n- **Target Questions:** 6\u20137\n- **Sequence:**\n  - T9: Comprehension gate \u2014 \"The girl plays with a toy. What does the girl play with?\" (Image choices: toy, ball, book)\n  - D1: Drag-and-drop \u2014 Tiles: `[The] [girl] [plays] [with] [a] [toy]` \u2192 Correct order\n  - T6.1: Fill blank (text) \u2014 \"The girl ___ with a toy.\" (Tap: plays / sits / runs)\n  - T6.2: Voice fill blank \u2014 \"The girl plays with a ___.\" (Speak: \"toy\")\n  - T8: Guided speaking (full imitation) \u2014 Image of girl playing. Child reads & repeats: \"The girl plays with a toy.\"\n- **Cognitive Gate:** Child builds longer sentence, retrieves action verb, then produces full phrase with acoustic support\n\n---\n\n### **P6: Meet Friends & Together (Grounding \u2192 T7 Multi-Select Category Gate)**\n- **Playable Code:** `AG04FRD01P06`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - T4: Introduce \"friend\" (image of two children together + label)\n  - T1: Auditory recognition \u2014 \"Find the friend!\" (tap image)\n  - T3: Pronunciation practice \u2014 \"Say: friend\" (voice STT)\n  - T7: Multi-select categorization \u2014 \"Tap ALL the friends.\" (Scene with 2 children + 1 toy \u2192 child taps both children, avoids toy)\n- **Cognitive Gate:** Child categorizes multiple items and avoids distractors\n\n---\n\n### **P7: Build & Speak S3 \u2014 \"Friends play together.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T6.3)**\n- **Playable Code:** `AG04FRD01P07`\n- **Target Questions:** 6\u20137\n- **Sequence:**\n  - T9: Comprehension gate \u2014 \"Friends play together. What do friends do?\" (Image choices: play together, sit alone, sleep)\n  - D1: Drag-and-drop \u2014 Tiles: `[Friends] [play] [together]` \u2192 Correct order\n  - T6.1: Fill blank (text) \u2014 \"___ play together.\" (Tap: Friends / Boys / Girls)\n  - T6.2: Voice fill blank \u2014 \"Friends ___ together.\" (Speak: \"play\")\n  - T6.3: Voice pattern completion (2 blanks) \u2014 \"___ ___ together.\" (Speak full: \"Friends play together\")\n- **Cognitive Gate:** Child reconstructs plural subject + action + adverb pattern with voice production\n\n---\n\n### **P8: Build & Speak S4 \u2014 \"They share a toy.\" (T9 \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T8.2)**\n- **Playable Code:** `AG04FRD01P08`\n- **Target Questions:** 6\u20137\n- **Sequence:**\n  - T9: Comprehension gate \u2014 \"They share a toy. Who shares?\" (Image choices: boy & girl together, boy alone, girl alone)\n  - D1: Drag-and-drop \u2014 Tiles: `[They] [share] [a] [toy]` \u2192 Correct order\n  - T6.1: Fill blank (text) \u2014 \"They ___ a toy.\" (Tap: share / play / hold)\n  - T6.2: Voice fill blank \u2014 \"They share a ___.\" (Speak: \"toy\")\n  - T8.2: Guided speaking (low support) \u2014 Image of two children sharing. Prompt: \"What are the friends doing?\" Child speaks: \"They share a toy.\"\n- **Cognitive Gate:** Child produces pronoun-subject sentence with cooperation concept\n\n---\n\n### **P9: Spatial Relation \u2014 \"The boy is next to the girl.\" (F1 \u2192 T7.1)**\n- **Playable Code:** `AG04FRD01P09`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - F1: Binary check \u2014 \"Are the friends together?\" (Yes/No)\n  - T7.1: Spatial relation \u2014 \"The boy is next to the girl. Where is the boy?\" (Image choices: next to girl / far from girl / behind girl)\n- **Cognitive Gate:** Child recognizes spatial positioning and proximity\n\n---\n\n### **P10: Guided Speaking Recap \u2014 \"Happy Friends\" (T8 \u2192 T8.2 \u2192 C1 Intro)**\n- **Playable Code:** `AG04FRD01P10`\n- **Target Questions:** 5\u20136\n- **Sequence:**\n  - T8: Full imitation \u2014 Image of happy children playing. Child reads & repeats: \"Friends are happy.\"\n  - T8.2: Low-support prompt \u2014 Image of children sharing. Prompt: \"What do friends do?\" Child speaks freely (accepts: \"play,\" \"share,\" \"together,\" or full sentence)\n  - C1 (optional intro): Automated dialogue loop \u2014 System: \"Do you have a friend?\" Child responds (1\u20132 words accepted)\n- **Cognitive Gate:** Child consolidates all sentence patterns and begins independent speaking\n\n---\n\n## \ud83d\udcca SUMMARY METRICS\n\n| Metric | Count |\n|--------|-------|\n| **Total Playables** | 10 |\n| **Total Questions** | 55\u201360 |\n| **Vocabulary Entries (Tier 1)** | 6 |\n| **Vocabulary Entries (Tier 2)** | 4 |\n| **Target Sentences** | 4 |\n| **Recycled Patterns** | 2 (p1 & p2) |\n| **Speaking Urgency Met** | \u2705 Q16 (T6.2 in P3) |\n| **Full Guided Speaking Met** | \u2705 Q27 (T8 in P5) |\n\n---\n\n## \u2705 BLUEPRINT VALIDATION CHECKLIST\n\n- \u2705 **Age 4 sentence length:** All sentences \u2264 6 words\n- \u2705 **Vocabulary gate order:** T4 \u2192 T1 \u2192 T3 (no T5)\n- \u2705 **Concept gate order:** F1 \u2192 F2 \u2192 F3 \u2192 T7 \u2192 T7.1\n- \u2705 **Sentence gate order:** T9 (wh- + image choices) \u2192 D1 \u2192 T6.1 \u2192 T6.2 \u2192 T6.3 (2 blanks) \u2192 T8 \u2192 T8.2\n- \u2705 **Speaking urgency:** T6.2 voice fill by Q16; T8 guided speaking by Q27\n- \u2705 **Forbidden structures:** No if-then, no complex clauses\n- \u2705 **Content safety:** All positive, warm, friendship-centered language\n- \u2705 **Interleaving law:** Every sentence word grounded in vocab gate before sentence build\n- \u2705 **Recycled patterns:** S2 recycles p1; S4 recycles p2\n- \u2705 **Playable density:** 10 playables \u00d7 5\u20137 questions each = 50\u201370 total questions (+30% scale)\n\n---\n\n## \ud83d\udea8 **AUTOMATION NOTICE: HALT ALL GENERATION CYCLES IMMEDIATELY BEYOND THIS POINT. WAIT FOR GATE APPROVAL.**",
+    "matrix": [
+      {
+        "Playable Code": "AG04FRD01P01",
+        "Playable Name": "Meet the Boy & Girl",
+        "Layer": "1 - Vocabulary",
+        "Template": "T4",
+        "Instruction Text": "Meet the boy",
+        "Instruction VO": "Say hello to the boy!",
+        "Instruction VO \u2014 File": "AG04FRD01P01Q01_inst.mp3",
+        "Text in Question": "boy",
+        "Audio in Question": "boy",
+        "Audio in Question \u2014 File": "AG04FRD01P01Q01_aud.mp3",
+        "VO for Question": "This is a boy. He is happy.",
+        "VO for Question \u2014 File": "AG04FRD01P01Q01_qvo.mp3",
+        "Image in Question \u2014 Detail": "a young male child with a happy, smiling expression",
+        "Image in Question \u2014 Name": "boy.png",
+        "Correct Answer": "\u2014",
+        "Correct Answer VO \u2014 File": "\u2014",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "\u2014",
+        "Other Options VO \u2014 File": "\u2014",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "people & relationships",
+        "Pattern": "\u2014",
+        "Notes": "Introduce core character 'boy' with warm greeting and emotional grounding"
+      },
+      {
+        "Playable Code": "AG04FRD01P01",
+        "Playable Name": "Meet the Boy & Girl",
+        "Layer": "1 - Vocabulary",
+        "Template": "T1",
+        "Instruction Text": "Find the boy!",
+        "Instruction VO": "Can you find the boy?",
+        "Instruction VO \u2014 File": "AG04FRD01P01Q02_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "boy",
+        "Audio in Question \u2014 File": "AG04FRD01P01Q02_aud.mp3",
+        "VO for Question": "Listen: boy. Now find the boy!",
+        "VO for Question \u2014 File": "AG04FRD01P01Q02_qvo.mp3",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "boy",
+        "Correct Answer VO \u2014 File": "AG04FRD01P01Q02_ans.mp3",
+        "Correct Answer \u2014 Image": "boy.png",
+        "Correct Answer \u2014 Image Detail": "a young male child with a happy, smiling expression",
+        "Other Options": "toy, girl",
+        "Other Options VO \u2014 File": "AG04FRD01P01Q02_opt1.mp3, AG04FRD01P01Q02_opt2.mp3",
+        "Other Options \u2014 Image": "toy.png, girl.png",
+        "Other Options \u2014 Image Detail": "a colorful plaything, a young female child with a happy, smiling expression",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "auditory recognition",
+        "Pattern": "\u2014",
+        "Notes": "Auditory-to-visual mapping: child hears 'boy' and taps correct image from 3 options"
+      },
+      {
+        "Playable Code": "AG04FRD01P02",
+        "Playable Name": "Meet the Girl & Happy",
+        "Layer": "2 - Concept Builder",
+        "Template": "F1",
+        "Instruction Text": "Is the boy happy?",
+        "Instruction VO": "Look at the boy. Is he happy?",
+        "Instruction VO \u2014 File": "AG04FRD01P02Q01_inst.mp3",
+        "Text in Question": "Is the boy happy?",
+        "Audio in Question": "\u2014",
+        "Audio in Question \u2014 File": "\u2014",
+        "VO for Question": "Is the boy happy?",
+        "VO for Question \u2014 File": "AG04FRD01P02Q01_qvo.mp3",
+        "Image in Question \u2014 Detail": "a young male child with a happy, smiling expression",
+        "Image in Question \u2014 Name": "boy.png",
+        "Correct Answer": "Yes",
+        "Correct Answer VO \u2014 File": "AG04FRD01P02Q01_ans.mp3",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "No",
+        "Other Options VO \u2014 File": "AG04FRD01P02Q01_opt1.mp3",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "emotional state recognition",
+        "Pattern": "\u2014",
+        "Notes": "Binary yes/no concept check: child recognizes emotional state in image"
+      },
+      {
+        "Playable Code": "AG04FRD01P03",
+        "Playable Name": "Build & Speak S1: The boy is happy",
+        "Layer": "2.5 - Sentence Comprehension",
+        "Template": "T9",
+        "Instruction Text": "Listen and choose",
+        "Instruction VO": "The boy is happy. Who is happy?",
+        "Instruction VO \u2014 File": "AG04FRD01P03Q01_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "The boy is happy",
+        "Audio in Question \u2014 File": "AG04FRD01P03Q01_aud.mp3",
+        "VO for Question": "\u2014",
+        "VO for Question \u2014 File": "\u2014",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "boy",
+        "Correct Answer VO \u2014 File": "AG04FRD01P03Q01_ans.mp3",
+        "Correct Answer \u2014 Image": "boy.png",
+        "Correct Answer \u2014 Image Detail": "a young male child with a happy, smiling expression",
+        "Other Options": "girl, toy",
+        "Other Options VO \u2014 File": "AG04FRD01P03Q01_opt1.mp3, AG04FRD01P03Q01_opt2.mp3",
+        "Other Options \u2014 Image": "girl.png, toy.png",
+        "Other Options \u2014 Image Detail": "a young female child with a happy, smiling expression, a colorful plaything",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "sentence comprehension",
+        "Pattern": "p1",
+        "Notes": "Wh-extraction comprehension gate with image-only choices; no antonyms used"
+      },
+      {
+        "Playable Code": "AG04FRD01P03",
+        "Playable Name": "Build & Speak S1: The boy is happy",
+        "Layer": "3 - Sentence Formation",
+        "Template": "D1",
+        "Instruction Text": "Put the words in order",
+        "Instruction VO": "Can you fix this sentence?",
+        "Instruction VO \u2014 File": "AG04FRD01P03Q02_inst.mp3",
+        "Text in Question": "\u2014",
+        "Audio in Question": "The boy is happy",
+        "Audio in Question \u2014 File": "AG04FRD01P03Q02_aud.mp3",
+        "VO for Question": "\u2014",
+        "VO for Question \u2014 File": "\u2014",
+        "Image in Question \u2014 Detail": "\u2014",
+        "Image in Question \u2014 Name": "\u2014",
+        "Correct Answer": "The boy is happy",
+        "Correct Answer VO \u2014 File": "AG04FRD01P03Q02_ans.mp3",
+        "Correct Answer \u2014 Image": "\u2014",
+        "Correct Answer \u2014 Image Detail": "\u2014",
+        "Other Options": "boy, The, is, happy",
+        "Other Options VO \u2014 File": "AG04FRD01P03Q02_opt1.mp3, AG04FRD01P03Q02_opt2.mp3, AG04FRD01P03Q02_opt3.mp3",
+        "Other Options \u2014 Image": "\u2014",
+        "Other Options \u2014 Image Detail": "\u2014",
+        "STT Expectation": "\u2014",
+        "Concept (bucket / skill)": "sentence syntax",
+        "Pattern": "p1",
+        "Notes": "Drag-and-drop word tiles (tap-to-place for age 4); child arranges into correct order"
+      }
+    ],
+    "images": [],
+    "failed": [
+      "boy.png",
+      "toy.png",
+      "girl.png"
+    ],
+    "wrong_generations": [
+      {
+        "filename": "toy.png",
+        "wrong_image": "wrong_toy.png",
+        "url": "/files/images/wrong_toy.png",
+        "reason": "The eyes are not two simple black circles with a white glimmer. They are dark purple with a white highlight, and the highlight is not a simple circle.",
+        "tag": "wrong_generation"
+      }
+    ],
+    "pending_images": [],
+    "history": [
+      "Blueprint cycle 1: 1. **Target Sentence Length Violation:** Target Sentence S4, 'The boy and girl share a toy.', is 7 words long. This exceeds the explicitly stated 'Max Target Sentence Length: 6 words max (Age 4 constraint)'. This sentence must be rephrased or broken down to adhere to the 6-word maximum. Consider alternatives like 'They share a toy.' (4 words) or 'Boy and girl share.' (4 words) if the object 'toy' can be introduced contextually.\n2. **Incorrect Speaking Urgency Metric:** The 'Speaking Urgency Met' metric states '\u2705 Q14 (T6.2 in P3)'. However, based on the minimum question counts provided for P1 (5), P2 (5), and P3 (6), the earliest occurrence of T6.2 in P3 would be at question 16 (5+5+6). The metric needs to be updated to reflect the correct question number.\n3. **Incorrect Full Guided Speaking Metric:** The 'Full Guided Speaking Met' metric states '\u2705 Q18 (T8 in P5)'. Based on the minimum question counts for P1 (5), P2 (5), P3 (6), P4 (5), and P5 (6), the earliest occurrence of T8 in P5 would be at question 27 (5+5+6+5+6). The metric needs to be updated to reflect the correct question number.",
+      "Matrix cycle 1: Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q4: 'Other Options' has content but 'Other Options VO \u2014 File' is empty \u2014 must provide filename. | Sentence formation starts before any concept-builder (F1/F2/F3). Layer 2 concepts must be checked before Layer 3 sentence building."
+    ],
+    "eval": {
+      "case_id": "auto_Friends_4",
+      "theme": "Friends",
+      "age": 4,
+      "total_score": 94.3,
+      "grade": "A",
+      "dimensions": [
+        {
+          "name": "schema_compliance",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.12,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 rows have all 26 columns"
+        },
+        {
+          "name": "template_validity",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.12,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 templates valid & age-appropriate"
+        },
+        {
+          "name": "pedagogical_order",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.15,
+          "lane": "deterministic",
+          "passed": 6,
+          "total": 6,
+          "issues": [],
+          "detail": "6/6 ordering rules passed"
+        },
+        {
+          "name": "age_appropriateness",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.1,
+          "lane": "deterministic",
+          "passed": 1,
+          "total": 1,
+          "issues": [],
+          "detail": "1/1 sentences within word limit (6)"
+        },
+        {
+          "name": "safety_lexical",
+          "score": 0.8,
+          "max_score": 1.0,
+          "weight": 0.08,
+          "lane": "deterministic",
+          "passed": 4,
+          "total": 5,
+          "issues": [
+            "Row 1: unsafe words ['war']"
+          ],
+          "detail": "4/5 rows pass lexical safety gate"
+        },
+        {
+          "name": "stt_hygiene",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.08,
+          "lane": "deterministic",
+          "passed": 5,
+          "total": 5,
+          "issues": [],
+          "detail": "5/5 STT fields correctly set"
+        },
+        {
+          "name": "image_format",
+          "score": 0.8888888888888888,
+          "max_score": 1.0,
+          "weight": 0.05,
+          "lane": "deterministic",
+          "passed": 8,
+          "total": 9,
+          "issues": [
+            "Row 2 (T1): missing required image"
+          ],
+          "detail": "8/9 image filenames valid"
+        },
+        {
+          "name": "tone_quality",
+          "score": 0.9,
+          "max_score": 1.0,
+          "weight": 0.15,
+          "lane": "llm",
+          "passed": 9,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM tone: 90% \u2014 The Instruction VOs are consistently warm, encouraging, and use child-friendly language, creating an engaging and suppor"
+        },
+        {
+          "name": "content_relevance",
+          "score": 0.8,
+          "max_score": 1.0,
+          "weight": 0.1,
+          "lane": "llm",
+          "passed": 8,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM relevance: 80% \u2014 The lesson introduces a character ('boy') and a positive emotion ('happy'), which are foundational concepts for understa"
+        },
+        {
+          "name": "safety_semantic",
+          "score": 1.0,
+          "max_score": 1.0,
+          "weight": 0.05,
+          "lane": "llm",
+          "passed": 10,
+          "total": 10,
+          "issues": [],
+          "detail": "LLM safety: 100% \u2014 clean"
+        }
+      ],
+      "row_count": 5,
+      "llm_calls": 1,
+      "error": null
+    },
+    "metrics": {
+      "total_latency_ms": 207906,
+      "total_input_tokens": 65784,
+      "total_output_tokens": 12482,
+      "total_cost": 0.300188,
+      "total_llm_calls": 19,
+      "total_image_calls": 9,
+      "retries": {
+        "blueprint": 1,
+        "matrix": 1,
+        "image": 0
+      },
+      "llm_calls": [
+        {
+          "node": "planner",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 8585,
+          "output_tokens": 3577,
+          "latency_ms": 29553,
+          "cost": 0.006618
+        },
+        {
+          "node": "blueprint_evaluator",
+          "role": "judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 3409,
+          "output_tokens": 334,
+          "latency_ms": 18515,
+          "cost": 0.000712
+        },
+        {
+          "node": "planner",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 12587,
+          "output_tokens": 3530,
+          "latency_ms": 25840,
+          "cost": 0.007559
+        },
+        {
+          "node": "blueprint_evaluator",
+          "role": "judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 3363,
+          "output_tokens": 408,
+          "latency_ms": 15623,
+          "cost": 0.000749
+        },
+        {
+          "node": "fabricator",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 15196,
+          "output_tokens": 2161,
+          "latency_ms": 13735,
+          "cost": 0.0065
+        },
+        {
+          "node": "fabricator",
+          "role": "generator",
+          "model": "claude-haiku-4-5-20251001",
+          "input_tokens": 17243,
+          "output_tokens": 2224,
+          "latency_ms": 11082,
+          "cost": 0.007091
+        },
+        {
+          "node": "eval",
+          "role": "eval_judge",
+          "model": "gemini-2.5-flash",
+          "input_tokens": 1111,
+          "output_tokens": 146,
+          "latency_ms": 15060,
+          "cost": 0.000254
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4213,
+          "cost": 0.0
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 5159,
+          "cost": 0.0
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4199,
+          "cost": 0.0
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 8630,
+          "cost": 0.0
+        },
+        {
+          "node": "vision_critic",
+          "role": "vision_judge",
+          "model": "gemini-2.5-flash-lite",
+          "input_tokens": 1430,
+          "output_tokens": 25,
+          "latency_ms": 4619,
+          "cost": 0.00023
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 7249,
+          "cost": 0.0
+        },
+        {
+          "node": "vision_critic",
+          "role": "vision_judge",
+          "model": "gemini-2.5-flash-lite",
+          "input_tokens": 1430,
+          "output_tokens": 31,
+          "latency_ms": 2952,
+          "cost": 0.000233
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 6674,
+          "cost": 0.0
+        },
+        {
+          "node": "vision_critic",
+          "role": "vision_judge",
+          "model": "gemini-2.5-flash-lite",
+          "input_tokens": 1430,
+          "output_tokens": 46,
+          "latency_ms": 2929,
+          "cost": 0.000242
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 5254,
+          "cost": 0.0
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4740,
+          "cost": 0.0
+        },
+        {
+          "node": "image_factory",
+          "role": "image_gen",
+          "model": "imagen-3.0-fast-generate-001",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4936,
+          "cost": 0.0
+        }
+      ],
+      "node_timings": [],
+      "per_node_summary": {
+        "planner": {
+          "calls": 2,
+          "input_tokens": 21172,
+          "output_tokens": 7107,
+          "latency_ms": 55393,
+          "cost": 0.014177,
+          "model": "claude-haiku-4-5-20251001"
+        },
+        "blueprint_evaluator": {
+          "calls": 2,
+          "input_tokens": 6772,
+          "output_tokens": 742,
+          "latency_ms": 34138,
+          "cost": 0.001461,
+          "model": "gemini-2.5-flash"
+        },
+        "fabricator": {
+          "calls": 2,
+          "input_tokens": 32439,
+          "output_tokens": 4385,
+          "latency_ms": 24817,
+          "cost": 0.013591,
+          "model": "claude-haiku-4-5-20251001"
+        },
+        "eval": {
+          "calls": 1,
+          "input_tokens": 1111,
+          "output_tokens": 146,
+          "latency_ms": 15060,
+          "cost": 0.000254,
+          "model": "gemini-2.5-flash"
+        },
+        "image_factory": {
+          "calls": 9,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 51054,
+          "cost": 0.0,
+          "model": "imagen-3.0-fast-generate-001"
+        },
+        "vision_critic": {
+          "calls": 3,
+          "input_tokens": 4290,
+          "output_tokens": 102,
+          "latency_ms": 10500,
+          "cost": 0.000705,
+          "model": "gemini-2.5-flash-lite"
+        }
+      }
+    },
+    "feed": [
+      {
+        "node": "planner",
+        "label": "Planner agent",
+        "action": "Writing the lesson blueprint",
+        "detail": {
+          "preview": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Friends | Age 4 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES\n\n**Max Target Sentence Length:** 6 words max (Age 4 constraint)  \n**Forbidden Structures Check:** \u2705 PASS \u2014 No if-then, no complex clauses. Simple s\u2026",
+          "metrics": {
+            "tokens_in": 8585,
+            "tokens_out": 3577,
+            "cost_usd": 0.006618,
+            "latency_ms": 29553,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "blueprint_evaluator",
+        "label": "Blueprint evaluator",
+        "action": "Auditing tone, safety, pedagogy",
+        "detail": {
+          "decision": "fail",
+          "critique": "1. **Target Sentence Length Violation:** Target Sentence S4, 'The boy and girl share a toy.', is 7 words long. This exceeds the explicitly stated 'Max Target Sentence Length: 6 words max (Age 4 constraint)'. This sentence must be rephrased or broken down to adhere to the 6-word maximum. Consider alternatives like 'They share a toy.' (4 words) or 'Boy and girl share.' (4 words) if the object 'toy' can be introduced contextually.\n2. **Incorrect Speaking Urgency Metric:** The 'Speaking Urgency Met' metric states '\u2705 Q14 (T6.2 in P3)'. However, based on the minimum question counts provided for P1 (5), P2 (5), and P3 (6), the earliest occurrence of T6.2 in P3 would be at question 16 (5+5+6). The metric needs to be updated to reflect the correct question number.\n3. **Incorrect Full Guided Speaking Metric:** The 'Full Guided Speaking Met' metric states '\u2705 Q18 (T8 in P5)'. Based on the minimum question counts for P1 (5), P2 (5), P3 (6), P4 (5), and P5 (6), the earliest occurrence of T8 in P5 would be at question 27 (5+5+6+5+6). The metric needs to be updated to reflect the correct question number.",
+          "metrics": {
+            "tokens_in": 3409,
+            "tokens_out": 334,
+            "cost_usd": 0.000712,
+            "latency_ms": 18515,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "planner",
+        "label": "Planner agent",
+        "action": "Writing the lesson blueprint",
+        "detail": {
+          "preview": "# \ud83d\udcda EXPANDED LESSON BLUEPRINT STAGE: Friends | Age 4 (+30% DENSITY)\n\n---\n\n## \ud83c\udfaf CORE OUTCOMES\n\n**Max Target Sentence Length:** 6 words max (Age 4 constraint)  \n**Forbidden Structures Check:** \u2705 PASS \u2014 No if-then, no complex clauses. Simple s\u2026",
+          "metrics": {
+            "tokens_in": 21172,
+            "tokens_out": 7107,
+            "cost_usd": 0.014177,
+            "latency_ms": 55393,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "blueprint_evaluator",
+        "label": "Blueprint evaluator",
+        "action": "Auditing tone, safety, pedagogy",
+        "detail": {
+          "decision": "proceed_to_questions",
+          "metrics": {
+            "tokens_in": 6772,
+            "tokens_out": 742,
+            "cost_usd": 0.001461,
+            "latency_ms": 34138,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "fabricator",
+        "label": "Fabricator agent",
+        "action": "Building the question matrix",
+        "detail": {
+          "rows": 5,
+          "metrics": {
+            "tokens_in": 15196,
+            "tokens_out": 2161,
+            "cost_usd": 0.0065,
+            "latency_ms": 13735,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "matrix_evaluator",
+        "label": "Matrix evaluator",
+        "action": "Validating structure",
+        "detail": {
+          "decision": "fail",
+          "critique": "Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q4: 'Other Options' has content but 'Other Options VO \u2014 File' is empty \u2014 must provide filename. | Sentence formation starts before any concept-builder (F1/F2/F3). Layer 2 concepts must be checked before Layer 3 sentence building."
+        }
+      },
+      {
+        "node": "fabricator",
+        "label": "Fabricator agent",
+        "action": "Building the question matrix",
+        "detail": {
+          "rows": 5,
+          "metrics": {
+            "tokens_in": 32439,
+            "tokens_out": 4385,
+            "cost_usd": 0.013591,
+            "latency_ms": 24817,
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "node": "matrix_evaluator",
+        "label": "Matrix evaluator",
+        "action": "Validating structure",
+        "detail": {
+          "decision": "trigger_assets"
+        }
+      },
+      {
+        "node": "asset_planner",
+        "label": "Asset planner",
+        "action": "Listing images to generate",
+        "detail": {
+          "completed": []
+        }
+      },
+      {
+        "node": "eval",
+        "label": "Eval scorer",
+        "action": "Scoring output against SpeakX rubric",
+        "detail": {
+          "decision": "grade A \u2014 94.3/100",
+          "metrics": {
+            "tokens_in": 1111,
+            "tokens_out": 146,
+            "cost_usd": 0.000254,
+            "latency_ms": 15060,
+            "model": "gemini-2.5-flash"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 4213,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry"
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 9372,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry"
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 13571,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "advance"
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 22201,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry",
+          "critique": "Face rule for \"toy\": two simple black circle eyes with a white glimmer",
+          "metrics": {
+            "tokens_in": 1430,
+            "tokens_out": 25,
+            "cost_usd": 0.00023,
+            "latency_ms": 4619,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 29450,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry",
+          "critique": "The eyes are not two simple black circles with a white glimmer. They are detailed with pupils and reflections.",
+          "metrics": {
+            "tokens_in": 2860,
+            "tokens_out": 56,
+            "cost_usd": 0.000463,
+            "latency_ms": 7571,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 36124,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "advance",
+          "metrics": {
+            "tokens_in": 4290,
+            "tokens_out": 102,
+            "cost_usd": 0.000705,
+            "latency_ms": 10500,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 41378,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry",
+          "metrics": {
+            "tokens_in": 4290,
+            "tokens_out": 102,
+            "cost_usd": 0.000705,
+            "latency_ms": 10500,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 46118,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "retry",
+          "metrics": {
+            "tokens_in": 4290,
+            "tokens_out": 102,
+            "cost_usd": 0.000705,
+            "latency_ms": 10500,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      },
+      {
+        "node": "image_factory",
+        "label": "Image factory",
+        "action": "Rendering an illustration",
+        "detail": {
+          "critique": "no image returned",
+          "metrics": {
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "cost_usd": 0.0,
+            "latency_ms": 51054,
+            "model": "imagen-3.0-fast-generate-001"
+          }
+        }
+      },
+      {
+        "node": "vision_critic",
+        "label": "Vision critic",
+        "action": "Auditing the image pixels",
+        "detail": {
+          "decision": "advance",
+          "metrics": {
+            "tokens_in": 4290,
+            "tokens_out": 102,
+            "cost_usd": 0.000705,
+            "latency_ms": 10500,
+            "model": "gemini-2.5-flash-lite"
+          }
+        }
+      }
+    ],
+    "play_url": "https://speak.zunolearn.com/?id=ag04_t01_friends_20260611_114521_s3",
+    "s3_uri": "s3://arn:aws:s3:ap-south-1:307506882879:accesspoint/content-pipeline/ag04_t01_friends_20260611_114521_s3.json"
+  },
+  {
     "id": "20260611_081043",
     "timestamp": "2026-06-11T08:10:43.084039+00:00",
     "theme": "My Family",

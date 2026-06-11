@@ -141,9 +141,10 @@ def planner_node(state: dict) -> dict:
     user = (f"Build a lesson blueprint for Theme: {state['theme']}, "
             f"Age: {age}. Obey all rules. "
             f"Output ONLY the lesson blueprint (theme intro, vocabulary, playable steps). "
-            f"Do NOT include any safety checklist, content-warning, or 'words to avoid' "
-            f"list, and never write scary/violent words even as negative examples — keep "
-            f"all language gentle and positive."
+            f"Do NOT include any safety checklist, content-warning, 'words to avoid' list, "
+            f"or any HALT / gate / approval / automation notice — those are not part of the "
+            f"blueprint. Never write scary/violent words even as negative examples; keep all "
+            f"language gentle and positive."
             f"{age_context}{correction}")
     llm = get_generator()
     resp = _tracked_invoke(llm, [("system", CONFIG.prompts.generator_system), ("user", user)],

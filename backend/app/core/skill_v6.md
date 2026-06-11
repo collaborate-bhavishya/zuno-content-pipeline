@@ -142,7 +142,7 @@ Acquire the **Theme** and **Target Age**. Read all workspace reference files seq
 
 ### Step 3: Agent 1 — The Curriculum & Staging Planner (PHASE 1 GATE)
 
-Before generating any individual question rows, playables, or Excel spreadsheet layout logic, the system MUST compute and output a comprehensive, high-level **Expanded Curriculum Blueprint**. The generator must completely HALT execution after outputting this block and wait for system/user confirmation before proceeding to Phase 2 fabrications.
+Before generating any individual question rows, playables, or Excel spreadsheet layout logic, the system MUST compute and output a comprehensive, high-level **Expanded Curriculum Blueprint**. Output ONLY the blueprint block below — do NOT add any halt/gate/approval notices or meta-commentary. The pipeline automatically validates this blueprint before Phase 2.
 
 **Required Step 3 Output Blueprint Schema:**
 
@@ -183,12 +183,11 @@ All context strings must remain positive, safe, encouraging, and emotionally com
 • P5: Build & Speak S2 [Recycled Pattern p1] (T9 ──> D1 ──> T6.1 ──> T6.2 ──> T8) | Target Qs: 6-7
 • P6: Meet [Nouns G & H] (Grounding ──> T7 Multi-Select Category Gate) | Target Qs: 5-6
 ============================================================
-**🚨 AUTOMATION NOTICE: HALT ALL GENERATION CYCLES IMMEDIATELY BEYOND THIS POINT. WAIT FOR GATE APPROVAL.**
 
 ---
 
-### Step 4: Staging Approval Check & Code Injection
-Review blueprint output from Step 3. Ensure vocabulary aligns perfectly with target sentences, no adult-drifting words exist, and sentence patterns match the age profile. Once validated, release the gate.
+### Step 4: Automated Blueprint Validation & Code Injection
+The blueprint evaluator automatically checks that vocabulary aligns with the target sentences, no adult-drifting words exist, and sentence patterns match the age profile. On pass, the pipeline proceeds to Phase 2; on fail it returns a targeted critique for one focused repair. No manual approval step.
 
 ### Step 5: Agent 2 — Vocabulary & Recycled Sentence Generator (+30% Scale)
 Lock down the exact string arrays for the 5-7 Tier 1 nouns, 3-5 Tier 2 descriptors, and 4-6 recycled target sentences.
