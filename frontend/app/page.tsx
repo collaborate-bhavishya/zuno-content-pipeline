@@ -43,6 +43,11 @@ export default function Home() {
         if (e.kind === "node") {
           setItems((prev) => [...prev, eventToItem(e, idRef.current++)]);
           if ((e as any).detail?.quota_wait) setQuotaWait(true);
+        } else if ((e as any).kind === "error") {
+          setItems((prev) => [...prev, {
+            id: idRef.current++, label: "Run stopped",
+            action: (e as any).message || "The run was stopped.", status: "fail" as const,
+          }]);
         } else if (e.kind === "questions_ready") {
           // Questions are finalized — show them for review while images render.
           setImagesPending(true);

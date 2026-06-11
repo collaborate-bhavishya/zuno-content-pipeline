@@ -120,6 +120,22 @@ export default function Admin() {
 
       {/* MODE + LIMITS */}
       <Section title="Run mode & limits" subtitle="Trial mode (default) caps questions and images so test runs stay cheap. Turn it off for a full run where the system decides the count.">
+        {/* Daily hard stop */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: 12, marginBottom: 18,
+          padding: "12px 16px", borderRadius: 10, background: "#fdecea", border: "1px solid #f5c6c0",
+        }}>
+          <span style={{ minWidth: 150, fontSize: 13.5, fontWeight: 600, color: "#a01b15" }}>
+            Max runs per day
+          </span>
+          <input type="number" min={0} value={config.limits.max_runs_per_day ?? 10}
+            onChange={(e) => setLimit("max_runs_per_day", Number(e.target.value))}
+            style={{ ...inp, maxWidth: 100 }} />
+          <span style={{ fontSize: 11.5, color: "#a16207" }}>
+            hard stop — pipeline refuses new runs once this many complete in a (UTC) day
+          </span>
+        </div>
+
         {/* Trial toggle */}
         <div style={{
           display: "flex", alignItems: "center", gap: 14, marginBottom: 18,

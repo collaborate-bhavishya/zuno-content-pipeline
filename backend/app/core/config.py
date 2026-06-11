@@ -432,6 +432,9 @@ class RuntimeConfig:
     trial_max_questions: int = 5
     trial_max_images: int = 3
 
+    # Hard stop: max full pipeline runs allowed per (UTC) day. Editable in admin.
+    max_runs_per_day: int = 10
+
     @property
     def effective_max_questions(self) -> int:
         return min(self.trial_max_questions, self.max_questions) if self.trial_mode else self.max_questions
@@ -456,7 +459,8 @@ class RuntimeConfig:
                        "max_retries": self.max_retries,
                        "trial_mode": 1 if self.trial_mode else 0,
                        "trial_max_questions": self.trial_max_questions,
-                       "trial_max_images": self.trial_max_images},
+                       "trial_max_images": self.trial_max_images,
+                       "max_runs_per_day": self.max_runs_per_day},
         }
 
 

@@ -80,6 +80,12 @@ def _load_runs() -> list:
         return []
 
 
+def _runs_today() -> int:
+    """Count full pipeline runs saved today (UTC). Run ids start with %Y%m%d."""
+    today = datetime.now(timezone.utc).strftime("%Y%m%d")
+    return sum(1 for r in _load_runs() if str(r.get("id", "")).startswith(today))
+
+
 def _slug(s: str) -> str:
     """Filesystem-safe lowercase slug (letters/digits/underscores)."""
     s = re.sub(r"[^a-zA-Z0-9]+", "_", str(s or "")).strip("_").lower()
@@ -311,6 +317,16 @@ def _summarize(node: str, update: dict) -> dict:
 
 
 async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_code: str = "T01"):
+    # Daily hard stop — refuse to run if today's quota is used up.
+    used = _runs_today()
+    if used >= CONFIG.max_runs_per_day:
+        yield _event("start", theme=theme, age=age)
+        yield _event("error",
+                     message=(f"Daily run limit reached ({used}/{CONFIG.max_runs_per_day}). "
+                              f"Try again tomorrow, or raise 'max runs per day' in the admin panel."),
+                     detail="daily_limit")
+        return
+
     mc = init_collector()
     graph = build_graph()
     inputs = {"theme": theme, "target_age": age,
@@ -786,10 +802,14 @@ async def get_config(x_admin_password: Optional[str] = Header(None)):
 @app.get("/api/run-mode")
 async def get_run_mode():
     """Public (no-auth) trial-mode status, so the UI can warn before a run."""
+    used = _runs_today()
     return {
         "trial_mode": bool(CONFIG.trial_mode),
         "max_questions": CONFIG.effective_max_questions,
         "max_images": CONFIG.effective_max_images,
+        "runs_today": used,
+        "max_runs_per_day": CONFIG.max_runs_per_day,
+        "daily_limit_reached": used >= CONFIG.max_runs_per_day,
     }
 
 
