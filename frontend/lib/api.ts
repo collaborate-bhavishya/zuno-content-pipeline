@@ -40,6 +40,7 @@ export type FeedEvent =
       eval?: EvalResult;
       metrics?: RunMetrics;
       pending_images?: any[];
+      wrong_generations?: WrongGeneration[];
       play_url?: string;
       s3_uri?: string;
     };
@@ -167,9 +168,32 @@ export interface RunRecord {
   eval?: EvalResult;
   metrics?: RunMetrics;
   pending_images?: any[];
+  wrong_generations?: WrongGeneration[];
   feed?: { node: string; label: string; action: string; detail: any }[];
   play_url?: string;
   s3_uri?: string;
+}
+
+export interface WrongGeneration {
+  filename: string;
+  wrong_image: string;
+  url: string;
+  reason: string;
+  tag: string;
+}
+
+export async function reviewImage(
+  runId: string,
+  filename: string,
+  action: "use" | "reject"
+): Promise<{ images: any[]; wrong_generations: WrongGeneration[] }> {
+  const res = await fetch(`${API_BASE}/api/image-review/${runId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ filename, action }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
 }
 
 export async function retryImages(

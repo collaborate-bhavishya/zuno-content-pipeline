@@ -13,6 +13,7 @@ export default function OutputPanel({
   onFeedback,
   onRerun,
   onRetryImages,
+  onImageReview,
   busy,
 }: {
   data: Complete;
@@ -20,6 +21,7 @@ export default function OutputPanel({
   onFeedback: (text: string, phase?: RerunPhase) => void;
   onRerun: (phase: RerunPhase) => void;
   onRetryImages?: () => void;
+  onImageReview?: (filename: string, action: "use" | "reject") => void;
   busy: boolean;
 }) {
   const [tab, setTab] = useState<"blueprint" | "questions" | "images" | "eval" | "logs">("blueprint");
@@ -34,7 +36,11 @@ export default function OutputPanel({
   const tabs: [typeof tab, string, string][] = [
     ["blueprint", "Blueprint", ""],
     ["questions", "Questions", data.matrix?.length ? `${data.matrix.length}` : ""],
-    ["images", "Images", data.images?.length ? `${data.images.length}` : ""],
+    ["images", "Images", (() => {
+      const imgs = data.images?.length || 0;
+      const review = (data as any).wrong_generations?.length || 0;
+      return review ? `${imgs} · ${review} to review` : (imgs ? `${imgs}` : "");
+    })()],
     ["eval", "Eval", evalData?.grade || ""],
     ["logs", "Logs", data.history?.length ? `${data.history.length}` : ""],
   ];
@@ -178,6 +184,53 @@ export default function OutputPanel({
                     Retry now
                   </button>
                 )}
+              </div>
+            )}
+
+            {/* Rejected images — manual review (Use now / Reject) */}
+            {(data as any).wrong_generations?.length > 0 && (
+              <div style={{ marginBottom: 18 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#854d0e", marginBottom: 4 }}>
+                  Needs review — {(data as any).wrong_generations.length} image
+                  {(data as any).wrong_generations.length > 1 ? "s" : ""} rejected by the vision critic
+                </div>
+                <div style={{ fontSize: 12, color: "var(--ink-faint)", marginBottom: 10 }}>
+                  The critic flagged these, but you can keep them. Review and choose <strong>Use now</strong> or <strong>Reject</strong>.
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 14 }}>
+                  {(data as any).wrong_generations.map((w: any) => (
+                    <div key={w.filename} className="card" style={{ padding: 10, border: "1px solid #fde68a" }}>
+                      <div style={{ background: "#fff", borderRadius: 8, aspectRatio: "1",
+                        display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={imageUrl(w.url)} alt={w.filename} style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                      </div>
+                      <div style={{ fontSize: 12, marginTop: 7, fontWeight: 600, color: "var(--ink-soft)" }}>{w.filename}</div>
+                      {w.reason && (
+                        <div style={{ fontSize: 11, color: "var(--ink-faint)", marginTop: 3,
+                          maxHeight: 48, overflow: "hidden" }}>{w.reason}</div>
+                      )}
+                      <div style={{ display: "flex", gap: 6, marginTop: 9 }}>
+                        <button
+                          onClick={() => onImageReview?.(w.filename, "use")}
+                          disabled={busy || !onImageReview}
+                          style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600, cursor: "pointer",
+                            borderRadius: 7, border: "1px solid var(--green)", background: "var(--green-soft)", color: "var(--green)" }}
+                        >
+                          Use now
+                        </button>
+                        <button
+                          onClick={() => onImageReview?.(w.filename, "reject")}
+                          disabled={busy || !onImageReview}
+                          style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600, cursor: "pointer",
+                            borderRadius: 7, border: "1px solid var(--accent)", background: "var(--accent-soft)", color: "var(--accent)" }}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

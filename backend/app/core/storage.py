@@ -46,6 +46,16 @@ class LocalStorage(Storage):
     def list_images(self) -> set:
         return set(os.listdir(self.img_dir)) if os.path.isdir(self.img_dir) else set()
 
+    def copy_image(self, src: str, dst: str) -> str:
+        import shutil
+        shutil.copy(os.path.join(self.img_dir, src), os.path.join(self.img_dir, dst))
+        return f"{self.public_base}/images/{dst}"
+
+    def delete_image(self, filename: str):
+        p = os.path.join(self.img_dir, filename)
+        if os.path.exists(p):
+            os.remove(p)
+
 
 class GCSStorage(Storage):
     """
@@ -78,6 +88,14 @@ class GCSStorage(Storage):
     def list_images(self) -> set:
         return {b.name.replace(self.prefix, "")
                 for b in self.bucket.list_blobs(prefix=self.prefix)}
+
+    def copy_image(self, src: str, dst: str) -> str:
+        src_blob = self.bucket.blob(self.prefix + src)
+        self.bucket.copy_blob(src_blob, self.bucket, self.prefix + dst)
+        return self.bucket.blob(self.prefix + dst).public_url
+
+    def delete_image(self, filename: str):
+        self.bucket.blob(self.prefix + filename).delete()
 
 
 class S3Storage(Storage):
@@ -148,6 +166,17 @@ class S3Storage(Storage):
         except Exception:
             pass
         return out
+
+    def copy_image(self, src: str, dst: str) -> str:
+        self.s3.copy_object(
+            Bucket=self.bucket,
+            CopySource={"Bucket": self.bucket, "Key": self._key(src)},
+            Key=self._key(dst),
+            ContentType="image/png", MetadataDirective="REPLACE")
+        return f"{self.public_base}/{dst}"
+
+    def delete_image(self, filename: str):
+        self.s3.delete_object(Bucket=self.bucket, Key=self._key(filename))
 
 
 def get_storage() -> Storage:

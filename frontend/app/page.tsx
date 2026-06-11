@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { streamPost, FeedEvent, fetchRuns, RunRecord, retryImages, fetchRunMode, RunMode } from "../lib/api";
+import { streamPost, FeedEvent, fetchRuns, RunRecord, retryImages, fetchRunMode, RunMode, reviewImage } from "../lib/api";
 import ProcessFeed, { FeedItem, eventToItem } from "../components/ProcessFeed";
 import OutputPanel from "../components/OutputPanel";
 
@@ -99,6 +99,7 @@ export default function Home() {
       eval: run.eval,
       metrics: run.metrics,
       pending_images: (run as any).pending_images,
+      wrong_generations: (run as any).wrong_generations,
       play_url: (run as any).play_url,
       s3_uri: (run as any).s3_uri,
     } as any);
@@ -151,6 +152,21 @@ export default function Home() {
   const sendFeedback = (text: string, phase: string = "all") =>
     run("/api/feedback", { action: "feedback", theme, age, feedback: text, phase, run_id: currentRunId,
       milestone_code: milestoneCode, theme_code: themeCode });
+
+  const handleImageReview = async (filename: string, action: "use" | "reject") => {
+    if (!currentRunId) return;
+    try {
+      const res = await reviewImage(currentRunId, filename, action);
+      setResult((prev) => prev
+        ? ({ ...prev, images: res.images, wrong_generations: res.wrong_generations } as any)
+        : prev);
+    } catch (err) {
+      setItems((prev) => [
+        ...prev,
+        { id: idRef.current++, label: "Image review failed", action: String(err), status: "fail" as const },
+      ]);
+    }
+  };
 
   const handleRetryImages = async () => {
     if (!currentRunId) return;
@@ -275,6 +291,7 @@ export default function Home() {
                 onFeedback={sendFeedback}
                 onRerun={rerun}
                 onRetryImages={handleRetryImages}
+                onImageReview={handleImageReview}
               />
             </section>
           )}

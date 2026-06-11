@@ -721,6 +721,55 @@ def _save_runs(runs: list):
         json.dump(runs, f, indent=2, default=str)
 
 
+class ImageReviewRequest(BaseModel):
+    filename: str
+    action: str   # "use" | "reject"
+
+
+@app.post("/api/image-review/{run_id}")
+async def image_review(run_id: str, body: ImageReviewRequest):
+    """Manually resolve a vision-critic-rejected image: 'use' promotes it to the
+    real asset (Supabase status -> 1), 'reject' discards it."""
+    from app.core.storage import STORAGE
+    from app.core.db import mark_generated
+    runs = _load_runs()
+    run = next((r for r in runs if r["id"] == run_id), None)
+    if not run:
+        raise HTTPException(status_code=404, detail="Run not found")
+    wrong = run.get("wrong_generations", [])
+    entry = next((w for w in wrong if w.get("filename") == body.filename), None)
+    if not entry:
+        raise HTTPException(status_code=404, detail="No image pending review with that filename")
+    wrong_name = entry.get("wrong_image") or f"wrong_{body.filename}"
+
+    if body.action == "use":
+        url = entry.get("url", "")
+        try:
+            url = STORAGE.copy_image(wrong_name, body.filename)   # promote to real filename
+        except Exception as e:
+            log.warning("image-review copy failed (%s); falling back to stored url", e)
+        try:
+            mark_generated(body.filename, image_url=url)          # Supabase status -> 1
+        except Exception as e:
+            log.warning("image-review mark_generated failed: %s", e)
+        obj = body.filename[:-4].replace("_", " ") if body.filename.endswith(".png") else body.filename
+        run["images"] = run.get("images", []) + [
+            {"filename": body.filename, "url": url, "object_name": obj}]
+        run["wrong_generations"] = [w for w in wrong if w.get("filename") != body.filename]
+    elif body.action == "reject":
+        run["wrong_generations"] = [w for w in wrong if w.get("filename") != body.filename]
+        try:
+            STORAGE.delete_image(wrong_name)
+        except Exception:
+            pass
+    else:
+        raise HTTPException(status_code=400, detail="action must be 'use' or 'reject'")
+
+    _save_runs(runs)
+    return {"images": run.get("images", []),
+            "wrong_generations": run.get("wrong_generations", [])}
+
+
 # ===================== ADMIN =====================
 
 def _check_admin(pw: Optional[str]):
