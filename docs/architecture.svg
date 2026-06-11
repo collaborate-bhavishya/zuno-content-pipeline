@@ -1,0 +1,320 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1580" viewBox="0 0 1520 1580" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d97706"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#137333"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c5221f"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0b1f3a" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .t-title  { fill:#fff; font-size:27px; font-weight:700; }
+      .t-sub    { fill:#9fb3c8; font-size:14.5px; font-weight:500; }
+      .band-h   { font-size:13px; font-weight:700; letter-spacing:.08em; }
+      .node-h   { font-size:16px; font-weight:700; }
+      .node-d   { font-size:12.5px; fill:#475569; }
+      .chip     { font-size:12px; fill:#334155; }
+      .phase    { font-size:13px; font-weight:800; letter-spacing:.1em; }
+      .lbl      { font-size:11.5px; font-weight:600; }
+      .rail-h   { font-size:14px; font-weight:700; }
+      .rail-d   { font-size:12px; fill:#475569; }
+      .model    { font-size:12px; font-weight:600; }
+      .small    { font-size:11px; fill:#64748b; }
+    </style>
+  </defs>
+
+  <rect width="1520" height="1580" fill="#f6f8fb"/>
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1520" height="74" fill="#0b1f3a"/>
+  <text x="40" y="34" class="t-title">Zuno SpeakX — Multi-Agent Lesson Generation Pipeline</text>
+  <text x="40" y="58" class="t-sub">Self-healing LangGraph agent system · generator → evaluator → router loops · two-lane evaluation · vision-audited image synthesis</text>
+  <text x="1480" y="44" text-anchor="end" class="t-sub">Google Agents Challenge · Track 2 (Optimize)</text>
+
+  <!-- ============ MAIN COLUMN ============ -->
+
+  <!-- CLIENT -->
+  <rect x="40" y="96" width="1040" height="104" rx="12" fill="#ffffff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="60" y="122" class="band-h" fill="#0b1f3a">PRESENTATION LAYER — Next.js / React</text>
+  <rect x="60" y="134" width="300" height="50" rx="8" fill="#f1f5fb" stroke="#dbe3ee"/>
+  <text x="76" y="155" class="chip" font-weight="700">Input</text>
+  <text x="76" y="173" class="small">theme · age · milestone &amp; theme codes</text>
+  <rect x="378" y="134" width="300" height="50" rx="8" fill="#f1f5fb" stroke="#dbe3ee"/>
+  <text x="394" y="155" class="chip" font-weight="700">Live Process Feed</text>
+  <text x="394" y="173" class="small">streaming node-by-node trace (SSE)</text>
+  <rect x="696" y="134" width="364" height="50" rx="8" fill="#f1f5fb" stroke="#dbe3ee"/>
+  <text x="712" y="155" class="chip" font-weight="700">Output Panel</text>
+  <text x="712" y="173" class="small">26-col matrix · images · eval grade · cost/latency</text>
+
+  <line x1="560" y1="200" x2="560" y2="244" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="572" y="226" class="lbl" fill="#334155">POST /api/generate — Server-Sent Events</text>
+
+  <!-- ORCHESTRATION -->
+  <rect x="40" y="246" width="1040" height="92" rx="12" fill="#ffffff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="60" y="272" class="band-h" fill="#0b1f3a">ORCHESTRATION — FastAPI</text>
+  <rect x="60" y="284" width="300" height="40" rx="8" fill="#eef2f9" stroke="#dbe3ee"/>
+  <text x="76" y="309" class="chip">LangGraph runtime · recursion_limit=100</text>
+  <rect x="378" y="284" width="300" height="40" rx="8" fill="#eef2f9" stroke="#dbe3ee"/>
+  <text x="394" y="309" class="chip">SSE event streaming · partial-run recovery</text>
+  <rect x="696" y="284" width="364" height="40" rx="8" fill="#eef2f9" stroke="#dbe3ee"/>
+  <text x="712" y="309" class="chip">MetricsCollector · admin-editable prompts/models</text>
+
+  <line x1="560" y1="338" x2="560" y2="372" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ============ AGENTIC CORE ============ -->
+  <rect x="30" y="372" width="1060" height="1018" rx="16" fill="#ffffff" stroke="#9aa7b8" stroke-width="1.5"/>
+  <rect x="30" y="372" width="1060" height="34" rx="16" fill="#0b1f3a"/>
+  <rect x="30" y="389" width="1060" height="17" fill="#0b1f3a"/>
+  <text x="48" y="394" class="band-h" fill="#fff">AGENTIC CORE — LangGraph StateGraph &#160;·&#160; generator → evaluator → router, with self-healing retry loops</text>
+
+  <!-- PHASE 1 -->
+  <text x="60" y="436" class="phase" fill="#1a73e8">PHASE 1 · BLUEPRINT</text>
+
+  <!-- Planner (generator) -->
+  <rect x="64" y="448" width="300" height="86" rx="10" fill="#e8f0fe" stroke="#1a73e8" filter="url(#shadow)"/>
+  <text x="80" y="476" class="node-h" fill="#174ea6">① Planner Agent</text>
+  <text x="80" y="497" class="node-d">writes the pedagogical lesson blueprint</text>
+  <rect x="80" y="505" width="168" height="20" rx="10" fill="#1a73e8"/>
+  <text x="92" y="519" class="model" fill="#fff">GENERATOR · Claude Haiku 4.5</text>
+
+  <!-- Blueprint gate -->
+  <rect x="404" y="436" width="436" height="110" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="420" y="460" class="node-h" fill="#0b1f3a">② Blueprint Evaluator</text>
+  <rect x="420" y="470" width="404" height="30" rx="7" fill="#e6f4ea" stroke="#137333"/>
+  <text x="432" y="490" class="chip" fill="#0d652d">DETERMINISTIC · validate_blueprint — structure, age template-gates</text>
+  <rect x="420" y="504" width="404" height="30" rx="7" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="432" y="524" class="chip" fill="#8a5a00">LLM JUDGE · tone · pedagogy ladder · safety  (Gemini 2.5 Flash)</text>
+
+  <!-- Router 1 -->
+  <polygon points="942,448 1008,491 942,534 876,491" fill="#f3e8fd" stroke="#8430ce" filter="url(#shadow)"/>
+  <text x="942" y="487" text-anchor="middle" class="lbl" fill="#6b21a8">route_</text>
+  <text x="942" y="502" text-anchor="middle" class="lbl" fill="#6b21a8">blueprint</text>
+
+  <line x1="364" y1="491" x2="400" y2="491" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="840" y1="491" x2="872" y2="491" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- loop back P1 -->
+  <path d="M942,448 C942,410 214,410 214,446" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowAmber)"/>
+  <text x="470" y="404" class="lbl" fill="#b45309">↻ regenerate — inject critique into error_log → next prompt</text>
+
+  <!-- proceed P1 -->
+  <line x1="942" y1="534" x2="942" y2="612" stroke="#137333" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="954" y="576" class="lbl" fill="#0d652d">proceed_to_questions</text>
+
+  <!-- PHASE 2 -->
+  <text x="60" y="612" class="phase" fill="#1a73e8">PHASE 2 · QUESTION MATRIX (26-column)</text>
+
+  <rect x="64" y="626" width="300" height="86" rx="10" fill="#e8f0fe" stroke="#1a73e8" filter="url(#shadow)"/>
+  <text x="80" y="654" class="node-h" fill="#174ea6">③ Fabricator Agent</text>
+  <text x="80" y="675" class="node-d">blueprint → structured 26-col JSON matrix</text>
+  <rect x="80" y="683" width="168" height="20" rx="10" fill="#1a73e8"/>
+  <text x="92" y="697" class="model" fill="#fff">GENERATOR · Claude Haiku 4.5</text>
+
+  <rect x="404" y="606" width="436" height="156" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="420" y="630" class="node-h" fill="#0b1f3a">④ Matrix Evaluator</text>
+  <rect x="420" y="640" width="404" height="26" rx="7" fill="#e6f4ea" stroke="#137333"/>
+  <text x="432" y="658" class="chip" fill="#0d652d">DET · schema &amp; 26-column completeness</text>
+  <rect x="420" y="670" width="404" height="26" rx="7" fill="#e6f4ea" stroke="#137333"/>
+  <text x="432" y="688" class="chip" fill="#0d652d">DET · TEMPLATE_COLUMN_RULES (per-template Yes/No)</text>
+  <rect x="420" y="700" width="404" height="26" rx="7" fill="#e6f4ea" stroke="#137333"/>
+  <text x="432" y="718" class="chip" fill="#0d652d">DET · child-safety whole-word scan · pedagogy ladder · STT</text>
+  <rect x="420" y="730" width="404" height="26" rx="7" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="432" y="748" class="chip" fill="#8a5a00">LLM JUDGE · relevance · tone  (Gemini 2.5 Flash)</text>
+
+  <polygon points="942,626 1008,669 942,712 876,669" fill="#f3e8fd" stroke="#8430ce" filter="url(#shadow)"/>
+  <text x="942" y="665" text-anchor="middle" class="lbl" fill="#6b21a8">route_</text>
+  <text x="942" y="680" text-anchor="middle" class="lbl" fill="#6b21a8">matrix</text>
+
+  <line x1="364" y1="669" x2="400" y2="669" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="840" y1="669" x2="872" y2="669" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <path d="M942,626 C942,590 214,590 214,624" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowAmber)"/>
+  <text x="470" y="584" class="lbl" fill="#b45309">↻ regenerate — inject critique → next prompt</text>
+
+  <line x1="942" y1="712" x2="942" y2="792" stroke="#137333" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="954" y="756" class="lbl" fill="#0d652d">trigger_assets</text>
+
+  <!-- PHASE 3 -->
+  <text x="60" y="792" class="phase" fill="#c2185b">PHASE 3 · IMAGE ASSETS</text>
+
+  <!-- Asset planner -->
+  <rect x="64" y="806" width="300" height="80" rx="10" fill="#fff3f8" stroke="#c2185b" filter="url(#shadow)"/>
+  <text x="80" y="833" class="node-h" fill="#a01050">⑤ Asset Planner</text>
+  <text x="80" y="854" class="node-d">extract image needs · build render queue</text>
+  <text x="80" y="873" class="small">de-duplicates against the asset DB</text>
+
+  <!-- Supabase cylinder -->
+  <g filter="url(#shadow)">
+    <path d="M84,930 a96,14 0 0 1 192,0 v74 a96,14 0 0 1 -192,0 Z" fill="#eef2f9" stroke="#546e7a"/>
+    <ellipse cx="180" cy="930" rx="96" ry="14" fill="#e1e8f2" stroke="#546e7a"/>
+  </g>
+  <text x="180" y="960" text-anchor="middle" class="node-h" fill="#37474f" font-size="14px">Supabase · Postgres</text>
+  <text x="180" y="980" text-anchor="middle" class="small">image_assets (name, detail, status)</text>
+  <text x="180" y="997" text-anchor="middle" class="small">skip status=1 · enqueue new</text>
+  <path d="M214,886 L200,924" fill="none" stroke="#546e7a" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <path d="M232,924 L246,890" fill="none" stroke="#546e7a" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+
+  <!-- Eval scorer two-lane -->
+  <rect x="404" y="806" width="616" height="158" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="420" y="830" class="node-h" fill="#0b1f3a">⑥ Eval Scorer — Two-Lane Quality Gate</text>
+  <text x="420" y="848" class="small">scores the finished matrix before any image quota is spent</text>
+  <rect x="420" y="856" width="290" height="98" rx="8" fill="#e6f4ea" stroke="#137333"/>
+  <text x="434" y="876" class="chip" font-weight="700" fill="#0d652d">LANE 1 · Deterministic  (70%)</text>
+  <text x="434" y="895" class="small">schema .12 · template .12 · pedagogy .15</text>
+  <text x="434" y="912" class="small">age .10 · safety .08 · STT .08 · image .05</text>
+  <text x="434" y="936" class="small" font-style="italic">pure Python · zero cost · instant</text>
+  <rect x="718" y="856" width="288" height="98" rx="8" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="732" y="876" class="chip" font-weight="700" fill="#8a5a00">LANE 2 · LLM-as-Judge  (30%)</text>
+  <text x="732" y="895" class="small">tone .15 · relevance .10 · semantic-safety .05</text>
+  <text x="732" y="912" class="small">one consolidated call · Gemini 2.5 Flash</text>
+  <text x="732" y="936" class="small" font-style="italic">→ blended Grade A–F · score / 100</text>
+
+  <line x1="364" y1="846" x2="400" y2="846" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="368" y="838" class="small">asset_planner → eval</text>
+
+  <!-- eval down to image factory -->
+  <line x1="214" y1="1004" x2="214" y2="1036" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M712,964 C712,995 230,995 230,1034" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430" y="1024" class="small">eval → image_factory (proceed if grade passes)</text>
+
+  <!-- Image factory -->
+  <rect x="64" y="1038" width="290" height="88" rx="10" fill="#fde7f3" stroke="#c2185b" filter="url(#shadow)"/>
+  <text x="80" y="1066" class="node-h" fill="#a01050">⑦ Image Factory</text>
+  <text x="80" y="1087" class="node-d">renders one asset per iteration</text>
+  <rect x="80" y="1096" width="150" height="20" rx="10" fill="#c2185b"/>
+  <text x="92" y="1110" class="model" fill="#fff">IMAGE GEN · Imagen 3.0</text>
+
+  <!-- Vision critic -->
+  <rect x="394" y="1038" width="310" height="88" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="410" y="1066" class="node-h" fill="#0b1f3a">⑧ Vision Critic</text>
+  <text x="410" y="1086" class="node-d">multimodal pixel audit — white bg,</text>
+  <text x="410" y="1102" class="node-d">no outlines, face-rule, single object</text>
+  <rect x="410" y="1108" width="232" height="14" rx="7" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="418" y="1119" class="small" fill="#8a5a00">LLM JUDGE (vision) · Gemini 2.5 Flash</text>
+
+  <!-- Router 3 -->
+  <polygon points="800,1038 866,1082 800,1126 734,1082" fill="#f3e8fd" stroke="#8430ce" filter="url(#shadow)"/>
+  <text x="800" y="1078" text-anchor="middle" class="lbl" fill="#6b21a8">route_</text>
+  <text x="800" y="1093" text-anchor="middle" class="lbl" fill="#6b21a8">image</text>
+
+  <line x1="354" y1="1082" x2="390" y2="1082" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="704" y1="1082" x2="730" y2="1082" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- retry loop (critic fail) -->
+  <path d="M734,1082 C690,1082 660,1150 480,1150 C360,1150 240,1150 209,1130" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowAmber)"/>
+  <text x="372" y="1168" class="lbl" fill="#b45309">↻ retry — inject visual critique  ·  next — advance to next asset</text>
+
+  <!-- all_done to storage -->
+  <line x1="866" y1="1082" x2="906" y2="1082" stroke="#137333" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="876" y="1074" class="small" fill="#0d652d">all_done</text>
+
+  <!-- Storage -->
+  <rect x="906" y="1044" width="160" height="78" rx="10" fill="#eef2f9" stroke="#546e7a" filter="url(#shadow)"/>
+  <text x="922" y="1070" class="node-h" fill="#37474f" font-size="14px">⑨ Storage</text>
+  <text x="922" y="1089" class="small">local / GCS</text>
+  <text x="922" y="1106" class="small">+ mark status=1</text>
+
+  <!-- guardrail note -->
+  <rect x="64" y="1144" width="640" height="0" />
+  <rect x="394" y="1140" width="310" height="34" rx="7" fill="#fdecea" stroke="#c5221f"/>
+  <text x="408" y="1162" class="small" fill="#a01b15">guardrails: hard cutoff 50 iters · 429 quota → pending queue</text>
+
+  <!-- OUTPUT note inside core bottom -->
+  <line x1="986" y1="1122" x2="986" y2="1330" stroke="#137333" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <rect x="404" y="1300" width="616" height="64" rx="10" fill="#eafaf0" stroke="#137333"/>
+  <text x="420" y="1326" class="node-h" fill="#0d652d" font-size="15px">Consolidated Lesson</text>
+  <text x="420" y="1346" class="small">26-col matrix + approved images + eval grade + per-node metrics → streamed back to UI</text>
+
+  <!-- ============ RIGHT RAIL ============ -->
+  <text x="1110" y="436" class="band-h" fill="#0b1f3a">CROSS-CUTTING CONCERNS</text>
+
+  <rect x="1110" y="448" width="372" height="118" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="1128" y="474" class="rail-h" fill="#b45309">↻ Self-Healing Loop</text>
+  <text x="1128" y="497" class="rail-d">Every evaluator emits a structured critique.</text>
+  <text x="1128" y="515" class="rail-d">It is written to error_log and injected into</text>
+  <text x="1128" y="533" class="rail-d">the next generator prompt — the agent</text>
+  <text x="1128" y="551" class="rail-d">regenerates until it passes or hits max_retries.</text>
+
+  <rect x="1110" y="578" width="372" height="138" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="1128" y="604" class="rail-h" fill="#c5221f">⛨ Guardrails</text>
+  <text x="1128" y="627" class="rail-d">· max_retries per phase (hard-fail → END)</text>
+  <text x="1128" y="645" class="rail-d">· recursion_limit = 100 (graph-level ceiling)</text>
+  <text x="1128" y="663" class="rail-d">· image loop hard cutoff = 50 iterations</text>
+  <text x="1128" y="681" class="rail-d">· 429 quota → pending-asset queue + resume</text>
+  <text x="1128" y="699" class="rail-d">· exceptions → clean error event, partial save</text>
+
+  <rect x="1110" y="728" width="372" height="128" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="1128" y="754" class="rail-h" fill="#174ea6">▣ Prompt &amp; Knowledge</text>
+  <text x="1128" y="777" class="rail-d">· skill_v6.md — SpeakX pedagogical framework</text>
+  <text x="1128" y="795" class="rail-d">· TEMPLATE_COLUMN_RULES (per-template schema)</text>
+  <text x="1128" y="813" class="rail-d">· age_guidelines (vocab, templates, gates)</text>
+  <text x="1128" y="831" class="rail-d">· editable live from the admin panel</text>
+
+  <rect x="1110" y="868" width="372" height="110" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="1128" y="894" class="rail-h" fill="#0d652d">◴ Observability</text>
+  <text x="1128" y="917" class="rail-d">MetricsCollector instruments every LLM call:</text>
+  <text x="1128" y="935" class="rail-d">tokens · cost · latency · retries, per node.</text>
+  <text x="1128" y="953" class="rail-d">Surfaced live in the process feed &amp; output.</text>
+
+  <!-- Node type legend -->
+  <rect x="1110" y="990" width="372" height="186" rx="10" fill="#fff" stroke="#cdd7e3" filter="url(#shadow)"/>
+  <text x="1128" y="1016" class="rail-h" fill="#0b1f3a">Legend — Node Types</text>
+  <rect x="1128" y="1030" width="20" height="14" rx="3" fill="#e8f0fe" stroke="#1a73e8"/>
+  <text x="1158" y="1042" class="rail-d">Generator agent (Claude Haiku 4.5)</text>
+  <rect x="1128" y="1052" width="20" height="14" rx="3" fill="#e6f4ea" stroke="#137333"/>
+  <text x="1158" y="1064" class="rail-d">Deterministic validator (Python)</text>
+  <rect x="1128" y="1074" width="20" height="14" rx="3" fill="#fef7e0" stroke="#f9ab00"/>
+  <text x="1158" y="1086" class="rail-d">LLM-as-Judge (Gemini 2.5 Flash)</text>
+  <rect x="1128" y="1096" width="20" height="14" rx="3" fill="#fde7f3" stroke="#c2185b"/>
+  <text x="1158" y="1108" class="rail-d">Image generation (Imagen 3.0)</text>
+  <polygon points="1138,1118 1150,1126 1138,1134 1126,1126" fill="#f3e8fd" stroke="#8430ce"/>
+  <text x="1158" y="1130" class="rail-d">Conditional router (decision)</text>
+  <rect x="1128" y="1140" width="20" height="14" rx="3" fill="#eef2f9" stroke="#546e7a"/>
+  <text x="1158" y="1152" class="rail-d">Data store / object storage</text>
+
+  <!-- ============ MODELS & SERVICES STRIP ============ -->
+  <text x="40" y="1424" class="band-h" fill="#0b1f3a">MODELS &amp; EXTERNAL SERVICES</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="1436" width="280" height="92" rx="10" fill="#e8f0fe" stroke="#1a73e8"/>
+    <text x="58" y="1462" class="model" fill="#174ea6" font-size="14px">Anthropic Claude API</text>
+    <text x="58" y="1483" class="small">Haiku 4.5 — content generation</text>
+    <text x="58" y="1502" class="small">Planner + Fabricator agents</text>
+    <text x="58" y="1519" class="small">via langchain-anthropic</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="332" y="1436" width="280" height="92" rx="10" fill="#fef7e0" stroke="#f9ab00"/>
+    <text x="350" y="1462" class="model" fill="#8a5a00" font-size="14px">Google Gemini API</text>
+    <text x="350" y="1483" class="small">2.5 Flash — judging + vision</text>
+    <text x="350" y="1502" class="small">Blueprint / Matrix judge</text>
+    <text x="350" y="1519" class="small">+ multimodal Vision Critic</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="624" y="1436" width="280" height="92" rx="10" fill="#fde7f3" stroke="#c2185b"/>
+    <text x="642" y="1462" class="model" fill="#a01050" font-size="14px">Google Imagen 3.0</text>
+    <text x="642" y="1483" class="small">text → image synthesis</text>
+    <text x="642" y="1502" class="small">flat-vector preschool art</text>
+    <text x="642" y="1519" class="small">via google-genai SDK</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="916" y="1436" width="270" height="92" rx="10" fill="#eef2f9" stroke="#546e7a"/>
+    <text x="934" y="1462" class="model" fill="#37474f" font-size="14px">Supabase Postgres</text>
+    <text x="934" y="1483" class="small">image_assets dedup table</text>
+    <text x="934" y="1502" class="small">status 0/1 generation ledger</text>
+    <text x="934" y="1519" class="small">skip already-rendered images</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1198" y="1436" width="284" height="92" rx="10" fill="#eef2f9" stroke="#546e7a"/>
+    <text x="1216" y="1462" class="model" fill="#37474f" font-size="14px">Object Storage</text>
+    <text x="1216" y="1483" class="small">local filesystem / Google GCS</text>
+    <text x="1216" y="1502" class="small">approved PNG assets</text>
+    <text x="1216" y="1519" class="small">served to the frontend</text>
+  </g>
+</svg>

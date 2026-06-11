@@ -1,0 +1,733 @@
+{
+  "id": "20260611_081043",
+  "timestamp": "2026-06-11T08:10:43.084039+00:00",
+  "theme": "My Family",
+  "age": 4,
+  "milestone_code": "AG04",
+  "theme_code": "T01",
+  "blueprint": "# 📚 EXPANDED LESSON BLUEPRINT STAGE: My Family | Age 4 (+30% DENSITY)\n\n---\n\n## 🎯 CORE OUTCOMES:\n• **Max Target Sentence Length:** 6 words max (Age 4 constraint)\n• **Forbidden Structures Check:** ✅ PASS — No if-then, no complex clauses. Simple subject-verb-object + descriptor patterns only.\n\n---\n\n## 🚨 ABSOLUTE CONTENT SAFETY PROTOCOL (NON-NEGOTIABLE):\nAll vocabulary, concepts, and sentences are **positive, warm, and emotionally safe** for young learners. No scary, mean, or aggressive language. Focus: love, togetherness, everyday family moments, celebration of differences.\n\n---\n\n## 🔤 JUST-IN-TIME VOCABULARY MANIFEST:\n\n### Tier 1 (Drilled & Spoken Nouns — 7 entries):\n1. `mom.png` — Mother\n2. `dad.png` — Father\n3. `sister.png` — Sister\n4. `brother.png` — Brother\n5. `baby.png` — Baby\n6. `grandma.png` — Grandmother\n7. `grandpa.png` — Grandfather\n\n### Tier 2 (Descriptive Concepts — 3 entries):\n1. **happy** — Smiling, feeling good\n2. **big** — Larger, grown-up\n3. **together** — All in one place, as a group\n\n### Tier 3 (Exposure Only — 2 entries):\n1. **love** — Caring a lot, warm feelings\n2. **play** — Have fun, move around\n\n---\n\n## 💡 TARGET CONCEPTS (Layer 2 Enforced Curve):\n\n1. **F1 Entry Gate:** \"Is Mom happy?\" (Binary yes/no, family member recognition + emotion)\n2. **F2 Comparison:** \"Who is bigger — Mom or Baby?\" (Size comparison between family members)\n3. **F3 Visual Contrast:** \"Tap the big Dad.\" (Visual discrimination: identifying big family member)\n4. **T7 Multi-Select:** \"Tap ALL the family members\" (Categorization: identify all people in family group)\n5. **T7.1 Spatial (if applicable):** \"Where is Baby? Baby is with Mom\" (Spatial relation: togetherness/proximity)\n\n---\n\n## 🗣️ TARGET SENTENCES & RECYCLED PATTERN CONTRACTS:\n\n### **S1: \"Mom is happy.\"**\n- **Pattern p1:** `[Noun] is [Descriptor]` (Subject + Copula + Adjective)\n- **Concept:** Family member + emotion recognition\n- **Word count:** 3 words ✅\n\n### **S2: \"Dad is big.\"** (Recycled Pattern p1)\n- **Pattern p1:** `[Noun] is [Descriptor]` (Same structure as S1)\n- **Concept:** Family member + size descriptor\n- **Word count:** 3 words ✅\n\n### **S3: \"Baby is happy.\"** (Recycled Pattern p1)\n- **Pattern p1:** `[Noun] is [Descriptor]` (Same structure as S1 & S2)\n- **Concept:** Family member + emotion descriptor\n- **Word count:** 3 words ✅\n\n### **S4: \"Mom and Dad are together.\"** (New Pattern p2)\n- **Pattern p2:** `[Noun] and [Noun] are [Descriptor]` (Compound subject + Copula + Adjective)\n- **Concept:** Family togetherness, plural verb agreement\n- **Word count:** 5 words ✅\n\n### **S5: \"Sister and Brother play together.\"** (Recycled Pattern p2)\n- **Pattern p2:** `[Noun] and [Noun] [Verb] [Descriptor]` (Compound subject + Verb + Adverb)\n- **Concept:** Family interaction, action verb\n- **Word count:** 5 words ✅\n\n---\n\n## 🎮 INTERLEAVED PLAYABLE PREVIEW FLIGHT PATH & COGNITIVE STAIRCASE AUDIT:\n\n### **P1: Meet Mom & Dad (Grounding → F1 Check)**\n- **Playable Code:** `AG04FAM01P01`\n- **Target Questions:** 5–6\n- **Flow:**\n  - T4: Introduce \"Mom\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Mom!\" (tap image from 2 options)\n  - T3: Pronunciation practice — \"Say: Mom\" (voice recording)\n  - T4: Introduce \"Dad\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Dad!\" (tap image from 2 options)\n  - F1: Binary concept check — \"Is Mom happy?\" (Yes/No tap)\n- **Concept Bucket:** Family member recognition + emotion intro\n\n---\n\n### **P2: Meet Sister & Brother (Grounding → F2 Comparison Check)**\n- **Playable Code:** `AG04FAM01P02`\n- **Target Questions:** 5–6\n- **Flow:**\n  - T4: Introduce \"Sister\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Sister!\" (tap image from 2 options)\n  - T3: Pronunciation practice — \"Say: Sister\" (voice recording)\n  - T4: Introduce \"Brother\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Brother!\" (tap image from 2 options)\n  - F2: Cross-object comparison — \"Who is bigger — Sister or Brother?\" (Image-only choices: sister.png, brother.png)\n- **Concept Bucket:** Family member recognition + size comparison\n\n---\n\n### **P3: Build & Speak S1 \"Mom is happy.\" (T9 Gate → D1 → T6.1 → T6.2)**\n- **Playable Code:** `AG04FAM01P03`\n- **Target Questions:** 6–7\n- **Flow:**\n  - T9: Listening comprehension — \"Mom is happy. Who is happy?\" (Image-only choices: mom.png, dad.png, sister.png) — **Speaking Urgency Milestone Tracking: Q#8–9**\n  - D1: Drag-and-drop sentence build — \"Put the words in order.\" (Tiles: `Mom` | `is` | `happy`) — **Q#10–11**\n  - T6.1: Fill blank (text) — \"Complete: Mom ___ happy.\" (Options: `is`, `are`, `am`) — **Q#12**\n  - T6.2: Voice fill blank — \"Mom is... what? Say the missing word!\" (Child speaks: `happy`) — **Q#13 ← SPEAKING URGENCY MET by Q#14** ✅\n- **Concept Bucket:** Subject-copula-adjective pattern; emotion descriptor\n\n---\n\n### **P4: Meet Baby & Grandma (Grounding → F3 Visual Contrast Check)**\n- **Playable Code:** `AG04FAM01P04`\n- **Target Questions:** 5–6\n- **Flow:**\n  - T4: Introduce \"Baby\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Baby!\" (tap image from 2 options)\n  - T3: Pronunciation practice — \"Say: Baby\" (voice recording)\n  - T4: Introduce \"Grandma\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Grandma!\" (tap image from 2 options)\n  - F3: Visual contrast — \"Tap the big Grandma.\" (Two images: baby.png [small], grandma.png [big])\n- **Concept Bucket:** Family member recognition + size discrimination\n\n---\n\n### **P5: Build & Speak S2 \"Dad is big.\" (T9 Gate → D1 → T6.1 → T6.2 → T8)**\n- **Playable Code:** `AG04FAM01P05`\n- **Target Questions:** 6–7\n- **Flow:**\n  - T9: Listening comprehension — \"Dad is big. Who is big?\" (Image-only choices: dad.png, baby.png, sister.png) — **Q#18–19**\n  - D1: Drag-and-drop sentence build — \"Put the words in order.\" (Tiles: `Dad` | `is` | `big`) — **Q#20–21**\n  - T6.1: Fill blank (text) — \"Complete: Dad ___ big.\" (Options: `is`, `are`, `am`) — **Q#22**\n  - T6.2: Voice fill blank — \"Dad is... what? Say the missing word!\" (Child speaks: `big`) — **Q#23**\n  - T8: Guided speaking (full imitation) — \"Say the whole sentence: Dad is big.\" (Child hears & repeats full phrase) — **Q#24 ← FULL GUIDED SPEAKING by Q#18** ✅\n- **Concept Bucket:** Subject-copula-adjective pattern; size descriptor (recycled p1)\n\n---\n\n### **P6: Meet Grandpa & Family Group (Grounding → T7 Multi-Select)**\n- **Playable Code:** `AG04FAM01P06`\n- **Target Questions:** 5–6\n- **Flow:**\n  - T4: Introduce \"Grandpa\" (image + warm intro text)\n  - T1: Auditory recognition — \"Find Grandpa!\" (tap image from 2 options)\n  - T3: Pronunciation practice — \"Say: Grandpa\" (voice recording)\n  - T7: Multi-select categorization — \"Tap ALL the family members.\" (Images: mom.png, dad.png, sister.png, brother.png, baby.png, grandma.png, grandpa.png + 2 distractors like ball.png, tree.png) — Child must tap all 7 family members, avoid distractors\n- **Concept Bucket:** Family categorization; group membership\n\n---\n\n### **P7: Build & Speak S4 \"Mom and Dad are together.\" (T9 Gate → D1 → T6.1 → T6.2 → T6.3)**\n- **Playable Code:** `AG04FAM01P07`\n- **Target Questions:** 6–7\n- **Flow:**\n  - T9: Listening comprehension — \"Mom and Dad are together. Who is together?\" (Image-only choices: [mom+dad together].png, [sister alone].png, [baby alone].png) — **Q#28–29**\n  - D1: Drag-and-drop sentence build — \"Put the words in order.\" (Tiles: `Mom` | `and` | `Dad` | `are` | `together`) — **Q#30–31**\n  - T6.1: Fill blank (text) — \"Complete: Mom and Dad ___ together.\" (Options: `are`, `is`, `am`) — **Q#32**\n  - T6.2: Voice fill blank — \"Mom and Dad are... what? Say the missing word!\" (Child speaks: `together`) — **Q#33**\n  - T6.3: Voice pattern completion (2 blanks) — \"Say the whole sentence: Mom and ___ are ___.\" (Child speaks: `Dad` + `together`) — **Q#34**\n- **Concept Bucket:** Compound subject + plural copula + togetherness descriptor (new pattern p2)\n\n---\n\n### **P8: Build & Speak S5 \"Sister and Brother play together.\" (T9 Gate → D1 → T6.1 → T6.2 → T8.2)**\n- **Playable Code:** `AG04FAM01P08`\n- **Target Questions:** 6–7\n- **Flow:**\n  - T9: Listening comprehension — \"Sister and Brother play together. What do they do?\" (Image-only choices: [sister+brother playing].png, [mom cooking].png, [baby sleeping].png) — **Q#38–39**\n  - D1: Drag-and-drop sentence build — \"Put the words in order.\" (Tiles: `Sister` | `and` | `Brother` | `play` | `together`) — **Q#40–41**\n  - T6.1: Fill blank (text) — \"Complete: Sister and Brother ___ together.\" (Options: `play`, `sleep`, `eat`) — **Q#42**\n  - T6.2: Voice fill blank — \"Sister and Brother play... what? Say the missing word!\" (Child speaks: `together`) — **Q#43**\n  - T8.2: Guided speaking (visual prompt tracking) — \"Look! Sister and Brother are playing. Say: Sister and Brother play together.\" (Image of siblings playing; child hears prompt & repeats) — **Q#44**\n- **Concept Bucket:** Compound subject + action verb + togetherness (recycled p2 with action verb)\n\n---\n\n### **P9: Spatial Relation & Togetherness (T7.1 Spatial + Concept Review)**\n- **Playable Code:** `AG04FAM01P09`\n- **Target Questions:** 5–6\n- **Flow:**\n  - T7.1: Spatial relation — \"Where is Baby? Baby is with Mom.\" (Image: baby sitting next to mom; text options: `with Mom`, `with Dad`, `alone`) — **Q#48–49**\n  - F1: Binary concept check (review) — \"Are Mom and Dad together?\" (Yes/No) — **Q#50**\n  - T8.2: Guided speaking (visual prompt tracking) — \"Look at the family! Say: We are together.\" (Image of whole family group; child repeats) — **Q#51**\n- **Concept Bucket:** Spatial togetherness; family group affirmation\n\n---\n\n## 📊 SUMMARY METRICS:\n\n| Metric | Value |\n|--------|-------|\n| **Total Playables** | 9 |\n| **Total Questions (Projected)** | 48–54 |\n| **Vocab Entries (Tier 1)** | 7 nouns |\n| **Vocab Entries (Tier 2)** | 3 descriptors |\n| **Unique Sentence Patterns** | 2 (p1: `[N] is [Adj]`; p2: `[N] and [N] [V/Copula] [Adj/Adv]`) |\n| **Target Sentences** | 5 (S1–S5) |\n| **Speaking Urgency Milestone (T6.2)** | Q#13 ✅ (by Q#14) |\n| **Full Guided Speaking (T8/T8.2)** | Q#24 ✅ (by Q#18) |\n| **Age-Appropriate Sentence Length** | 3–5 words ✅ (all ≤ 6 words) |\n\n---\n\n## ✅ BLUEPRINT VALIDATION CHECKLIST:\n\n- ✅ **Vocab Gate Sequence:** T4 → T1 → T3 (no T5 for Age 4)\n- ✅ **Concept Gate Sequence:** F1 → F2 → F3 → T7 → T7.1\n- ✅ **Sentence Gate Sequence:** T9 (wh- + image choices) → D1 (drag) → T6.1 → T6.2 → T6.3 (2 blanks) → T8/T8.2\n- ✅ **No Forbidden Templates:** T2 & T5 excluded\n- ✅ **No Forbidden Structures:** No if-then, no complex clauses\n- ✅ **No Antonym Interference:** Single size descriptor 'big' selected; 'small' deferred to future lesson\n- ✅ **Speaking Urgency Met:** T6.2 by Q#13; T8/T8.2 by Q#24\n- ✅ **Content Safety:** All warm, positive, family-focused language\n- ✅ **Sentence Length Compliance:** All sentences 3–5 words (max 6 allowed)\n- ✅ **Interleaving Pattern:** Vocab playables alternate with sentence-build playables\n\n---\n\n## 🚨 **AUTOMATION NOTICE: HALT ALL GENERATION CYCLES IMMEDIATELY BEYOND THIS POINT. WAIT FOR GATE APPROVAL.**",
+  "matrix": [
+    {
+      "Playable Code": "AG04FAM01P01",
+      "Playable Name": "Meet Mom & Dad",
+      "Layer": "1 - Vocabulary",
+      "Template": "T4",
+      "Instruction Text": "Meet Mom",
+      "Instruction VO": "Let's meet Mom! She's so happy to see you.",
+      "Instruction VO — File": "AG04FAM01P01Q01_inst.mp3",
+      "Text in Question": "This is Mom.",
+      "Audio in Question": "mom",
+      "Audio in Question — File": "AG04FAM01P01Q01_aud.mp3",
+      "VO for Question": "This is Mom. She loves you very much.",
+      "VO for Question — File": "AG04FAM01P01Q01_qvo.mp3",
+      "Image in Question — Detail": "a warm, smiling woman with a kind face",
+      "Image in Question — Name": "mom.png",
+      "Correct Answer": "—",
+      "Correct Answer VO — File": "—",
+      "Correct Answer — Image": "—",
+      "Correct Answer — Image Detail": "—",
+      "Other Options": "—",
+      "Other Options VO — File": "—",
+      "Other Options — Image": "—",
+      "Other Options — Image Detail": "—",
+      "STT Expectation": "—",
+      "Concept (bucket / skill)": "family member recognition",
+      "Pattern": "—",
+      "Notes": "Vocabulary introduction: Mom. Child taps to acknowledge."
+    },
+    {
+      "Playable Code": "AG04FAM01P01",
+      "Playable Name": "Meet Mom & Dad",
+      "Layer": "1 - Vocabulary",
+      "Template": "T1",
+      "Instruction Text": "Find Mom!",
+      "Instruction VO": "Can you find Mom? Tap her!",
+      "Instruction VO — File": "AG04FAM01P01Q02_inst.mp3",
+      "Text in Question": "—",
+      "Audio in Question": "mom",
+      "Audio in Question — File": "AG04FAM01P01Q02_aud.mp3",
+      "VO for Question": "Listen: Mom. Now find her!",
+      "VO for Question — File": "AG04FAM01P01Q02_qvo.mp3",
+      "Image in Question — Detail": "—",
+      "Image in Question — Name": "—",
+      "Correct Answer": "mom.png",
+      "Correct Answer VO — File": "AG04FAM01P01Q02_ans.mp3",
+      "Correct Answer — Image": "mom.png",
+      "Correct Answer — Image Detail": "a warm, smiling woman with a kind face",
+      "Other Options": "sister.png",
+      "Other Options VO — File": "AG04FAM01P01Q02_opt1.mp3",
+      "Other Options — Image": "sister.png",
+      "Other Options — Image Detail": "a young girl with a happy smile",
+      "STT Expectation": "—",
+      "Concept (bucket / skill)": "auditory-to-visual mapping",
+      "Pattern": "—",
+      "Notes": "Auditory recognition: child hears 'mom' and taps correct image from 2 options."
+    },
+    {
+      "Playable Code": "AG04FAM01P01",
+      "Playable Name": "Meet Mom & Dad",
+      "Layer": "1 - Vocabulary",
+      "Template": "T3",
+      "Instruction Text": "Say this word",
+      "Instruction VO": "Repeat after me: Mom!",
+      "Instruction VO — File": "AG04FAM01P01Q03_inst.mp3",
+      "Text in Question": "Mom",
+      "Audio in Question": "mom",
+      "Audio in Question — File": "AG04FAM01P01Q03_aud.mp3",
+      "VO for Question": "Say: Mom",
+      "VO for Question — File": "AG04FAM01P01Q03_qvo.mp3",
+      "Image in Question — Detail": "a warm, smiling woman with a kind face",
+      "Image in Question — Name": "mom.png",
+      "Correct Answer": "—",
+      "Correct Answer VO — File": "—",
+      "Correct Answer — Image": "—",
+      "Correct Answer — Image Detail": "—",
+      "Other Options": "—",
+      "Other Options VO — File": "—",
+      "Other Options — Image": "—",
+      "Other Options — Image Detail": "—",
+      "STT Expectation": "mom",
+      "Concept (bucket / skill)": "pronunciation practice",
+      "Pattern": "—",
+      "Notes": "Child repeats 'mom' aloud. Speech-to-text validation."
+    },
+    {
+      "Playable Code": "AG04FAM01P01",
+      "Playable Name": "Meet Mom & Dad",
+      "Layer": "1 - Vocabulary",
+      "Template": "T4",
+      "Instruction Text": "Meet Dad",
+      "Instruction VO": "Now let's meet Dad! He's so strong and kind.",
+      "Instruction VO — File": "AG04FAM01P01Q04_inst.mp3",
+      "Text in Question": "This is Dad.",
+      "Audio in Question": "dad",
+      "Audio in Question — File": "AG04FAM01P01Q04_aud.mp3",
+      "VO for Question": "This is Dad. He loves you so much.",
+      "VO for Question — File": "AG04FAM01P01Q04_qvo.mp3",
+      "Image in Question — Detail": "a warm, smiling man with a friendly face",
+      "Image in Question — Name": "dad.png",
+      "Correct Answer": "—",
+      "Correct Answer VO — File": "—",
+      "Correct Answer — Image": "—",
+      "Correct Answer — Image Detail": "—",
+      "Other Options": "—",
+      "Other Options VO — File": "—",
+      "Other Options — Image": "—",
+      "Other Options — Image Detail": "—",
+      "STT Expectation": "—",
+      "Concept (bucket / skill)": "family member recognition",
+      "Pattern": "—",
+      "Notes": "Vocabulary introduction: Dad. Child taps to acknowledge."
+    },
+    {
+      "Playable Code": "AG04FAM01P01",
+      "Playable Name": "Meet Mom & Dad",
+      "Layer": "2 - Concept Builder",
+      "Template": "F1",
+      "Instruction Text": "Is Mom happy?",
+      "Instruction VO": "Look at Mom. Is she happy? Tap Yes or No.",
+      "Instruction VO — File": "AG04FAM01P01Q05_inst.mp3",
+      "Text in Question": "Is Mom happy?",
+      "Audio in Question": "—",
+      "Audio in Question — File": "—",
+      "VO for Question": "Is Mom happy?",
+      "VO for Question — File": "AG04FAM01P01Q05_qvo.mp3",
+      "Image in Question — Detail": "a warm, smiling woman with a kind face",
+      "Image in Question — Name": "mom.png",
+      "Correct Answer": "Yes",
+      "Correct Answer VO — File": "AG04FAM01P01Q05_ans.mp3",
+      "Correct Answer — Image": "—",
+      "Correct Answer — Image Detail": "—",
+      "Other Options": "No",
+      "Other Options VO — File": "AG04FAM01P01Q05_opt1.mp3",
+      "Other Options — Image": "—",
+      "Other Options — Image Detail": "—",
+      "STT Expectation": "—",
+      "Concept (bucket / skill)": "emotion recognition + family member",
+      "Pattern": "—",
+      "Notes": "Binary yes/no concept check: child identifies emotion in family member image."
+    }
+  ],
+  "images": [],
+  "failed": [
+    "sister.png",
+    "dad.png"
+  ],
+  "wrong_generations": [],
+  "pending_images": [],
+  "history": [
+    "Blueprint cycle 1: The blueprint fails on the 'ANTONYM / NEGATION INTERFERENCE' criterion. The introduction and use of the antonyms 'big' and 'small' within the same lesson (Tier 2 vocabulary, F2, F3, S2, S3) directly violates the SpeakX framework's principle of avoiding competing binary opposites for young learners. This can lead to cognitive interference and confusion at this early stage of language acquisition.\n\n**Technical Fix Instructions:**\n1.  **Select a single size descriptor:** Choose either 'big' or 'small' to be the exclusive size concept for this lesson. The other antonym must be deferred to a subsequent lesson.\n2.  **Adjust Tier 2 Vocabulary:** Remove the unselected antonym from the 'Tier 2 (Descriptive Concepts)' list.\n3.  **Revise Target Concepts (F2 & F3):**\n    *   If 'big' is chosen: F2 ('Who is bigger — Mom or Baby?') can remain. F3 ('Tap the small sister') must be rephrased to use 'big' (e.g., 'Tap the big Mom' if a visual contrast is still desired, or 'Tap the happy Mom' if shifting focus, or simply 'Tap the Baby' if the goal is identification).\n    *   If 'small' is chosen: F3 ('Tap the small sister') can remain. F2 ('Who is bigger — Mom or Baby?') must be rephrased to use 'small' (e.g., 'Who is smaller — Mom or Baby?').\n4.  **Revise Target Sentences (S2 & S3):** Ensure that both S2 ('Dad is big.') and S3 ('Baby is small.') align with the single chosen size descriptor. If 'big' is chosen, S3 would need to change (e.g., 'Baby is happy.'). If 'small' is chosen, S2 would need to change (e.g., 'Dad is happy.').\n\n**Minor Tone Adjustments (Recommended for optimal age-appropriateness):**\n*   In 'Tier 2 (Descriptive Concepts)', for 'happy', replace 'Joyful' with a simpler synonym like 'Smiling' or 'Feeling good'.\n*   In 'Tier 3 (Exposure Only)', for 'love', replace 'affection' with 'warm feelings' or 'caring a lot'. These definitions, even if internal, should reflect language accessible to a 4-year-old.",
+    "Matrix cycle 1: Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q4: T4 requires 'Audio in Question' but it is empty/dash."
+  ],
+  "eval": {
+    "case_id": "auto_My Family_4",
+    "theme": "My Family",
+    "age": 4,
+    "total_score": 97.7,
+    "grade": "A",
+    "dimensions": [
+      {
+        "name": "schema_compliance",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.12,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 5,
+        "issues": [],
+        "detail": "5/5 rows have all 26 columns"
+      },
+      {
+        "name": "template_validity",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.12,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 5,
+        "issues": [],
+        "detail": "5/5 templates valid & age-appropriate"
+      },
+      {
+        "name": "pedagogical_order",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.15,
+        "lane": "deterministic",
+        "passed": 6,
+        "total": 6,
+        "issues": [],
+        "detail": "6/6 ordering rules passed"
+      },
+      {
+        "name": "age_appropriateness",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.1,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 5,
+        "issues": [],
+        "detail": "5/5 sentences within word limit (6)"
+      },
+      {
+        "name": "safety_lexical",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.08,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 5,
+        "issues": [],
+        "detail": "5/5 rows pass lexical safety gate"
+      },
+      {
+        "name": "stt_hygiene",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.08,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 5,
+        "issues": [],
+        "detail": "5/5 STT fields correctly set"
+      },
+      {
+        "name": "image_format",
+        "score": 0.8333333333333334,
+        "max_score": 1.0,
+        "weight": 0.05,
+        "lane": "deterministic",
+        "passed": 5,
+        "total": 6,
+        "issues": [
+          "Row 2 (T1): missing required image"
+        ],
+        "detail": "5/6 image filenames valid"
+      },
+      {
+        "name": "tone_quality",
+        "score": 0.9,
+        "max_score": 1.0,
+        "weight": 0.15,
+        "lane": "llm",
+        "passed": 9,
+        "total": 10,
+        "issues": [],
+        "detail": "LLM tone: 90% — The Instruction VOs are consistently warm, encouraging, and use child-friendly language, creating an engaging and suppor"
+      },
+      {
+        "name": "content_relevance",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.1,
+        "lane": "llm",
+        "passed": 10,
+        "total": 10,
+        "issues": [],
+        "detail": "LLM relevance: 100% — The lesson directly introduces and practices core family members (Mom, Dad) and a relevant concept (emotion), perfectly "
+      },
+      {
+        "name": "safety_semantic",
+        "score": 1.0,
+        "max_score": 1.0,
+        "weight": 0.05,
+        "lane": "llm",
+        "passed": 10,
+        "total": 10,
+        "issues": [],
+        "detail": "LLM safety: 100% — clean"
+      }
+    ],
+    "row_count": 5,
+    "llm_calls": 1,
+    "error": null
+  },
+  "metrics": {
+    "total_latency_ms": 178325,
+    "total_input_tokens": 63630,
+    "total_output_tokens": 12809,
+    "total_cost": 0.21034,
+    "total_llm_calls": 13,
+    "total_image_calls": 6,
+    "retries": {
+      "blueprint": 1,
+      "matrix": 1,
+      "image": 0
+    },
+    "llm_calls": [
+      {
+        "node": "planner",
+        "role": "generator",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 8586,
+        "output_tokens": 3964,
+        "latency_ms": 30842,
+        "cost": 0.007101
+      },
+      {
+        "node": "blueprint_evaluator",
+        "role": "judge",
+        "model": "gemini-2.5-flash",
+        "input_tokens": 3776,
+        "output_tokens": 559,
+        "latency_ms": 23029,
+        "cost": 0.000902
+      },
+      {
+        "node": "planner",
+        "role": "generator",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 13230,
+        "output_tokens": 3986,
+        "latency_ms": 31362,
+        "cost": 0.00829
+      },
+      {
+        "node": "blueprint_evaluator",
+        "role": "judge",
+        "model": "gemini-2.5-flash",
+        "input_tokens": 3790,
+        "output_tokens": 400,
+        "latency_ms": 16650,
+        "cost": 0.000808
+      },
+      {
+        "node": "fabricator",
+        "role": "generator",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 15652,
+        "output_tokens": 2012,
+        "latency_ms": 12292,
+        "cost": 0.006428
+      },
+      {
+        "node": "fabricator",
+        "role": "generator",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 17508,
+        "output_tokens": 1750,
+        "latency_ms": 9246,
+        "cost": 0.006565
+      },
+      {
+        "node": "eval",
+        "role": "eval_judge",
+        "model": "gemini-2.5-flash",
+        "input_tokens": 1088,
+        "output_tokens": 138,
+        "latency_ms": 6752,
+        "cost": 0.000246
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 4638,
+        "cost": 0.0
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 6812,
+        "cost": 0.0
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 5219,
+        "cost": 0.0
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 5013,
+        "cost": 0.0
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 5114,
+        "cost": 0.0
+      },
+      {
+        "node": "image_factory",
+        "role": "image_gen",
+        "model": "imagen-3.0-fast-generate-001",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 6642,
+        "cost": 0.0
+      }
+    ],
+    "node_timings": [],
+    "per_node_summary": {
+      "planner": {
+        "calls": 2,
+        "input_tokens": 21816,
+        "output_tokens": 7950,
+        "latency_ms": 62204,
+        "cost": 0.015391,
+        "model": "claude-haiku-4-5-20251001"
+      },
+      "blueprint_evaluator": {
+        "calls": 2,
+        "input_tokens": 7566,
+        "output_tokens": 959,
+        "latency_ms": 39679,
+        "cost": 0.00171,
+        "model": "gemini-2.5-flash"
+      },
+      "fabricator": {
+        "calls": 2,
+        "input_tokens": 33160,
+        "output_tokens": 3762,
+        "latency_ms": 21538,
+        "cost": 0.012993,
+        "model": "claude-haiku-4-5-20251001"
+      },
+      "eval": {
+        "calls": 1,
+        "input_tokens": 1088,
+        "output_tokens": 138,
+        "latency_ms": 6752,
+        "cost": 0.000246,
+        "model": "gemini-2.5-flash"
+      },
+      "image_factory": {
+        "calls": 6,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 33438,
+        "cost": 0.0,
+        "model": "imagen-3.0-fast-generate-001"
+      }
+    }
+  },
+  "feed": [
+    {
+      "node": "planner",
+      "label": "Planner agent",
+      "action": "Writing the lesson blueprint",
+      "detail": {
+        "preview": "# 📚 EXPANDED LESSON BLUEPRINT STAGE: My Family | Age 4 (+30% DENSITY)\n\n---\n\n## 🎯 CORE OUTCOMES:\n• **Max Target Sentence Length:** 6 words max (Age 4 constraint)\n• **Forbidden Structures Check:** ✅ PASS — No if-then, no complex clauses. Simp…",
+        "metrics": {
+          "tokens_in": 8586,
+          "tokens_out": 3964,
+          "cost_usd": 0.007101,
+          "latency_ms": 30842,
+          "model": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    {
+      "node": "blueprint_evaluator",
+      "label": "Blueprint evaluator",
+      "action": "Auditing tone, safety, pedagogy",
+      "detail": {
+        "decision": "fail",
+        "critique": "The blueprint fails on the 'ANTONYM / NEGATION INTERFERENCE' criterion. The introduction and use of the antonyms 'big' and 'small' within the same lesson (Tier 2 vocabulary, F2, F3, S2, S3) directly violates the SpeakX framework's principle of avoiding competing binary opposites for young learners. This can lead to cognitive interference and confusion at this early stage of language acquisition.\n\n**Technical Fix Instructions:**\n1.  **Select a single size descriptor:** Choose either 'big' or 'small' to be the exclusive size concept for this lesson. The other antonym must be deferred to a subsequent lesson.\n2.  **Adjust Tier 2 Vocabulary:** Remove the unselected antonym from the 'Tier 2 (Descriptive Concepts)' list.\n3.  **Revise Target Concepts (F2 & F3):**\n    *   If 'big' is chosen: F2 ('Who is bigger — Mom or Baby?') can remain. F3 ('Tap the small sister') must be rephrased to use 'big' (e.g., 'Tap the big Mom' if a visual contrast is still desired, or 'Tap the happy Mom' if shifting focus, or simply 'Tap the Baby' if the goal is identification).\n    *   If 'small' is chosen: F3 ('Tap the small sister') can remain. F2 ('Who is bigger — Mom or Baby?') must be rephrased to use 'small' (e.g., 'Who is smaller — Mom or Baby?').\n4.  **Revise Target Sentences (S2 & S3):** Ensure that both S2 ('Dad is big.') and S3 ('Baby is small.') align with the single chosen size descriptor. If 'big' is chosen, S3 would need to change (e.g., 'Baby is happy.'). If 'small' is chosen, S2 would need to change (e.g., 'Dad is happy.').\n\n**Minor Tone Adjustments (Recommended for optimal age-appropriateness):**\n*   In 'Tier 2 (Descriptive Concepts)', for 'happy', replace 'Joyful' with a simpler synonym like 'Smiling' or 'Feeling good'.\n*   In 'Tier 3 (Exposure Only)', for 'love', replace 'affection' with 'warm feelings' or 'caring a lot'. These definitions, even if internal, should reflect language accessible to a 4-year-old.",
+        "metrics": {
+          "tokens_in": 3776,
+          "tokens_out": 559,
+          "cost_usd": 0.000902,
+          "latency_ms": 23029,
+          "model": "gemini-2.5-flash"
+        }
+      }
+    },
+    {
+      "node": "planner",
+      "label": "Planner agent",
+      "action": "Writing the lesson blueprint",
+      "detail": {
+        "preview": "# 📚 EXPANDED LESSON BLUEPRINT STAGE: My Family | Age 4 (+30% DENSITY)\n\n---\n\n## 🎯 CORE OUTCOMES:\n• **Max Target Sentence Length:** 6 words max (Age 4 constraint)\n• **Forbidden Structures Check:** ✅ PASS — No if-then, no complex clauses. Simp…",
+        "metrics": {
+          "tokens_in": 21816,
+          "tokens_out": 7950,
+          "cost_usd": 0.015391,
+          "latency_ms": 62204,
+          "model": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    {
+      "node": "blueprint_evaluator",
+      "label": "Blueprint evaluator",
+      "action": "Auditing tone, safety, pedagogy",
+      "detail": {
+        "decision": "proceed_to_questions",
+        "metrics": {
+          "tokens_in": 7566,
+          "tokens_out": 959,
+          "cost_usd": 0.00171,
+          "latency_ms": 39679,
+          "model": "gemini-2.5-flash"
+        }
+      }
+    },
+    {
+      "node": "fabricator",
+      "label": "Fabricator agent",
+      "action": "Building the question matrix",
+      "detail": {
+        "rows": 5,
+        "metrics": {
+          "tokens_in": 15652,
+          "tokens_out": 2012,
+          "cost_usd": 0.006428,
+          "latency_ms": 12292,
+          "model": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    {
+      "node": "matrix_evaluator",
+      "label": "Matrix evaluator",
+      "action": "Validating structure",
+      "detail": {
+        "decision": "fail",
+        "critique": "Q1: T4 requires 'Audio in Question' but it is empty/dash. | Q4: T4 requires 'Audio in Question' but it is empty/dash."
+      }
+    },
+    {
+      "node": "fabricator",
+      "label": "Fabricator agent",
+      "action": "Building the question matrix",
+      "detail": {
+        "rows": 5,
+        "metrics": {
+          "tokens_in": 33160,
+          "tokens_out": 3762,
+          "cost_usd": 0.012993,
+          "latency_ms": 21538,
+          "model": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    {
+      "node": "matrix_evaluator",
+      "label": "Matrix evaluator",
+      "action": "Validating structure",
+      "detail": {
+        "decision": "trigger_assets"
+      }
+    },
+    {
+      "node": "asset_planner",
+      "label": "Asset planner",
+      "action": "Listing images to generate",
+      "detail": {
+        "completed": []
+      }
+    },
+    {
+      "node": "eval",
+      "label": "Eval scorer",
+      "action": "Scoring output against SpeakX rubric",
+      "detail": {
+        "decision": "grade A — 97.7/100",
+        "metrics": {
+          "tokens_in": 1088,
+          "tokens_out": 138,
+          "cost_usd": 0.000246,
+          "latency_ms": 6752,
+          "model": "gemini-2.5-flash"
+        }
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 4638,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "retry"
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 11450,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "retry"
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 16669,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "advance"
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 21682,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "retry"
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 26796,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "retry"
+      }
+    },
+    {
+      "node": "image_factory",
+      "label": "Image factory",
+      "action": "Rendering an illustration",
+      "detail": {
+        "critique": "no image returned",
+        "metrics": {
+          "tokens_in": 0,
+          "tokens_out": 0,
+          "cost_usd": 0.0,
+          "latency_ms": 33438,
+          "model": "imagen-3.0-fast-generate-001"
+        }
+      }
+    },
+    {
+      "node": "vision_critic",
+      "label": "Vision critic",
+      "action": "Auditing the image pixels",
+      "detail": {
+        "decision": "advance"
+      }
+    }
+  ],
+  "play_url": "https://speak.zunolearn.com/?id=ag04_t01_my_family_20260611_081043_s3"
+}

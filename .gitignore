@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/.env
+backend/storage/images/*.png
+
+# Node
+node_modules/
+.next/
+frontend/.env.local
+
+# misc
+.DS_Store

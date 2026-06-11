@@ -1,0 +1,227 @@
+{
+  "version": "2.0",
+  "description": "Gold-standard eval cases for the Zuno SpeakX pipeline. v2: uses semantic theme_concepts and categorical forbidden_themes instead of literal string matching.",
+  "forbidden_themes_global": ["violence", "injury", "fear", "death", "dark_themes", "body_horror", "weapons", "abuse"],
+  "cases": [
+    {
+      "id": "bus_age3",
+      "theme": "bus",
+      "age": 3,
+      "difficulty": "easy",
+      "expected": {
+        "min_rows": 3,
+        "allowed_templates": ["T4", "T1", "T3", "F1", "F2", "F3", "T9", "D1", "T6.1", "T6.2", "T8", "T8.2", "C1"],
+        "forbidden_templates": ["T2", "T5", "T7", "T7.1", "T6.3"],
+        "max_words_per_sentence": 4,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["bus", "wheels", "ride", "big", "yellow", "red", "drive", "road"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes"]
+      }
+    },
+    {
+      "id": "animals_age4",
+      "theme": "animals",
+      "age": 4,
+      "difficulty": "easy",
+      "expected": {
+        "min_rows": 3,
+        "allowed_templates": ["T4", "T1", "T3", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": ["T2", "T5"],
+        "max_words_per_sentence": 6,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["lion", "cat", "dog", "elephant", "big", "small", "fast", "animal", "pet", "wild"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "hunting", "predator_prey"]
+      }
+    },
+    {
+      "id": "fruits_age5",
+      "theme": "fruits",
+      "age": 5,
+      "difficulty": "medium",
+      "expected": {
+        "min_rows": 4,
+        "allowed_templates": ["T4", "T1", "T2", "T3", "T5", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": [],
+        "max_words_per_sentence": 10,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["apple", "banana", "mango", "orange", "red", "sweet", "yummy", "fruit", "eat", "taste"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes"]
+      }
+    },
+    {
+      "id": "ocean_age5",
+      "theme": "ocean",
+      "age": 5,
+      "difficulty": "medium",
+      "expected": {
+        "min_rows": 4,
+        "allowed_templates": ["T4", "T1", "T2", "T3", "T5", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": [],
+        "max_words_per_sentence": 10,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["fish", "wave", "water", "blue", "swim", "ocean", "sea", "shell", "boat"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "drowning", "shark_attack"]
+      }
+    },
+    {
+      "id": "jungle_age6",
+      "theme": "jungle",
+      "age": 6,
+      "difficulty": "hard",
+      "expected": {
+        "min_rows": 4,
+        "allowed_templates": ["T4", "T2", "T3", "T5", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": [],
+        "max_words_per_sentence": 12,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["tree", "monkey", "parrot", "green", "tall", "climb", "jungle", "leaf", "vine"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "hunting", "predator_prey"]
+      }
+    },
+    {
+      "id": "space_age7",
+      "theme": "space",
+      "age": 7,
+      "difficulty": "hard",
+      "expected": {
+        "min_rows": 4,
+        "allowed_templates": ["T4", "T2", "T3", "T5", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": [],
+        "max_words_per_sentence": 18,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["star", "moon", "rocket", "planet", "bright", "fly", "space", "sun", "astronaut"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "explosion", "alien_attack"]
+      }
+    },
+    {
+      "id": "colors_age3",
+      "theme": "colors",
+      "age": 3,
+      "difficulty": "easy",
+      "expected": {
+        "min_rows": 3,
+        "allowed_templates": ["T4", "T1", "T3", "F1", "F2", "F3", "T9", "D1", "T6.1", "T6.2", "T8", "T8.2", "C1"],
+        "forbidden_templates": ["T2", "T5", "T7", "T7.1", "T6.3"],
+        "max_words_per_sentence": 4,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["red", "blue", "yellow", "green", "color", "bright", "paint"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes"]
+      }
+    },
+    {
+      "id": "food_age4",
+      "theme": "food",
+      "age": 4,
+      "difficulty": "easy",
+      "expected": {
+        "min_rows": 3,
+        "allowed_templates": ["T4", "T1", "T3", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": ["T2", "T5"],
+        "max_words_per_sentence": 6,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["cake", "milk", "egg", "bread", "yummy", "sweet", "eat", "food", "drink"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes"]
+      }
+    },
+    {
+      "id": "weather_age6",
+      "theme": "weather",
+      "age": 6,
+      "difficulty": "hard",
+      "expected": {
+        "min_rows": 4,
+        "allowed_templates": ["T4", "T2", "T3", "T5", "F1", "F2", "F3", "T7", "T7.1", "T9", "D1", "T6.1", "T6.2", "T6.3", "T8", "T8.2", "C1"],
+        "forbidden_templates": [],
+        "max_words_per_sentence": 12,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["sun", "rain", "cloud", "wind", "hot", "cold", "weather", "sky", "snow"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "frightening_natural_disasters"]
+      }
+    },
+    {
+      "id": "family_age3",
+      "theme": "family",
+      "age": 3,
+      "difficulty": "easy",
+      "expected": {
+        "min_rows": 3,
+        "allowed_templates": ["T4", "T1", "T3", "F1", "F2", "F3", "T9", "D1", "T6.1", "T6.2", "T8", "T8.2", "C1"],
+        "forbidden_templates": ["T2", "T5", "T7", "T7.1", "T6.3"],
+        "max_words_per_sentence": 4,
+        "must_start_with": "T4",
+        "vocab_before_sentence": true,
+        "concept_before_sentence": true,
+        "t9_before_d1": true,
+        "required_columns": 15,
+        "no_emoji": true,
+        "image_filenames_snake_case": true,
+        "stt_clean_lowercase": true,
+        "theme_concepts": ["mom", "dad", "baby", "love", "hug", "family", "mother", "father", "sister", "brother"],
+        "forbidden_themes": ["violence", "injury", "fear", "death", "dark_themes", "family_conflict"]
+      }
+    }
+  ]
+}
