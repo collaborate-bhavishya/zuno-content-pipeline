@@ -21,4 +21,10 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            bash ~/zuno-content-pipeline/deploy/update.sh
+            set -e
+            cd ~/zuno-content-pipeline
+            git pull --ff-only
+            cd deploy
+            docker compose up -d --build
+            docker image prune -f
+            echo "✅ Backend updated to $(git -C ~/zuno-content-pipeline rev-parse --short HEAD)"
