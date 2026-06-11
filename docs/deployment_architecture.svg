@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1140" viewBox="0 0 1560 1140" font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <marker id="aOr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d9822b"/>
+    </marker>
+    <marker id="aBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#1a73e8"/>
+    </marker>
+    <marker id="aGray" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <filter id="sh" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1.4" stdDeviation="2.2" flood-color="#0b1f3a" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .ttl{fill:#fff;font-size:25px;font-weight:700}
+      .sub{fill:#9fb3c8;font-size:14px}
+      .h{font-size:15.5px;font-weight:700}
+      .d{font-size:12px;fill:#475569}
+      .dom{font-size:11.5px;font-weight:600;fill:#0d652d}
+      .lbl{font-size:11px;font-weight:600}
+      .grp{font-size:13px;font-weight:800;letter-spacing:.04em}
+      .pchip{font-size:11px;font-weight:700}
+      .sm{font-size:10.5px;fill:#64748b}
+    </style>
+  </defs>
+
+  <rect width="1560" height="1140" fill="#f6f8fb"/>
+  <rect x="0" y="0" width="1560" height="72" fill="#0b1f3a"/>
+  <text x="40" y="33" class="ttl">Zuno SpeakX — Production Deployment Architecture</text>
+  <text x="40" y="57" class="sub">Frontend on Amplify · self-healing LangGraph backend on EC2 (Docker + Caddy HTTPS) · S3 storage · Supabase ledger · GitHub Actions CI/CD</text>
+
+  <!-- USER -->
+  <rect x="40" y="96" width="250" height="76" rx="11" fill="#fff" stroke="#cdd7e3" filter="url(#sh)"/>
+  <text x="60" y="128" class="h" fill="#0b1f3a">End User</text>
+  <text x="60" y="150" class="d">web browser</text>
+
+  <!-- ROUTE 53 -->
+  <rect x="330" y="96" width="270" height="76" rx="11" fill="#fff5e6" stroke="#e8a33d" filter="url(#sh)"/>
+  <text x="350" y="124" class="h" fill="#9a5b00">Amazon Route 53</text>
+  <text x="350" y="145" class="d">zunolearn.com DNS</text>
+  <text x="350" y="162" class="sm">flow → Amplify · flowbackend → EC2</text>
+  <line x1="290" y1="134" x2="328" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- AWS CLOUD BOUNDARY -->
+  <rect x="36" y="200" width="1040" height="900" rx="16" fill="none" stroke="#e8901f" stroke-width="2" stroke-dasharray="9 6"/>
+  <rect x="52" y="186" width="290" height="28" rx="6" fill="#e8901f"/>
+  <text x="66" y="205" class="grp" fill="#fff">AWS CLOUD · ap-south-1 (Mumbai)</text>
+
+  <!-- AMPLIFY -->
+  <rect x="70" y="240" width="430" height="104" rx="11" fill="#eaf6ef" stroke="#2e9e5b" filter="url(#sh)"/>
+  <text x="90" y="268" class="h" fill="#1f7a44">AWS Amplify + CloudFront</text>
+  <text x="90" y="289" class="d">Next.js frontend (auto-deploy on push)</text>
+  <rect x="90" y="298" width="220" height="22" rx="11" fill="#2e9e5b"/>
+  <text x="102" y="313" class="pchip" fill="#fff">flow.zunolearn.com</text>
+
+  <line x1="165" y1="172" x2="165" y2="238" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+  <text x="175" y="210" class="lbl" fill="#334155">HTTPS</text>
+
+  <!-- EC2 BACKEND -->
+  <rect x="70" y="382" width="950" height="370" rx="13" fill="#fff" stroke="#e8a33d" stroke-width="1.5" filter="url(#sh)"/>
+  <rect x="70" y="382" width="950" height="30" rx="13" fill="#fef0d9"/>
+  <rect x="70" y="397" width="950" height="15" fill="#fef0d9"/>
+  <text x="88" y="403" class="grp" fill="#9a5b00">AMAZON EC2 (t3.micro) — Docker Compose &#160;·&#160; flowbackend.zunolearn.com</text>
+
+  <!-- Caddy -->
+  <rect x="92" y="430" width="230" height="92" rx="10" stroke="#7c8aa0" filter="url(#sh)"/>
+  <rect x="92" y="430" width="230" height="92" rx="10" fill="#eef2f9" stroke="#7c8aa0"/>
+  <text x="110" y="458" class="h" fill="#334155">Caddy</text>
+  <text x="110" y="479" class="d">reverse proxy</text>
+  <text x="110" y="497" class="d">auto-HTTPS (Let's Encrypt)</text>
+  <text x="110" y="514" class="sm">terminates TLS :443</text>
+
+  <!-- Backend container with pipeline -->
+  <rect x="350" y="424" width="648" height="306" rx="11" fill="#f8fafc" stroke="#1a73e8" filter="url(#sh)"/>
+  <text x="368" y="450" class="h" fill="#174ea6">FastAPI + LangGraph container</text>
+  <text x="368" y="470" class="d">self-healing multi-agent pipeline (Python)</text>
+
+  <!-- pipeline mini chips -->
+  <g>
+    <rect x="368" y="486" width="120" height="40" rx="7" fill="#e8f0fe" stroke="#1a73e8"/>
+    <text x="428" y="503" text-anchor="middle" class="pchip" fill="#174ea6">Planner</text>
+    <text x="428" y="518" text-anchor="middle" class="sm">blueprint</text>
+    <rect x="500" y="486" width="120" height="40" rx="7" fill="#e6f4ea" stroke="#137333"/>
+    <text x="560" y="503" text-anchor="middle" class="pchip" fill="#0d652d">Evaluator ×2</text>
+    <text x="560" y="518" text-anchor="middle" class="sm">det + judge</text>
+    <rect x="632" y="486" width="120" height="40" rx="7" fill="#e8f0fe" stroke="#1a73e8"/>
+    <text x="692" y="503" text-anchor="middle" class="pchip" fill="#174ea6">Fabricator</text>
+    <text x="692" y="518" text-anchor="middle" class="sm">26-col matrix</text>
+    <rect x="764" y="486" width="120" height="40" rx="7" fill="#fef7e0" stroke="#f9ab00"/>
+    <text x="824" y="503" text-anchor="middle" class="pchip" fill="#8a5a00">Eval Scorer</text>
+    <text x="824" y="518" text-anchor="middle" class="sm">two-lane</text>
+
+    <rect x="500" y="538" width="120" height="40" rx="7" fill="#fde7f3" stroke="#c2185b"/>
+    <text x="560" y="555" text-anchor="middle" class="pchip" fill="#a01050">Image Factory</text>
+    <text x="560" y="570" text-anchor="middle" class="sm">Imagen</text>
+    <rect x="632" y="538" width="120" height="40" rx="7" fill="#fef7e0" stroke="#f9ab00"/>
+    <text x="692" y="555" text-anchor="middle" class="pchip" fill="#8a5a00">Vision Critic</text>
+    <text x="692" y="570" text-anchor="middle" class="sm">Gemini-lite</text>
+  </g>
+  <text x="368" y="602" class="sm">↻ generator → evaluator → router, with incremental-repair retries · trial mode caps</text>
+
+  <!-- caddy to container -->
+  <line x1="322" y1="476" x2="348" y2="476" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- Amplify to Caddy (API) -->
+  <path d="M285,322 C285,376 207,376 207,428" fill="none" stroke="#1a73e8" stroke-width="2" marker-end="url(#aBlue)"/>
+  <text x="214" y="372" class="lbl" fill="#174ea6">API + SSE → flowbackend</text>
+
+  <!-- S3 IMAGES -->
+  <g filter="url(#sh)">
+    <path d="M96,802 a92,13 0 0 1 184,0 v66 a92,13 0 0 1 -184,0 Z" fill="#fff5e6" stroke="#e8a33d"/>
+    <ellipse cx="188" cy="802" rx="92" ry="13" fill="#fde8c8" stroke="#e8a33d"/>
+  </g>
+  <text x="188" y="828" text-anchor="middle" class="h" fill="#9a5b00" font-size="14px">S3 · zuno-auto-images</text>
+  <text x="188" y="848" text-anchor="middle" class="sm">generated PNGs · public-read</text>
+  <text x="188" y="864" text-anchor="middle" class="sm">survives every redeploy</text>
+
+  <!-- S3 JSON -->
+  <g filter="url(#sh)">
+    <path d="M360,802 a108,13 0 0 1 216,0 v66 a108,13 0 0 1 -216,0 Z" fill="#fff5e6" stroke="#e8a33d"/>
+    <ellipse cx="468" cy="802" rx="108" ry="13" fill="#fde8c8" stroke="#e8a33d"/>
+  </g>
+  <text x="468" y="828" text-anchor="middle" class="h" fill="#9a5b00" font-size="14px">S3 · prek-zuno-speak-data</text>
+  <text x="468" y="848" text-anchor="middle" class="sm">run JSON (_s3.json) at bucket root</text>
+  <text x="468" y="864" text-anchor="middle" class="sm">resolves player ?id={run}</text>
+
+  <!-- container to S3 -->
+  <path d="M520,730 C420,770 250,760 200,792" fill="none" stroke="#e8901f" stroke-width="2" marker-end="url(#a)"/>
+  <text x="250" y="752" class="lbl" fill="#9a5b00">upload images</text>
+  <line x1="560" y1="730" x2="492" y2="788" stroke="#e8901f" stroke-width="2" marker-end="url(#a)"/>
+  <text x="540" y="770" class="lbl" fill="#9a5b00">upload JSON</text>
+
+  <!-- ====== EXTERNAL PROVIDERS (right) ====== -->
+  <text x="1110" y="232" class="grp" fill="#0b1f3a">AI PROVIDERS &amp; DATA</text>
+
+  <rect x="1110" y="246" width="412" height="86" rx="11" fill="#fbeee9" stroke="#cc785c" filter="url(#sh)"/>
+  <text x="1128" y="274" class="h" fill="#a8492f">Anthropic Claude API</text>
+  <text x="1128" y="295" class="d">Haiku 4.5 — content generation</text>
+  <text x="1128" y="313" class="sm">Planner + Fabricator (+ vision-capable)</text>
+
+  <rect x="1110" y="344" width="412" height="86" rx="11" fill="#e8f0fe" stroke="#1a73e8" filter="url(#sh)"/>
+  <text x="1128" y="372" class="h" fill="#174ea6">Google Gemini API</text>
+  <text x="1128" y="393" class="d">2.5 Flash + Flash-Lite</text>
+  <text x="1128" y="411" class="sm">blueprint / matrix judge · vision critic</text>
+
+  <rect x="1110" y="442" width="412" height="86" rx="11" fill="#fde7f3" stroke="#c2185b" filter="url(#sh)"/>
+  <text x="1128" y="470" class="h" fill="#a01050">Google Imagen 3.0 Fast</text>
+  <text x="1128" y="491" class="d">text → image generation</text>
+  <text x="1128" y="509" class="sm">flat-vector preschool art</text>
+
+  <rect x="1110" y="540" width="412" height="86" rx="11" fill="#e7f8f0" stroke="#2bbd7e" filter="url(#sh)"/>
+  <text x="1128" y="568" class="h" fill="#1a8a5a">Supabase Postgres</text>
+  <text x="1128" y="589" class="d">image_assets ledger</text>
+  <text x="1128" y="607" class="sm">status 0 pending · 1 done · 2 wrong-gen · de-dupe</text>
+
+  <!-- arrows backend -> providers -->
+  <line x1="998" y1="500" x2="1108" y2="289" stroke="#64748b" stroke-width="1.6" marker-end="url(#aGray)"/>
+  <line x1="998" y1="506" x2="1108" y2="387" stroke="#64748b" stroke-width="1.6" marker-end="url(#aGray)"/>
+  <line x1="998" y1="558" x2="1108" y2="485" stroke="#64748b" stroke-width="1.6" marker-end="url(#aGray)"/>
+  <line x1="998" y1="610" x2="1108" y2="583" stroke="#64748b" stroke-width="1.6" marker-end="url(#aGray)"/>
+
+  <!-- ====== PLAYER ====== -->
+  <rect x="360" y="930" width="430" height="92" rx="11" fill="#eafaf0" stroke="#137333" filter="url(#sh)"/>
+  <text x="380" y="958" class="h" fill="#0d652d">Zuno Player</text>
+  <text x="380" y="979" class="d">loads lesson by id, renders questions + images</text>
+  <rect x="380" y="988" width="240" height="22" rx="11" fill="#137333"/>
+  <text x="392" y="1003" class="pchip" fill="#fff">speak.zunolearn.com/?id=…</text>
+  <line x1="468" y1="870" x2="468" y2="928" stroke="#137333" stroke-width="2" marker-end="url(#aGray)"/>
+  <text x="478" y="906" class="sm">reads run JSON</text>
+  <path d="M188,872 C188,905 330,910 358,962" fill="none" stroke="#137333" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#aGray)"/>
+  <text x="210" y="906" class="sm">+ images</text>
+
+  <!-- ====== CI/CD ====== -->
+  <text x="1110" y="700" class="grp" fill="#0b1f3a">CI / CD</text>
+  <rect x="1110" y="714" width="412" height="120" rx="11" fill="#f2f3f5" stroke="#3b4252" filter="url(#sh)"/>
+  <text x="1128" y="742" class="h" fill="#24292e">GitHub → Actions</text>
+  <text x="1128" y="764" class="d">push to main (backend/**) →</text>
+  <text x="1128" y="782" class="d">SSH into EC2 → git pull + docker compose up</text>
+  <text x="1128" y="806" class="sm">repo: collaborate-bhavishya/zuno-content-pipeline</text>
+  <text x="1128" y="823" class="sm">frontend auto-deploys via Amplify on push</text>
+  <path d="M1316,714 C1316,640 700,720 545,752" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#aGray)"/>
+  <text x="760" y="690" class="lbl" fill="#475569">auto-deploy (SSH)</text>
+
+  <!-- legend -->
+  <rect x="36" y="1050" width="1486" height="58" rx="9" fill="#fff" stroke="#dbe3ee"/>
+  <text x="56" y="1074" class="sm" font-weight="700" fill="#0b1f3a">FLOW:</text>
+  <text x="110" y="1074" class="sm">User → Amplify (flow.zunolearn.com) → EC2/Caddy (flowbackend.zunolearn.com) → LangGraph pipeline → Claude / Gemini / Imagen + Supabase → S3 (images + run JSON) → Zuno Player.</text>
+  <text x="56" y="1094" class="sm" font-weight="700" fill="#0b1f3a">DEPLOY:</text>
+  <text x="120" y="1094" class="sm">git push → GitHub Actions SSH-deploys the backend container to EC2; Amplify rebuilds the frontend. Images &amp; run JSON persist in S3 across redeploys.</text>
+</svg>
