@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+storage/images/*.png
+storage/runs/
+storage/runs.json
+storage/evals/
+*.log
+.DS_Store

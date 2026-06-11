@@ -1,12 +1,24 @@
+# Web server
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
-pydantic==2.9.0
-langgraph>=0.2.0
-langchain-google-genai>=2.0.0
-google-genai>=1.0.0
-Pillow>=10.0.0
+pydantic==2.13.4
+python-dotenv==1.2.2
 
-# Optional — only needed for cross-family judging / cloud storage:
-# langchain-anthropic>=0.2.0
-# langchain-openai>=0.2.0
-# google-cloud-storage>=2.18.0
+# Agent orchestration
+langgraph==1.2.4
+
+# LLM providers
+langchain-anthropic==1.4.4          # content generation + vision critic (Claude)
+langchain-google-vertexai==3.2.3    # judge / vision via Vertex AI (ADC)
+langchain-google-genai==4.2.4       # judge / vision via AI Studio API key
+anthropic==0.109.1
+google-genai==2.7.0                 # image generation (Imagen / Gemini-image)
+google-cloud-aiplatform==1.154.0
+
+# Data + storage
+supabase==2.31.0                    # image_assets ledger
+boto3==1.43.26                      # S3 run-JSON upload
+Pillow==12.2.0
+
+# Optional — only if you switch the generator to Amazon Bedrock:
+# langchain-aws==1.5.1
