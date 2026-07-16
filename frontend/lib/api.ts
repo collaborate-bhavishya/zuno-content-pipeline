@@ -177,18 +177,3 @@ export async function fetchRuns(): Promise<RunRecord[]> {
   return res.json();
 }
 
-export interface RunMode {
-  trial_mode: boolean;
-  max_questions: number;
-  max_images: number;
-}
-
-export async function fetchRunMode(): Promise<RunMode | null> {
-  try {
-    const res = await fetch(`${API_BASE}/api/run-mode`, { headers: await authHeaders() });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}

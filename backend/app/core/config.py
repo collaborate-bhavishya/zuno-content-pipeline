@@ -390,24 +390,8 @@ class RuntimeConfig:
     max_images: int = 100
     max_retries: int = 5
 
-    # Trial mode — ON by default to conserve image quota / API spend. When on,
-    # the pipeline is capped to the (smaller) trial limits below. Toggle + caps
-    # are editable in the admin panel.
-    trial_mode: bool = True
-    trial_max_questions: int = 5
-    trial_max_images: int = 3
-
     # Hard stop: max full pipeline runs allowed per (UTC) day. Editable in admin.
     max_runs_per_day: int = 10
-
-    @property
-    def effective_max_questions(self) -> int:
-        return min(self.trial_max_questions, self.max_questions) if self.trial_mode else self.max_questions
-
-    @property
-    def effective_max_images(self) -> int:
-        # min() so an explicit max_images=0 (e.g. eval skip-images) still wins.
-        return min(self.trial_max_images, self.max_images) if self.trial_mode else self.max_images
 
     def public_dict(self) -> dict:
         """Serializable view for the admin UI (keys masked)."""
@@ -422,9 +406,6 @@ class RuntimeConfig:
             "limits": {"max_questions": self.max_questions,
                        "max_images": self.max_images,
                        "max_retries": self.max_retries,
-                       "trial_mode": 1 if self.trial_mode else 0,
-                       "trial_max_questions": self.trial_max_questions,
-                       "trial_max_images": self.trial_max_images,
                        "max_runs_per_day": self.max_runs_per_day},
         }
 

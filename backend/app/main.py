@@ -558,20 +558,6 @@ async def get_config(x_admin_password: Optional[str] = Header(None)):
     return CONFIG.public_dict()
 
 
-@app.get("/api/run-mode", dependencies=[Depends(require_user)])
-async def get_run_mode():
-    """Public (no-auth) trial-mode status, so the UI can warn before a run."""
-    used = _runs_today()
-    return {
-        "trial_mode": bool(CONFIG.trial_mode),
-        "max_questions": CONFIG.effective_max_questions,
-        "max_images": CONFIG.effective_max_images,
-        "runs_today": used,
-        "max_runs_per_day": CONFIG.max_runs_per_day,
-        "daily_limit_reached": used >= CONFIG.max_runs_per_day,
-    }
-
-
 class AdminUpdate(BaseModel):
     models: Optional[dict] = None
     prompts: Optional[dict] = None
@@ -600,10 +586,7 @@ async def update_config(body: AdminUpdate,
     if body.limits:
         for k, v in body.limits.items():
             if hasattr(CONFIG, k):
-                if k == "trial_mode":
-                    setattr(CONFIG, k, bool(v))
-                else:
-                    setattr(CONFIG, k, v)
+                setattr(CONFIG, k, v)
     if body.output:
         if "matrix_columns" in body.output:
             CONFIG.output.matrix_columns = body.output["matrix_columns"]

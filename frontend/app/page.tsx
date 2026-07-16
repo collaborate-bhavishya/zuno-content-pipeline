@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { streamPost, FeedEvent, fetchRuns, RunRecord, fetchRunMode, RunMode } from "../lib/api";
+import { streamPost, FeedEvent, fetchRuns, RunRecord } from "../lib/api";
 import { authHeaders } from "../lib/supabase";
 import ProcessFeed, { FeedItem, eventToItem } from "../components/ProcessFeed";
 import OutputPanel from "../components/OutputPanel";
@@ -20,13 +20,10 @@ export default function Home() {
   const [history, setHistory] = useState<RunRecord[]>([]);
   const [currentRunId, setCurrentRunId] = useState<string | null>(null);
   const [finishingUp, setFinishingUp] = useState(false); // questions shown, eval still running
-  const [runMode, setRunMode] = useState<RunMode | null>(null);
-  const [showTrialModal, setShowTrialModal] = useState(false);
   const idRef = useRef(0);
 
   useEffect(() => {
     fetchRuns().then(setHistory);
-    fetchRunMode().then(setRunMode);
   }, []);
 
   async function run(path: string, body: any) {
@@ -127,19 +124,11 @@ export default function Home() {
     setStarted(true);
   }
 
-  const doGenerate = () => run("/api/generate", {
-    theme: theme.trim(), age, milestone_code: milestoneCode, theme_code: themeCode,
-  });
-  // On generate: if the system is in trial mode, warn first via a popup.
-  const start = async () => {
+  const start = () => {
     if (!theme.trim()) return;
-    const rm = await fetchRunMode();
-    if (rm) setRunMode(rm);
-    if (rm?.trial_mode) {
-      setShowTrialModal(true);   // Continue button proceeds
-    } else {
-      doGenerate();
-    }
+    run("/api/generate", {
+      theme: theme.trim(), age, milestone_code: milestoneCode, theme_code: themeCode,
+    });
   };
   const approve = async () => fetch(`${process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"}/api/feedback`, {
     method: "POST",
@@ -250,52 +239,6 @@ export default function Home() {
         </>
       )}
 
-      {/* Trial-mode confirmation popup */}
-      {showTrialModal && (
-        <div
-          onClick={() => setShowTrialModal(false)}
-          style={{
-            position: "fixed", inset: 0, zIndex: 50,
-            background: "rgba(20,18,15,0.45)",
-            display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="card"
-            style={{ maxWidth: 440, width: "100%", padding: 26, textAlign: "left",
-                     animation: "fadeUp .2s ease" }}
-          >
-            <div style={{
-              display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: ".04em",
-              padding: "3px 10px", borderRadius: 4, background: "#fef08a", color: "#854d0e",
-              marginBottom: 14,
-            }}>
-              TRIAL MODE
-            </div>
-            <h3 style={{ fontSize: 19, marginBottom: 10 }}>This will run as a trial</h3>
-            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5, marginBottom: 8 }}>
-              The system will run in trial state and generate only a few questions
-              {runMode ? ` (up to ${runMode.max_questions} questions and ${runMode.max_images} images)` : ""}.
-            </p>
-            <p style={{ fontSize: 13, color: "var(--ink-faint)", lineHeight: 1.5, marginBottom: 22 }}>
-              To change this, update the limits in the{" "}
-              <a href="/admin" style={{ color: "var(--accent)" }}>Admin panel</a>.
-            </p>
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button className="btn btn-ghost" onClick={() => setShowTrialModal(false)}>
-                Cancel
-              </button>
-              <button
-                className="btn btn-accent"
-                onClick={() => { setShowTrialModal(false); doGenerate(); }}
-              >
-                Continue →
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   );
 }

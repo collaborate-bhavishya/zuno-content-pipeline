@@ -240,7 +240,7 @@ def fabricator_node(state: dict) -> dict:
 
     user = (f"Convert this blueprint into a structured JSON array with as many rows as "
             f"the lesson requires (follow the blueprint's playable steps). "
-            f"Maximum {CONFIG.effective_max_questions} rows. Each row MUST have ALL of these 26 keys:\n"
+            f"Maximum {CONFIG.max_questions} rows. Each row MUST have ALL of these 26 keys:\n"
             f"  {', '.join(columns)}\n\n"
             f"COLUMN GUIDE (26-column schema):\n"
             f"Group 1 — Identity & Instruction:\n"
@@ -321,7 +321,7 @@ def fabricator_node(state: dict) -> dict:
                            node="fabricator", role="generator")
     clean = resp.content.replace("```json", "").replace("```", "").strip()
     try:
-        rows = json.loads(clean)[: CONFIG.effective_max_questions]
+        rows = json.loads(clean)[: CONFIG.max_questions]
     except Exception as e:
         rows = []
         err = f"JSON parse failed: {e}"
@@ -429,7 +429,7 @@ def asset_planner_node(state: dict) -> dict:
         c for c in candidates
         if c["filename"] not in existing_local and c["filename"] not in db_existing
     ]
-    queue = queue[: CONFIG.effective_max_images]
+    queue = queue[: CONFIG.max_images]
 
     # Register EVERY distinct image (one row per split filename) in Supabase —
     # idempotent: won't overwrite rows already marked generated.

@@ -114,8 +114,8 @@ export default function Admin() {
         <ModelRow label="Blueprint judge" prefix="judge" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
       </Section>
 
-      {/* MODE + LIMITS */}
-      <Section title="Run mode & limits" subtitle="Trial mode (default) caps questions and images so test runs stay cheap. Turn it off for a full run where the system decides the count.">
+      {/* LIMITS */}
+      <Section title="Limits" subtitle="The system decides how many questions the lesson needs, up to these upper bounds.">
         {/* Daily hard stop */}
         <div style={{
           display: "flex", alignItems: "center", gap: 12, marginBottom: 18,
@@ -132,61 +132,8 @@ export default function Admin() {
           </span>
         </div>
 
-        {/* Trial toggle */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 14, marginBottom: 18,
-          padding: "14px 16px", borderRadius: 10,
-          background: config.limits.trial_mode ? "#fefce8" : "var(--cream)",
-          border: `1px solid ${config.limits.trial_mode ? "#fef08a" : "var(--line)"}`,
-        }}>
-          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", flex: 1 }}>
-            <input
-              type="checkbox"
-              checked={!!config.limits.trial_mode}
-              onChange={(e) => setLimit("trial_mode", e.target.checked ? 1 : 0)}
-              style={{ width: 18, height: 18, accentColor: "var(--accent)" }}
-            />
-            <div>
-              <span style={{ fontSize: 14, fontWeight: 600 }}>Trial mode</span>
-              <div style={{ fontSize: 12, color: "var(--ink-faint)", marginTop: 1 }}>
-                {config.limits.trial_mode
-                  ? `Capped to ${config.limits.trial_max_questions} questions & ${config.limits.trial_max_images} images`
-                  : "Full mode — system decides count (up to the upper bounds below)"}
-              </div>
-            </div>
-          </label>
-          <span style={{
-            fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 4,
-            background: config.limits.trial_mode ? "#fef08a" : "#22c55e22",
-            color: config.limits.trial_mode ? "#854d0e" : "#22c55e",
-          }}>
-            {config.limits.trial_mode ? "TRIAL" : "FULL"}
-          </span>
-        </div>
-
-        {/* Trial caps — active when trial mode is on */}
-        {config.limits.trial_mode && (
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--ink-soft)", marginBottom: 8 }}>
-              Trial caps (active)
-            </div>
-            {[["trial_max_questions", "max questions"], ["trial_max_images", "max images"]].map(([k, label]) => (
-              <div key={k} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 10 }}>
-                <span style={{ minWidth: 150, fontSize: 13.5 }}>{label}</span>
-                <input type="number" min={0} value={config.limits[k] ?? 0}
-                  onChange={(e) => setLimit(k, Number(e.target.value))} style={{ ...inp, maxWidth: 100 }} />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Full-mode upper bounds + retries */}
-        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--ink-soft)", marginBottom: 8 }}>
-          {config.limits.trial_mode ? "Full-mode upper bounds (used when trial is off)" : "Limits"}
-        </div>
         {["max_questions", "max_images", "max_retries"].map((k) => (
-          <div key={k} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12,
-            opacity: config.limits.trial_mode && k !== "max_retries" ? 0.55 : 1 }}>
+          <div key={k} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12 }}>
             <span style={{ minWidth: 150, fontSize: 13.5 }}>{k.replace(/_/g, " ")}</span>
             <input type="number" value={config.limits[k]} onChange={(e) => setLimit(k, Number(e.target.value))} style={{ ...inp, maxWidth: 100 }} />
           </div>
