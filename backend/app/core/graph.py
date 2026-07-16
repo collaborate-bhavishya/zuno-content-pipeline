@@ -7,12 +7,11 @@ from app.nodes.graph_nodes import (
     asset_planner_node, eval_node,
 )
 
-# Image generation/vision-critique are intentionally NOT wired in for now —
-# asset_planner already lists every needed image and registers it as
-# `pending` (status=0) in Supabase (see app/core/db.py:upsert_pending), which
-# is all we need at this stage. The generation/critic nodes still exist in
-# app/nodes/graph_nodes.py (image_factory_node, vision_critic_node) if this
-# gets re-enabled later — just re-add them as nodes here.
+# The pipeline plans images but does not render them: asset_planner lists
+# every image the matrix needs and registers new ones as pending (status=0)
+# in Supabase (see app/core/db.py:upsert_pending) for a separate generation
+# process. The old in-graph image factory / vision critic were removed in
+# the simplification pass — see git history if they're ever needed again.
 
 
 def build_graph():

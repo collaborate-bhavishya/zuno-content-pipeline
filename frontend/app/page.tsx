@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { streamPost, FeedEvent, fetchRuns, RunRecord, retryImages, fetchRunMode, RunMode, reviewImage } from "../lib/api";
+import { streamPost, FeedEvent, fetchRuns, RunRecord, fetchRunMode, RunMode } from "../lib/api";
 import { authHeaders } from "../lib/supabase";
 import ProcessFeed, { FeedItem, eventToItem } from "../components/ProcessFeed";
 import OutputPanel from "../components/OutputPanel";
@@ -19,8 +19,7 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [history, setHistory] = useState<RunRecord[]>([]);
   const [currentRunId, setCurrentRunId] = useState<string | null>(null);
-  const [imagesPending, setImagesPending] = useState(false); // questions shown, images still rendering
-  const [quotaWait, setQuotaWait] = useState(false);          // image model is rate-limited / slow
+  const [finishingUp, setFinishingUp] = useState(false); // questions shown, eval still running
   const [runMode, setRunMode] = useState<RunMode | null>(null);
   const [showTrialModal, setShowTrialModal] = useState(false);
   const idRef = useRef(0);
@@ -35,23 +34,21 @@ export default function Home() {
     setResult(null);
     setRunning(true);
     setStarted(true);
-    setImagesPending(false);
-    setQuotaWait(false);
+    setFinishingUp(false);
     idRef.current = 0;
 
     try {
       await streamPost(path, body, (e: FeedEvent) => {
         if (e.kind === "node") {
           setItems((prev) => [...prev, eventToItem(e, idRef.current++)]);
-          if ((e as any).detail?.quota_wait) setQuotaWait(true);
         } else if ((e as any).kind === "error") {
           setItems((prev) => [...prev, {
             id: idRef.current++, label: "Run stopped",
             action: (e as any).message || "The run was stopped.", status: "fail" as const,
           }]);
         } else if (e.kind === "questions_ready") {
-          // Questions are finalized — show them for review while images render.
-          setImagesPending(true);
+          // Questions are finalized — show them for review while eval finishes.
+          setFinishingUp(true);
           setResult({
             kind: "complete",
             theme, age,
@@ -61,8 +58,7 @@ export default function Home() {
             eval: undefined, metrics: undefined, pending_images: [],
           } as any);
         } else if (e.kind === "complete") {
-          setImagesPending(false);
-          setQuotaWait(false);
+          setFinishingUp(false);
           setResult(e);
           const m = (e as any).metrics;
           const costStr = m ? ` · $${m.total_cost < 0.01 ? m.total_cost.toFixed(4) : m.total_cost.toFixed(3)}` : "";
@@ -72,7 +68,7 @@ export default function Home() {
             {
               id: idRef.current++,
               label: "Generation complete",
-              action: `${e.matrix?.length || 0} questions · ${e.images?.length || 0} images${timeStr}${costStr}`,
+              action: `${e.matrix?.length || 0} questions · ${(e as any).pending_images?.length || 0} images registered${timeStr}${costStr}`,
               status: "pass" as const,
             },
           ]);
@@ -105,7 +101,6 @@ export default function Home() {
       eval: run.eval,
       metrics: run.metrics,
       pending_images: (run as any).pending_images,
-      wrong_generations: (run as any).wrong_generations,
       play_url: (run as any).play_url,
       s3_uri: (run as any).s3_uri,
     } as any);
@@ -127,8 +122,7 @@ export default function Home() {
     } else {
       setItems([]);
     }
-    setImagesPending(false);
-    setQuotaWait(false);
+    setFinishingUp(false);
     setRunning(false);
     setStarted(true);
   }
@@ -158,50 +152,6 @@ export default function Home() {
   const sendFeedback = (text: string, phase: string = "all") =>
     run("/api/feedback", { action: "feedback", theme, age, feedback: text, phase, run_id: currentRunId,
       milestone_code: milestoneCode, theme_code: themeCode });
-
-  const handleImageReview = async (filename: string, action: "use" | "reject") => {
-    if (!currentRunId) return;
-    try {
-      const res = await reviewImage(currentRunId, filename, action);
-      setResult((prev) => prev
-        ? ({ ...prev, images: res.images, wrong_generations: res.wrong_generations } as any)
-        : prev);
-    } catch (err) {
-      setItems((prev) => [
-        ...prev,
-        { id: idRef.current++, label: "Image review failed", action: String(err), status: "fail" as const },
-      ]);
-    }
-  };
-
-  const handleRetryImages = async () => {
-    if (!currentRunId) return;
-    setRunning(true);
-    setItems((prev) => [
-      ...prev,
-      { id: idRef.current++, label: "Retrying images", action: "Generating pending images...", status: "info" as const },
-    ]);
-    try {
-      await retryImages(currentRunId, (e: FeedEvent) => {
-        if (e.kind === "node") {
-          setItems((prev) => [...prev, eventToItem(e, idRef.current++)]);
-        } else if (e.kind === "complete") {
-          setResult(e);
-        }
-      });
-    } catch (err) {
-      setItems((prev) => [
-        ...prev,
-        { id: idRef.current++, label: "Retry failed", action: String(err), status: "fail" as const },
-      ]);
-    } finally {
-      setRunning(false);
-      fetchRuns().then((runs) => {
-        setHistory(runs);
-        if (runs.length > 0) setCurrentRunId(runs[0].id);
-      });
-    }
-  };
 
   return (
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -244,8 +194,8 @@ export default function Home() {
         />
       ) : (
         <>
-        {/* Quota-aware banner: questions ready, images still rendering slowly */}
-        {running && imagesPending && (
+        {/* Questions ready, eval still scoring */}
+        {running && finishingUp && (
           <div style={{
             display: "flex", alignItems: "center", gap: 12,
             padding: "12px 28px", fontSize: 13.5,
@@ -254,11 +204,8 @@ export default function Home() {
           }}>
             <div className="spinner" style={{ flexShrink: 0 }} />
             <span>
-              <strong style={{ fontWeight: 600 }}>
-                {quotaWait ? "Image model is at its current quota limit — generating slowly." : "Generating images…"}
-              </strong>{" "}
-              Your questions are ready below — feel free to review them now. Images
-              will keep filling in automatically; this can take a few minutes.
+              <strong style={{ fontWeight: 600 }}>Scoring the lesson…</strong>{" "}
+              Your questions are ready below — feel free to review them now.
             </span>
           </div>
         )}
@@ -296,8 +243,6 @@ export default function Home() {
                 onApprove={approve}
                 onFeedback={sendFeedback}
                 onRerun={rerun}
-                onRetryImages={handleRetryImages}
-                onImageReview={handleImageReview}
               />
             </section>
           )}

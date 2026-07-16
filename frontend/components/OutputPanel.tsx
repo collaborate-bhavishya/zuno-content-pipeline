@@ -12,16 +12,12 @@ export default function OutputPanel({
   onApprove,
   onFeedback,
   onRerun,
-  onRetryImages,
-  onImageReview,
   busy,
 }: {
   data: Complete;
   onApprove: () => void;
   onFeedback: (text: string, phase?: RerunPhase) => void;
   onRerun: (phase: RerunPhase) => void;
-  onRetryImages?: () => void;
-  onImageReview?: (filename: string, action: "use" | "reject") => void;
   busy: boolean;
 }) {
   const [tab, setTab] = useState<"blueprint" | "questions" | "images" | "eval" | "logs">("blueprint");
@@ -38,8 +34,8 @@ export default function OutputPanel({
     ["questions", "Questions", data.matrix?.length ? `${data.matrix.length}` : ""],
     ["images", "Images", (() => {
       const imgs = data.images?.length || 0;
-      const review = (data as any).wrong_generations?.length || 0;
-      return review ? `${imgs} · ${review} to review` : (imgs ? `${imgs}` : "");
+      const pending = (data as any).pending_images?.length || 0;
+      return pending ? `${pending} pending` : (imgs ? `${imgs}` : "");
     })()],
     ["eval", "Eval", evalData?.grade || ""],
     ["logs", "Logs", data.history?.length ? `${data.history.length}` : ""],
@@ -156,80 +152,21 @@ export default function OutputPanel({
 
         {tab === "images" && (
           <div>
-            {/* Pending images banner */}
+            {/* Images this lesson needs that don't exist yet — registered as
+                pending in Supabase for the external generation process. */}
             {(data as any).pending_images?.length > 0 && (
               <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "12px 16px", marginBottom: 14, borderRadius: 10,
                 background: "#fefce8", border: "1px solid #fef08a",
               }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#854d0e" }}>
-                    {(data as any).pending_images.length} image{(data as any).pending_images.length > 1 ? "s" : ""} pending
-                  </div>
-                  <div style={{ fontSize: 12, color: "#a16207", marginTop: 2 }}>
-                    Image quota was exhausted. These will be generated when quota resets.
-                  </div>
-                  <div style={{ fontSize: 11, color: "#a16207", marginTop: 4 }}>
-                    {(data as any).pending_images.map((a: any) => a.object_name || a.filename).join(", ")}
-                  </div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#854d0e" }}>
+                  {(data as any).pending_images.length} image{(data as any).pending_images.length > 1 ? "s" : ""} registered for generation
                 </div>
-                {onRetryImages && (
-                  <button
-                    className="btn btn-ghost"
-                    onClick={onRetryImages}
-                    disabled={busy}
-                    style={{ flexShrink: 0, fontSize: 12, color: "#854d0e", borderColor: "#fef08a" }}
-                  >
-                    Retry now
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Rejected images — manual review (Use now / Reject) */}
-            {(data as any).wrong_generations?.length > 0 && (
-              <div style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#854d0e", marginBottom: 4 }}>
-                  Needs review — {(data as any).wrong_generations.length} image
-                  {(data as any).wrong_generations.length > 1 ? "s" : ""} rejected by the vision critic
+                <div style={{ fontSize: 12, color: "#a16207", marginTop: 2 }}>
+                  New images this lesson needs — saved as pending in the asset database.
                 </div>
-                <div style={{ fontSize: 12, color: "var(--ink-faint)", marginBottom: 10 }}>
-                  The critic flagged these, but you can keep them. Review and choose <strong>Use now</strong> or <strong>Reject</strong>.
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 14 }}>
-                  {(data as any).wrong_generations.map((w: any) => (
-                    <div key={w.filename} className="card" style={{ padding: 10, border: "1px solid #fde68a" }}>
-                      <div style={{ background: "#fff", borderRadius: 8, aspectRatio: "1",
-                        display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={imageUrl(w.url)} alt={w.filename} style={{ maxWidth: "100%", maxHeight: "100%" }} />
-                      </div>
-                      <div style={{ fontSize: 12, marginTop: 7, fontWeight: 600, color: "var(--ink-soft)" }}>{w.filename}</div>
-                      {w.reason && (
-                        <div style={{ fontSize: 11, color: "var(--ink-faint)", marginTop: 3,
-                          maxHeight: 48, overflow: "hidden" }}>{w.reason}</div>
-                      )}
-                      <div style={{ display: "flex", gap: 6, marginTop: 9 }}>
-                        <button
-                          onClick={() => onImageReview?.(w.filename, "use")}
-                          disabled={busy || !onImageReview}
-                          style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                            borderRadius: 7, border: "1px solid var(--green)", background: "var(--green-soft)", color: "var(--green)" }}
-                        >
-                          Use now
-                        </button>
-                        <button
-                          onClick={() => onImageReview?.(w.filename, "reject")}
-                          disabled={busy || !onImageReview}
-                          style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                            borderRadius: 7, border: "1px solid var(--accent)", background: "var(--accent-soft)", color: "var(--accent)" }}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                <div style={{ fontSize: 11, color: "#a16207", marginTop: 4 }}>
+                  {(data as any).pending_images.map((a: any) => a.object_name || a.filename).join(", ")}
                 </div>
               </div>
             )}
@@ -255,11 +192,8 @@ export default function OutputPanel({
                 </div>
               ))}
               {(!data.images || data.images.length === 0) && !(data as any).pending_images?.length && (
-                <div style={{ color: "var(--ink-faint)", fontSize: 13 }}>No images approved.</div>
-              )}
-              {data.failed?.length > 0 && (
-                <div style={{ gridColumn: "1/-1", fontSize: 12.5, color: "var(--accent)" }}>
-                  {data.failed.length} asset(s) failed the vision critic after retries: {data.failed.join(", ")}
+                <div style={{ color: "var(--ink-faint)", fontSize: 13 }}>
+                  No new images needed — everything is reused from the asset library.
                 </div>
               )}
             </div>
@@ -317,9 +251,9 @@ export default function OutputPanel({
                 }}>
                   {([
                     ["all", "Re-run everything", "Full pipeline from scratch"],
-                    ["blueprint", "Re-run blueprint", "New blueprint → questions → images"],
-                    ["questions", "Re-run questions", "Keep blueprint, redo questions → images"],
-                    ["images", "Re-run images only", "Keep questions, regenerate images"],
+                    ["blueprint", "Re-run blueprint", "New blueprint → questions → image plan"],
+                    ["questions", "Re-run questions", "Keep blueprint, redo questions → image plan"],
+                    ["images", "Re-plan images", "Keep questions, redo image plan & eval"],
                   ] as [RerunPhase, string, string][]).map(([phase, label, desc]) => (
                     <button
                       key={phase}
@@ -372,7 +306,7 @@ export default function OutputPanel({
                 <option value="all">Re-run everything</option>
                 <option value="blueprint">Re-run from blueprint</option>
                 <option value="questions">Re-run from questions</option>
-                <option value="images">Re-run images only</option>
+                <option value="images">Re-plan images</option>
               </select>
               <button
                 className="btn btn-accent"

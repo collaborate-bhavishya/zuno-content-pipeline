@@ -71,7 +71,10 @@ def upsert_pending(assets: list[dict]):
 
 
 def mark_generated(image_name: str, image_url: str = ""):
-    """Set status=1 and optionally store the URL/path."""
+    """Set status=1 and optionally store the URL/path.
+
+    No in-repo callers: this is the ledger's write-back hook for the external
+    image-generation process that renders pending (status=0) assets."""
     client = get_client()
     try:
         client.table("image_assets").update(
@@ -79,25 +82,6 @@ def mark_generated(image_name: str, image_url: str = ""):
         ).eq("image_name", image_name).execute()
     except Exception as e:
         log.warning("mark_generated(%s): %s", image_name, e)
-
-
-def mark_failed(image_name: str):
-    """Keep status=0 so next run retries it."""
-    # Nothing to change — status is already 0.
-    # But we log it for observability.
-    log.info("Image stayed pending (will retry next run): %s", image_name)
-
-
-def mark_wrong_generation(image_name: str, image_url: str = ""):
-    """Image was generated but REJECTED by the vision critic. Status 2 =
-    wrong_generation; image_url points to the stored (rejected) image for review."""
-    client = get_client()
-    try:
-        client.table("image_assets").update(
-            {"status": 2, "image_url": image_url}
-        ).eq("image_name", image_name).execute()
-    except Exception as e:
-        log.warning("mark_wrong_generation(%s): %s", image_name, e)
 
 
 def get_all_assets(milestone_code: str = "", theme_code: str = "") -> list[dict]:

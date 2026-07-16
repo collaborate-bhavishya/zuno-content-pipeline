@@ -10,12 +10,10 @@ FastAPI backend.
 import json
 import asyncio
 import os
-import io
 import re
 import logging
 from datetime import datetime, timezone
 from typing import Optional
-from PIL import Image
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)s  %(message)s")
 
@@ -27,7 +25,6 @@ from pydantic import BaseModel
 
 from app.core.config import CONFIG, ADMIN_PASSWORD, persist_keys_to_env
 from app.core.graph import build_graph
-from app.core.scorer import score_run as _score_run
 from app.core.metrics import init_collector, get_collector, clear_collector
 from app.core.db import save_run as _db_save_run, save_questions as _db_save_questions
 from app.core.auth import require_user
@@ -38,40 +35,6 @@ RUNS_FILE = os.path.normpath(RUNS_FILE)
 RUNS_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "storage", "runs"))
 
 log = logging.getLogger("main")
-
-
-def _auto_score(theme: str, age: int, matrix: list) -> dict:
-    """Build eval spec from current config and score the matrix. Returns dict."""
-    guidelines = CONFIG.output.age_guidelines.get(age, {})
-    expected = {
-        "allowed_templates": guidelines.get("allowed_templates", []),
-        "forbidden_templates": guidelines.get("forbidden_templates", []),
-        "max_words_per_sentence": guidelines.get("max_words_per_sentence", 99),
-        "must_start_with": "T4",
-        "vocab_before_sentence": True,
-        "concept_before_sentence": True,
-        "t9_before_d1": True,
-        "required_columns": 26,
-        "no_emoji": True,
-        "image_filenames_snake_case": True,
-        "stt_clean_lowercase": True,
-        "theme_concepts": [],          # auto-runs don't have gold keywords
-        "forbidden_themes": ["violence", "injury", "fear", "death",
-                             "dark_themes", "body_horror", "weapons", "abuse"],
-    }
-    try:
-        result = _score_run(
-            case_id=f"auto_{theme}_{age}",
-            theme=theme, age=age,
-            matrix_rows=matrix,
-            expected=expected,
-            use_llm_tone=True,
-        )
-        return result.to_dict()
-    except Exception as e:
-        log.warning("Auto-score failed: %s", e)
-        return {"total_score": 0, "grade": "?", "error": str(e),
-                "dimensions": [], "llm_calls": 0}
 
 
 def _load_runs() -> list:
@@ -294,24 +257,14 @@ def _summarize(node: str, update: dict) -> dict:
         safe["decision"] = update["gate_decision"]
     if "matrix_gate_decision" in update:
         safe["decision"] = update["matrix_gate_decision"]
-    if "image_gate_decision" in update:
-        safe["decision"] = update["image_gate_decision"]
     if update.get("blueprint_error_log"):
         safe["critique"] = update["blueprint_error_log"]
     if update.get("matrix_error_log"):
         safe["critique"] = update["matrix_error_log"]
-    if update.get("image_error_log"):
-        safe["critique"] = update["image_error_log"]
     if "raw_question_matrix" in update and update["raw_question_matrix"] is not None:
         safe["rows"] = len(update["raw_question_matrix"])
-    if "completed_assets" in update:
-        safe["completed"] = update["completed_assets"]
-    if update.get("quota_exhausted"):
-        pending = update.get("pending_assets", [])
-        safe["quota_exhausted"] = True
-        safe["pending_count"] = len(pending)
-    if update.get("image_quota_wait"):
-        safe["quota_wait"] = True
+    if "asset_queue" in update:
+        safe["pending_images"] = [a.get("filename", "") for a in update["asset_queue"]]
     if "eval_result" in update:
         ev = update["eval_result"]
         safe["decision"] = f"grade {ev.get('grade', '?')} — {ev.get('total_score', 0)}/100"
@@ -381,7 +334,7 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
                 "matrix": final_state.get("raw_question_matrix", []) or [],
                 "images": final_state.get("completed_assets", []),
                 "failed": final_state.get("failed_assets", []),
-                "pending_images": final_state.get("pending_assets", []),
+                "pending_images": final_state.get("asset_queue", []),
                 "history": final_state.get("evaluator_history", []),
                 "eval": final_state.get("eval_result") or {},
                 "metrics": None,
@@ -403,7 +356,6 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
     retries = {
         "blueprint": max(0, final_state.get("blueprint_retry_count", 1) - 1),
         "matrix": max(0, final_state.get("matrix_retry_count", 1) - 1),
-        "image": final_state.get("image_retry_count", 0),
     }
     metrics = mc.finalize(retries).to_dict()
     clear_collector()
@@ -419,8 +371,7 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
         "matrix": matrix,
         "images": final_state.get("completed_assets", []),
         "failed": final_state.get("failed_assets", []),
-        "wrong_generations": final_state.get("wrong_generations", []),
-        "pending_images": final_state.get("pending_assets", []),
+        "pending_images": final_state.get("asset_queue", []),
         "history": final_state.get("evaluator_history", []),
         "eval": eval_result,
         "metrics": metrics,
@@ -566,7 +517,6 @@ async def feedback(req: FeedbackRequest):
         retries = {
             "blueprint": max(0, final.get("blueprint_retry_count", 1) - 1),
             "matrix": max(0, final.get("matrix_retry_count", 1) - 1),
-            "image": final.get("image_retry_count", 0),
         }
         metrics = mc.finalize(retries).to_dict()
         clear_collector()
@@ -582,7 +532,7 @@ async def feedback(req: FeedbackRequest):
             "matrix": matrix,
             "images": final.get("completed_assets", []),
             "failed": final.get("failed_assets", []),
-            "pending_images": final.get("pending_assets", []),
+            "pending_images": final.get("asset_queue", []),
             "history": final.get("evaluator_history", []),
             "eval": eval_result,
             "metrics": metrics,
@@ -593,183 +543,6 @@ async def feedback(req: FeedbackRequest):
                                     if k not in ("id", "timestamp")})
 
     return StreamingResponse(rerun(), media_type="text/event-stream")
-
-
-# ===================== RETRY IMAGES =====================
-
-@app.post("/api/retry-images/{run_id}", dependencies=[Depends(require_user)])
-async def retry_images(run_id: str):
-    """Retry pending images for a run whose image quota was exhausted."""
-    runs = _load_runs()
-    run = next((r for r in runs if r["id"] == run_id), None)
-    if not run:
-        raise HTTPException(status_code=404, detail="Run not found")
-    pending = run.get("pending_images", [])
-    if not pending:
-        raise HTTPException(status_code=400, detail="No pending images to retry")
-
-    async def stream():
-        from app.core.llm import render_image_bytes, get_vision_judge
-        from app.core.storage import STORAGE
-        from app.nodes.graph_nodes import _eye_rule, LIVING_KEYWORDS, build_image_prompt
-
-        completed = list(run.get("images", []))
-        failed = list(run.get("failed", []))
-        remaining = list(pending)
-        quota_hit = False
-
-        yield _event("start", theme=run["theme"], age=run["age"],
-                     retry_images=True, pending=len(pending))
-
-        for i, asset in enumerate(pending):
-            if quota_hit:
-                break
-
-            obj_name = asset["object_name"]
-            eye = _eye_rule(obj_name)
-            prompt = build_image_prompt(asset, eye)
-
-            yield _event("node", node="image_factory", label="Image factory",
-                         action=f"Rendering '{obj_name}' ({i+1}/{len(pending)})",
-                         detail={})
-
-            for attempt in range(CONFIG.max_retries):
-                try:
-                    raw = render_image_bytes(prompt)
-                    if not raw:
-                        continue
-                    pil = Image.open(io.BytesIO(raw))
-
-                    # Quick vision check
-                    import base64 as b64mod
-                    buf = io.BytesIO(); pil.save(buf, format="PNG")
-                    data_uri = "data:image/png;base64," + b64mod.b64encode(buf.getvalue()).decode()
-                    judge = get_vision_judge()
-                    sys_p = CONFIG.prompts.vision_critic_system.format(
-                        object_name=obj_name, eye_rule=eye)
-                    r = judge.invoke([
-                        ("system", sys_p),
-                        {"role": "user", "content": [
-                            {"type": "text", "text": f"Audit this {obj_name} asset."},
-                            {"type": "image_url", "image_url": {"url": data_uri}}]}
-                    ])
-                    clean = r.content.replace("```json", "").replace("```", "").strip()
-                    try:
-                        verdict = json.loads(clean)
-                    except Exception:
-                        verdict = {"pass": "true" in clean.lower()}
-
-                    if verdict.get("pass"):
-                        url = STORAGE.save_image(pil, asset["filename"])
-                        # Mark as generated in Supabase DB
-                        try:
-                            from app.core.db import mark_generated as _db_mark
-                            _db_mark(asset["filename"], image_url=url)
-                        except Exception:
-                            pass
-                        completed.append({"filename": asset["filename"], "url": url,
-                                          "object_name": obj_name})
-                        remaining.remove(asset)
-                        yield _event("node", node="vision_critic", label="Vision critic",
-                                     action=f"Approved '{obj_name}'",
-                                     detail={"decision": "advance",
-                                             "completed": [{"filename": asset["filename"],
-                                                           "url": url, "object_name": obj_name}]})
-                        break
-                    else:
-                        reason = verdict.get("reason", "rejected")
-                        prompt += f" Fix: {reason}"
-                        if attempt == CONFIG.max_retries - 1:
-                            failed.append(asset["filename"])
-                            remaining.remove(asset)
-
-                except Exception as e:
-                    if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e).upper() or "quota" in str(e).lower():
-                        log.warning("Retry images: quota exhausted again at asset '%s'", obj_name)
-                        quota_hit = True
-                        yield _event("node", node="image_factory",
-                                     label="Image factory",
-                                     action=f"Quota exhausted — {len(remaining)} images still pending",
-                                     detail={"quota_exhausted": True,
-                                             "pending_count": len(remaining)})
-                        break
-                    if attempt == CONFIG.max_retries - 1:
-                        failed.append(asset["filename"])
-                        remaining.remove(asset)
-
-                await asyncio.sleep(0)
-
-        # Update the run record
-        run["images"] = completed
-        run["failed"] = failed
-        run["pending_images"] = remaining
-        _save_runs(runs)
-
-        yield _event("complete", theme=run["theme"], age=run["age"],
-                     images=completed, failed=failed,
-                     pending_images=remaining,
-                     blueprint=run.get("blueprint", ""),
-                     matrix=run.get("matrix", []),
-                     history=run.get("history", []),
-                     eval=run.get("eval"))
-
-    return StreamingResponse(stream(), media_type="text/event-stream")
-
-
-def _save_runs(runs: list):
-    """Save the full runs list to disk."""
-    os.makedirs(os.path.dirname(RUNS_FILE), exist_ok=True)
-    with open(RUNS_FILE, "w") as f:
-        json.dump(runs, f, indent=2, default=str)
-
-
-class ImageReviewRequest(BaseModel):
-    filename: str
-    action: str   # "use" | "reject"
-
-
-@app.post("/api/image-review/{run_id}", dependencies=[Depends(require_user)])
-async def image_review(run_id: str, body: ImageReviewRequest):
-    """Manually resolve a vision-critic-rejected image: 'use' promotes it to the
-    real asset (Supabase status -> 1), 'reject' discards it."""
-    from app.core.storage import STORAGE
-    from app.core.db import mark_generated
-    runs = _load_runs()
-    run = next((r for r in runs if r["id"] == run_id), None)
-    if not run:
-        raise HTTPException(status_code=404, detail="Run not found")
-    wrong = run.get("wrong_generations", [])
-    entry = next((w for w in wrong if w.get("filename") == body.filename), None)
-    if not entry:
-        raise HTTPException(status_code=404, detail="No image pending review with that filename")
-    wrong_name = entry.get("wrong_image") or f"wrong_{body.filename}"
-
-    if body.action == "use":
-        url = entry.get("url", "")
-        try:
-            url = STORAGE.copy_image(wrong_name, body.filename)   # promote to real filename
-        except Exception as e:
-            log.warning("image-review copy failed (%s); falling back to stored url", e)
-        try:
-            mark_generated(body.filename, image_url=url)          # Supabase status -> 1
-        except Exception as e:
-            log.warning("image-review mark_generated failed: %s", e)
-        obj = body.filename[:-4].replace("_", " ") if body.filename.endswith(".png") else body.filename
-        run["images"] = run.get("images", []) + [
-            {"filename": body.filename, "url": url, "object_name": obj}]
-        run["wrong_generations"] = [w for w in wrong if w.get("filename") != body.filename]
-    elif body.action == "reject":
-        run["wrong_generations"] = [w for w in wrong if w.get("filename") != body.filename]
-        try:
-            STORAGE.delete_image(wrong_name)
-        except Exception:
-            pass
-    else:
-        raise HTTPException(status_code=400, detail="action must be 'use' or 'reject'")
-
-    _save_runs(runs)
-    return {"images": run.get("images", []),
-            "wrong_generations": run.get("wrong_generations", [])}
 
 
 # ===================== ADMIN =====================

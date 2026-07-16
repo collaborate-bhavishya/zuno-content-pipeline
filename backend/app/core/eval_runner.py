@@ -80,7 +80,6 @@ def _run_single_case(case: dict) -> dict:
         retries = {
             "blueprint": final_state.get("blueprint_retry_count", 0),
             "matrix": final_state.get("matrix_retry_count", 0),
-            "image": final_state.get("image_retry_count", 0),
         }
         history = final_state.get("evaluator_history", [])
 

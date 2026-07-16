@@ -7,18 +7,17 @@ python-dotenv==1.2.2
 # Agent orchestration
 langgraph==1.2.4
 
-# LLM providers
-langchain-anthropic==1.4.4          # content generation + vision critic (Claude)
-langchain-google-vertexai==3.2.3    # judge / vision via Vertex AI (ADC)
-langchain-google-genai==4.2.4       # judge / vision via AI Studio API key
-anthropic==0.109.1
-google-genai==2.7.0                 # image generation (Imagen / Gemini-image)
+# LLM providers (all-Gemini: generator + judge)
+langchain-google-vertexai==3.2.3    # via Vertex AI (ADC)
+langchain-google-genai==4.2.4       # via AI Studio API key
 google-cloud-aiplatform==1.154.0
 
 # Data + storage
-supabase==2.31.0                    # image_assets ledger
-boto3==1.43.26                      # S3 run-JSON upload
+supabase==2.31.0                    # image_assets / runs / questions tables
+boto3==1.43.26                      # S3 run-JSON upload + image storage backend
 Pillow==12.2.0
 
-# Optional — only if you switch the generator to Amazon Bedrock:
-# langchain-aws==1.5.1
+# Optional — only if you switch a role to another provider in the admin panel:
+# langchain-anthropic==1.4.4
+# anthropic==0.109.1
+# langchain-openai

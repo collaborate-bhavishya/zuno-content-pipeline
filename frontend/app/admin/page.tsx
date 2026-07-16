@@ -109,14 +109,9 @@ export default function Admin() {
       </div>
 
       {/* MODELS */}
-      <Section title="Models" subtitle="Generator, judge, and vision-critic roles. Cross-family judging reduces self-preference bias.">
+      <Section title="Models" subtitle="Generator and judge roles. Cross-family judging reduces self-preference bias.">
         <ModelRow label="Generator (text)" prefix="generator" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
         <ModelRow label="Blueprint judge" prefix="judge" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
-        <ModelRow label="Vision critic" prefix="vision" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
-        <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 6 }}>
-          <span style={{ minWidth: 150, fontSize: 13.5, fontWeight: 500 }}>Image generator</span>
-          <input value={config.models.image_model} onChange={(e) => setModel("image_model", e.target.value)} style={inp} />
-        </div>
       </Section>
 
       {/* MODE + LIMITS */}
@@ -244,7 +239,6 @@ export default function Admin() {
       <Section title="Prompts" subtitle="Edit and save — changes apply to the next run, no restart.">
         <PromptEditor label="Generator system prompt" value={config.prompts.generator_system} onChange={(v: string) => setPrompt("generator_system", v)} />
         <PromptEditor label="Blueprint judge prompt" value={config.prompts.blueprint_judge_system} onChange={(v: string) => setPrompt("blueprint_judge_system", v)} />
-        <PromptEditor label="Vision critic prompt" value={config.prompts.vision_critic_system} onChange={(v: string) => setPrompt("vision_critic_system", v)} hint="Use {object_name} and {eye_rule} placeholders." />
       </Section>
     </div>
   );

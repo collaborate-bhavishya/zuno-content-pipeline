@@ -27,12 +27,10 @@ export function eventToItem(e: Extract<FeedEvent, { kind: "node" }>, id: number)
     status = ok ? "pass" : bad ? "fail" : "info";
   }
   if (d.rows !== undefined) note = `${d.rows} questions built`;
-  if (d.completed?.length) note = `${d.completed.length} image${d.completed.length > 1 ? "s" : ""} approved`;
-  if (d.preview) note = d.preview;
-  if ((d as any).quota_exhausted) {
-    status = "fail";
-    note = `Image quota exhausted (429). ${(d as any).pending_count || 0} images queued for retry when quota resets.`;
+  if (d.pending_images?.length) {
+    note = `${d.pending_images.length} image${d.pending_images.length > 1 ? "s" : ""} registered for generation: ${d.pending_images.join(", ")}`;
   }
+  if (d.preview) note = d.preview;
 
   return {
     id,

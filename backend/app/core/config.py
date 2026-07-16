@@ -22,26 +22,11 @@ class ModelConfig:
     generator_model: str = "gemini-2.5-flash"
     generator_temperature: float = 0.2
 
-    # Blueprint quality judge — same family as the generator for now (see note above).
+    # Blueprint quality judge — same family as the generator for now.
     # Swap provider to "anthropic" or "openai" if you have those keys.
     judge_provider: str = "google"
     judge_model: str = "gemini-2.5-flash"
     judge_temperature: float = 0.0
-
-    # Vision critic for image audit (must be multimodal). Uses the lighter
-    # gemini-2.5-flash-lite — the critic fires many calls per run, and the lite
-    # model has more quota headroom than full flash (which throttled under load).
-    # If it ever 429s, vision_critic_node degrades gracefully (accepts the image).
-    vision_provider: str = "google"
-    vision_model: str = "gemini-2.5-flash-lite"
-    vision_temperature: float = 0.0
-
-    # Image generator. Dispatched by family in llm.render_image_bytes():
-    #   'imagen-*' → Imagen generate_images API
-    #   'gemini-*' → Gemini-native generate_content (IMAGE modality)
-    # imagen-3.0-fast has by far the highest quota on this project (empirically
-    # ≥8 burst, no 429) vs ~2 for gemini-2.5-flash-image — see quota audit.
-    image_model: str = "imagen-3.0-fast-generate-001"
 
 
 @dataclass
@@ -52,14 +37,6 @@ class ApiKeys:
     # Vertex AI (used when google api key is not set)
     gcp_project: Optional[str] = field(default_factory=lambda: os.getenv("GOOGLE_CLOUD_PROJECT"))
     gcp_location: str = field(default_factory=lambda: os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"))
-    # Amazon Bedrock (for Nova models). Falls back to the standard AWS credential
-    # chain (env vars, ~/.aws/credentials, IAM role) if these are unset.
-    aws_access_key_id: Optional[str] = field(default_factory=lambda: os.getenv("AWS_ACCESS_KEY_ID"))
-    aws_secret_access_key: Optional[str] = field(default_factory=lambda: os.getenv("AWS_SECRET_ACCESS_KEY"))
-    aws_session_token: Optional[str] = field(default_factory=lambda: os.getenv("AWS_SESSION_TOKEN"))
-    aws_region: str = field(default_factory=lambda: os.getenv("AWS_REGION", "ap-south-1"))
-    # Bedrock API key (bearer token) — alternative to access-key auth
-    aws_bedrock_token: Optional[str] = field(default_factory=lambda: os.getenv("AWS_BEARER_TOKEN_BEDROCK"))
 
     def masked(self) -> dict:
         """Return keys with all but the last 4 chars hidden, for the admin UI."""
@@ -110,18 +87,6 @@ for stylistic preferences or hypothetical improvements.
 
 Output ONLY raw JSON, no markdown:
 {"verdict": "PASS" | "FAIL", "critique": "<numbered list of ALL issues + technical fix instructions if FAIL>"}"""
-
-DEFAULT_VISION_CRITIC_SYSTEM = """You are a Lead Preschool UI Auditor. Inspect the
-ATTACHED IMAGE for design-system compliance. Looking at the ACTUAL PIXELS, check:
-- Background 100% flat solid white (no transparency checkerboard)?
-- Any rough sketches or heavy black outlines? (must be NONE)
-- Face rule for "{object_name}": {eye_rule}
-- Colors bright, inviting, child-safe (no dark/scary tones)?
-- Single centered isolated object?
-
-Output ONLY raw JSON, no markdown:
-{{"pass": true/false, "reason": "<specific visual critique if false, else empty>"}}"""
-
 
 DEFAULT_MATRIX_COLUMNS = [
     # Group 1: Identity & Instruction
@@ -411,7 +376,6 @@ class OutputConfig:
 class Prompts:
     generator_system: str = DEFAULT_GENERATOR_SYSTEM
     blueprint_judge_system: str = DEFAULT_BLUEPRINT_JUDGE_SYSTEM
-    vision_critic_system: str = DEFAULT_VISION_CRITIC_SYSTEM
 
 
 @dataclass
@@ -425,10 +389,6 @@ class RuntimeConfig:
     max_questions: int = 100
     max_images: int = 100
     max_retries: int = 5
-    max_total_llm_calls: int = 60      # hard cutoff across entire pipeline
-    max_image_loop_iterations: int = 50 # max image_factory+vision_critic cycles
-    image_backoff_base_s: int = 12     # 429 backoff: waits 12s, 24s, 36s before deferring
-    image_throttle_s: float = 1.5      # small pause between image calls to avoid bursts
 
     # Trial mode — ON by default to conserve image quota / API spend. When on,
     # the pipeline is capped to the (smaller) trial limits below. Toggle + caps

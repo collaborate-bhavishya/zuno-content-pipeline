@@ -20,23 +20,13 @@ class LessonState(TypedDict, total=False):
     matrix_error_log: str
     matrix_gate_decision: str
 
-    # Phase 3: image assets
-    asset_queue: list
-    current_asset_index: int
-    current_image: object        # PIL image held in memory between factory + critic
-    current_eye_rule: str
-    image_error_log: str
-    image_retry_count: int
-    image_loop_iterations: int   # total image_factory calls — hard cutoff guard
-    image_quota_wait: bool       # True when paced/cooling down on image 429s
-    image_gate_decision: str
-    completed_assets: list       # [{filename, url}]
-    failed_assets: list
-    wrong_generations: list      # critic-rejected images kept for review (status=2)
-    pending_assets: list         # assets queued for retry (quota exhausted)
-    quota_exhausted: bool        # True if image API returned 429
+    # Phase 3: image planning (no generation — the planner registers each
+    # needed image as pending in Supabase for a separate process to render)
+    asset_queue: list            # images the matrix needs that don't exist yet
+    completed_assets: list       # kept for output-shape compat (always [] now)
+    failed_assets: list          # kept for output-shape compat (always [] now)
 
-    # Eval (runs after asset_planner, before image generation)
+    # Eval (runs after asset_planner)
     eval_result: Optional[dict]
 
     # shared

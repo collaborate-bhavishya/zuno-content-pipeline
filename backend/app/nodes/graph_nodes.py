@@ -7,46 +7,19 @@ LLM clients are fetched fresh from the factory each call so admin edits take eff
 on the next run. Each LLM call is instrumented with the MetricsCollector for
 token/cost/latency tracking.
 """
-import io
 import json
 import time
-import base64
 import logging
-from PIL import Image
 
 log = logging.getLogger("pipeline")
 
 from app.core.config import CONFIG, TEMPLATE_COLUMN_RULES
-from app.core.llm import (get_generator, get_judge, get_vision_judge,
-                          get_image_client, render_image_bytes, image_cooldown_remaining)
+from app.core.llm import get_generator, get_judge
 from app.core.storage import STORAGE
 from app.core.validators import scan_for_unsafe_content, validate_blueprint, validate_matrix
 from app.core.metrics import get_collector
 from app.core.scorer import score_run as _score_run
-from app.core.db import lookup_existing, upsert_pending, mark_generated, mark_wrong_generation
-
-LIVING_KEYWORDS = ["cat", "dog", "lion", "monkey", "bear", "bird", "fish",
-                   "tiger", "boy", "girl", "cow", "duck", "frog"]
-
-# Known INANIMATE objects → rendered with NO face. Everything else (animals,
-# people, characters, or anything ambiguous) defaults to friendly eyes — because
-# in these themes an unknown subject is almost always a living creature, and
-# wrongly forbidding a face causes false rejections (e.g. an elephant with eyes).
-INANIMATE_WORDS = {
-    "ball", "block", "blocks", "cube", "cup", "mug", "plate", "bowl", "spoon",
-    "fork", "knife", "box", "bag", "basket", "bottle", "jar", "can",
-    "car", "truck", "bus", "train", "plane", "boat", "ship", "bike", "cycle",
-    "apple", "banana", "orange", "grape", "grapes", "fruit", "mango", "pear",
-    "carrot", "tomato", "potato", "corn", "vegetable", "cake", "bread", "egg",
-    "book", "pen", "pencil", "crayon", "paper", "bag",
-    "cap", "hat", "shoe", "shoes", "sock", "socks", "shirt", "dress", "coat",
-    "star", "moon", "sun", "cloud", "circle", "square", "triangle", "heart",
-    "tree", "leaf", "leaves", "flower", "plant", "grass", "rock", "stone",
-    "house", "home", "door", "window", "wall", "roof",
-    "key", "drum", "bell", "kite", "balloon", "clock", "lamp", "light",
-    "chair", "table", "bed", "sofa", "brush", "comb", "umbrella", "ring",
-    "coin", "phone", "tv", "guitar", "flag", "wheel", "button",
-}
+from app.core.db import lookup_existing, upsert_pending
 
 
 def _extract_tokens(resp) -> tuple:
@@ -399,7 +372,10 @@ def route_matrix(state: dict) -> str:
     return "regenerate"
 
 
-# ===================== PHASE 3: IMAGES =====================
+# ===================== PHASE 3: IMAGE PLANNING =====================
+# Images are NOT generated here — the planner just extracts every distinct
+# image the matrix needs and registers new ones as pending (status=0) in
+# Supabase for a separate generation process to pick up.
 
 def asset_planner_node(state: dict) -> dict:
     matrix = state.get("raw_question_matrix") or []
@@ -462,22 +438,19 @@ def asset_planner_node(state: dict) -> dict:
     except Exception as e:
         log.warning("DB upsert_pending failed (non-fatal): %s", e)
 
-    # Print which images are NEEDED (to generate) vs which ALREADY EXIST.
+    # Print which images are NEEDED (registered as pending) vs already existing.
     need = [c["filename"] for c in queue]
     have = sorted({n for n in all_names if n in existing_local or n in db_existing})
-    log.info("Asset planner: %d total images — %d to generate, %d already exist",
+    log.info("Asset planner: %d total images — %d newly pending, %d already exist",
              len(candidates), len(need), len(have))
-    log.info("  NEEDED  (generate now): %s", ", ".join(need) if need else "(none)")
-    log.info("  EXISTING (reused/skip):  %s", ", ".join(have) if have else "(none)")
-    return {"asset_queue": queue, "current_asset_index": 0,
-            "image_retry_count": 0, "completed_assets": [], "failed_assets": [],
-            "wrong_generations": []}
+    log.info("  PENDING  (registered):  %s", ", ".join(need) if need else "(none)")
+    log.info("  EXISTING (reused/skip): %s", ", ".join(have) if have else "(none)")
+    return {"asset_queue": queue, "completed_assets": [], "failed_assets": []}
 
 
 def eval_node(state: dict) -> dict:
     """Run the two-lane eval scorer on the final question matrix.
-    Placed after asset_planner so the matrix is finalized, and before
-    image generation so we don't waste image quota on bad content."""
+    Placed after asset_planner so the matrix (and its image plan) is final."""
     matrix = state.get("raw_question_matrix") or []
     theme = state.get("theme", "")
     age = state.get("target_age", 5)
@@ -515,239 +488,3 @@ def eval_node(state: dict) -> dict:
 
     log.info("Eval: grade=%s score=%s", eval_result.get("grade"), eval_result.get("total_score"))
     return {"eval_result": eval_result}
-
-
-def _eye_rule(object_name: str) -> str:
-    # Whole-word match against the inanimate list (so 'starfish' isn't caught by
-    # 'star', 'cowboy' isn't a 'cow', etc.). Only explicit objects get no face;
-    # animals/people/characters and anything ambiguous default to friendly eyes.
-    words = set(object_name.lower().replace("_", " ").split())
-    if words & INANIMATE_WORDS:
-        return "no eyes and no face"
-    return "two simple black circle eyes with a white glimmer"
-
-
-def _is_quota_error(exc: Exception) -> bool:
-    """Detect Imagen 429 / RESOURCE_EXHAUSTED quota errors."""
-    msg = str(exc).lower()
-    return "429" in msg or "resource_exhausted" in msg or "quota" in msg
-
-
-def build_image_prompt(asset: dict, eye_rule: str, prev_feedback: str = "") -> str:
-    """Construct the image-generation prompt for one asset.
-
-    Resolves the common conflict where the matrix's image DESCRIPTION mentions a
-    setting (e.g. "a cow standing in a sunny farm field") while the app requires a
-    single isolated object on white. The description is used for the subject's
-    APPEARANCE only; setting words are treated as context, not things to draw. If
-    description and composition still seem to conflict, the model is told to use
-    its own judgment and depict whatever best answers the learning goal.
-    """
-    core = asset.get("object_name", "")
-    detail = (asset.get("detail", "") or "").strip()
-    context = (asset.get("context", "") or "").strip()
-    appearance = detail if detail and detail != "—" else core
-
-    art_style = (
-        "Flat 2D cartoon vector illustration for a preschool learning app. "
-        "Soft rounded shapes, 100% flat vector, NO outlines, bright pastel tones. "
-        f"Face rule: {eye_rule}. No shadows, no gradients, no 3D effects."
-    )
-    composition = (
-        "COMPOSITION: show ONLY the single core subject as one centered, isolated "
-        "object on a solid 100% white background. Any setting words in the "
-        "description (e.g. 'farm', 'field', 'sky', 'grass', 'on the farm') are "
-        "CONTEXT ONLY — do not draw scenery, ground, or background elements."
-    )
-    judgment = (
-        "If the description and this single-isolated-subject rule seem to conflict, "
-        "use your own judgment and depict whatever best answers the learning goal"
-        + (f" ('{context}')" if context else "")
-        + " as one clear, identifiable subject on white."
-    )
-    prompt = (
-        f"{art_style} Core subject: {core}. "
-        f"Use this description for the subject's appearance only "
-        f"(color, pose, expression): {appearance}. "
-        f"{composition} {judgment}"
-    )
-    if prev_feedback:
-        prompt += (f" REPAIR — the previous attempt was rejected by the vision critic "
-                   f"for ONLY this reason: \"{prev_feedback}\". Regenerate the SAME "
-                   f"subject in the SAME pose, colors, and composition, changing ONLY "
-                   f"what is needed to fix that one issue — keep everything else identical.")
-    return prompt
-
-
-def image_factory_node(state: dict) -> dict:
-    queue = state.get("asset_queue", [])
-    idx = state.get("current_asset_index", 0)
-    retry = state.get("image_retry_count", 0)
-    loop_iter = state.get("image_loop_iterations", 0) + 1
-
-    # ── Hard cutoff: prevent infinite image loops ──
-    if loop_iter > CONFIG.max_image_loop_iterations:
-        pending = queue[idx:]
-        log.error("Image factory: HARD CUTOFF at %d iterations, queuing %d remaining", loop_iter, len(pending))
-        return {"image_gate_decision": "all_done",
-                "image_loop_iterations": loop_iter,
-                "pending_assets": state.get("pending_assets", []) + pending}
-
-    # If quota was already hit, skip straight to done with pending queue
-    if state.get("quota_exhausted"):
-        pending = queue[idx:]
-        log.warning("Image factory: quota exhausted, queuing %d remaining assets", len(pending))
-        return {"image_gate_decision": "all_done",
-                "image_loop_iterations": loop_iter,
-                "pending_assets": state.get("pending_assets", []) + pending}
-
-    if idx >= len(queue):
-        return {"image_gate_decision": "all_done", "image_loop_iterations": loop_iter}
-    asset = queue[idx]
-    eye = _eye_rule(asset["object_name"])
-    prev_feedback = state.get("image_error_log", "") if retry > 0 else ""
-    prompt = build_image_prompt(asset, eye, prev_feedback)
-    log.info("Image factory: rendering '%s' (idx=%d, attempt=%d)", asset["object_name"], idx, retry + 1)
-    # Small pause to space out calls so we don't burst past the per-minute image
-    # rate limit (the main reason Vertex 429s where a slow Colab loop would not).
-    if CONFIG.image_throttle_s:
-        time.sleep(CONFIG.image_throttle_s)
-    try:
-        t0 = time.time()
-        raw = render_image_bytes(prompt)
-        elapsed_ms = int((time.time() - t0) * 1000)
-
-        # Record image generation call
-        mc = get_collector()
-        if mc:
-            mc.record_image_call()
-            mc.record_llm_call(
-                node="image_factory", role="image_gen",
-                model=CONFIG.models.image_model,
-                input_tokens=0, output_tokens=0, latency_ms=elapsed_ms,
-            )
-
-        if not raw:
-            return {"current_image": None, "image_error_log": "no image returned",
-                    "image_retry_count": retry + 1, "current_eye_rule": eye,
-                    "image_loop_iterations": loop_iter}
-        pil = Image.open(io.BytesIO(raw))
-        return {"current_image": pil, "image_retry_count": retry + 1, "current_eye_rule": eye,
-                "image_loop_iterations": loop_iter,
-                "image_quota_wait": image_cooldown_remaining() > 0}
-    except Exception as e:
-        if _is_quota_error(e):
-            pending = queue[idx:]
-            log.warning("Image factory: QUOTA EXHAUSTED at idx=%d, queuing %d assets for retry", idx, len(pending))
-            return {"current_image": None, "quota_exhausted": True,
-                    "pending_assets": state.get("pending_assets", []) + pending,
-                    "image_error_log": f"Image quota exhausted (429). {len(pending)} images queued for retry.",
-                    "image_gate_decision": "all_done",
-                    "image_loop_iterations": loop_iter}
-        return {"current_image": None, "image_error_log": f"render error: {e}",
-                "image_retry_count": retry + 1, "current_eye_rule": eye,
-                "image_loop_iterations": loop_iter}
-
-
-def vision_critic_node(state: dict) -> dict:
-    """Multimodal audit — the actual PNG bytes are sent to the judge."""
-    queue = state.get("asset_queue", [])
-    idx = state.get("current_asset_index", 0)
-    retry = state.get("image_retry_count", 0)
-    if idx >= len(queue):
-        return {"image_gate_decision": "all_done"}
-    asset = queue[idx]
-    pil = state.get("current_image")
-
-    if pil is None:  # render failed
-        if retry >= CONFIG.max_retries:
-            return {"current_asset_index": idx + 1, "image_retry_count": 0,
-                    "failed_assets": state.get("failed_assets", []) + [asset["filename"]],
-                    "image_gate_decision": "advance"}
-        return {"image_gate_decision": "retry"}
-
-    buf = io.BytesIO(); pil.save(buf, format="PNG")
-    data_uri = "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
-    sys_prompt = CONFIG.prompts.vision_critic_system.format(
-        object_name=asset["object_name"], eye_rule=state.get("current_eye_rule", ""))
-    user_msg = {"role": "user", "content": [
-        {"type": "text", "text": f"Audit this {asset['object_name']} asset."},
-        {"type": "image_url", "image_url": {"url": data_uri}}]}
-    try:
-        judge = get_vision_judge()
-        r = _tracked_invoke(judge, [("system", sys_prompt), user_msg],
-                            node="vision_critic", role="vision_judge")
-        clean = r.content.replace("```json", "").replace("```", "").strip()
-        try:
-            verdict = json.loads(clean)
-        except Exception:
-            verdict = {"pass": "true" in clean.lower(), "reason": clean[:200]}
-    except Exception as e:
-        # The audit model failed (e.g. quota/429). The image itself rendered fine,
-        # so ACCEPT it rather than crash the whole run — quality control degrades
-        # gracefully instead of losing the asset.
-        log.warning("Vision critic unavailable (%s) — accepting image '%s' unaudited",
-                    type(e).__name__, asset["filename"])
-        verdict = {"pass": True, "reason": "auto-accepted (vision critic unavailable)"}
-
-    if verdict.get("pass"):
-        url = STORAGE.save_image(pil, asset["filename"])
-        # Mark as generated in Supabase DB
-        try:
-            mark_generated(asset["filename"], image_url=url)
-        except Exception as e:
-            log.warning("DB mark_generated failed (non-fatal): %s", e)
-        return {"current_asset_index": idx + 1, "image_retry_count": 0,
-                "completed_assets": state.get("completed_assets", [])
-                + [{"filename": asset["filename"], "url": url,
-                    "object_name": asset["object_name"]}],
-                "image_gate_decision": "advance"}
-    if retry >= CONFIG.max_retries:
-        # Generation failed evaluation after all retries. Keep the last (rejected)
-        # image for review: store it under a 'wrong_' name (so it doesn't shadow the
-        # real asset) and tag it in Supabase as wrong_generation (status = 2).
-        wrong_name = f"wrong_{asset['filename']}"
-        wrong_url = ""
-        try:
-            wrong_url = STORAGE.save_image(pil, wrong_name)
-        except Exception as e:
-            log.warning("Failed to store rejected image %s: %s", wrong_name, e)
-        try:
-            mark_wrong_generation(asset["filename"], image_url=wrong_url)
-        except Exception as e:
-            log.warning("DB mark_wrong_generation failed (non-fatal): %s", e)
-        log.info("Image '%s' rejected by critic after %d tries — stored as '%s', status=2 (wrong_generation)",
-                 asset["filename"], retry + 1, wrong_name)
-        return {"current_asset_index": idx + 1, "image_retry_count": 0,
-                "failed_assets": state.get("failed_assets", []) + [asset["filename"]],
-                "wrong_generations": state.get("wrong_generations", [])
-                + [{"filename": asset["filename"], "wrong_image": wrong_name,
-                    "url": wrong_url, "reason": verdict.get("reason", ""),
-                    "tag": "wrong_generation"}],
-                "image_gate_decision": "advance"}
-    return {"image_error_log": verdict.get("reason", ""), "image_gate_decision": "retry"}
-
-
-def route_after_factory(state: dict) -> str:
-    """Decide whether to run the vision critic or exit straight to END.
-
-    The image factory short-circuits (quota exhausted, hard cutoff, or empty
-    queue) by setting image_gate_decision='all_done'. The edge to the vision
-    critic is therefore CONDITIONAL — otherwise the critic would run on a null
-    image, overwrite the decision, and the graph would loop until the recursion
-    limit is hit.
-    """
-    if state.get("image_gate_decision") == "all_done":
-        return "all_done"
-    return "critic"
-
-
-def route_image(state: dict) -> str:
-    decision = state.get("image_gate_decision")
-    if decision == "all_done":
-        return "all_done"
-    if decision == "advance":
-        if state.get("current_asset_index", 0) >= len(state.get("asset_queue", [])):
-            return "all_done"
-        return "next"
-    return "retry"
