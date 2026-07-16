@@ -18,12 +18,11 @@ load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 @dataclass
 class ModelConfig:
     # Text generator (blueprint + question matrix)
-    # Anthropic Claude API — Haiku 4.5 (fast, low-cost, strong instruction-following).
-    generator_provider: str = "anthropic"
-    generator_model: str = "claude-haiku-4-5"
+    generator_provider: str = "google"
+    generator_model: str = "gemini-2.5-flash"
     generator_temperature: float = 0.2
 
-    # Blueprint quality judge — cross-family by default to avoid self-preference bias.
+    # Blueprint quality judge — same family as the generator for now (see note above).
     # Swap provider to "anthropic" or "openai" if you have those keys.
     judge_provider: str = "google"
     judge_model: str = "gemini-2.5-flash"

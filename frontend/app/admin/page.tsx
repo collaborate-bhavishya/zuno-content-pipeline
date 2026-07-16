@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { authHeaders } from "../../lib/supabase";
 
 const API = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
@@ -13,7 +14,7 @@ export default function Admin() {
 
   async function login() {
     const res = await fetch(`${API}/api/admin/config`, {
-      headers: { "x-admin-password": pw },
+      headers: { "x-admin-password": pw, ...(await authHeaders()) },
     });
     if (res.ok) {
       setConfig(await res.json());
@@ -27,7 +28,7 @@ export default function Admin() {
   async function save() {
     const res = await fetch(`${API}/api/admin/config`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-password": pw },
+      headers: { "Content-Type": "application/json", "x-admin-password": pw, ...(await authHeaders()) },
       body: JSON.stringify({
         models: config.models,
         prompts: config.prompts,

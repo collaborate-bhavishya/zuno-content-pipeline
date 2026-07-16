@@ -1,6 +1,8 @@
 // Shared API helpers. The backend streams Server-Sent Events; we parse the
 // `data:` lines and invoke a callback per event.
 
+import { authHeaders } from "./supabase";
+
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
@@ -118,7 +120,7 @@ export async function streamPost(
 ): Promise<void> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeaders()) },
     body: JSON.stringify(body),
   });
   if (!res.body) throw new Error("No response stream");
@@ -189,7 +191,7 @@ export async function reviewImage(
 ): Promise<{ images: any[]; wrong_generations: WrongGeneration[] }> {
   const res = await fetch(`${API_BASE}/api/image-review/${runId}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeaders()) },
     body: JSON.stringify({ filename, action }),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -204,7 +206,7 @@ export async function retryImages(
 }
 
 export async function fetchRuns(): Promise<RunRecord[]> {
-  const res = await fetch(`${API_BASE}/api/runs`);
+  const res = await fetch(`${API_BASE}/api/runs`, { headers: await authHeaders() });
   if (!res.ok) return [];
   return res.json();
 }
@@ -217,7 +219,7 @@ export interface RunMode {
 
 export async function fetchRunMode(): Promise<RunMode | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/run-mode`);
+    const res = await fetch(`${API_BASE}/api/run-mode`, { headers: await authHeaders() });
     if (!res.ok) return null;
     return res.json();
   } catch {

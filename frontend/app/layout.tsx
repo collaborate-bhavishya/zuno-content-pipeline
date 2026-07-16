@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import PasswordGate from "../components/PasswordGate";
+import AuthGate from "../components/AuthGate";
 
 export const metadata: Metadata = {
   title: "Zuno SpeakX — Lesson Pipeline",
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <PasswordGate>{children}</PasswordGate>
+        <AuthGate>{children}</AuthGate>
       </body>
     </html>
   );

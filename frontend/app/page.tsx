@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { streamPost, FeedEvent, fetchRuns, RunRecord, retryImages, fetchRunMode, RunMode, reviewImage } from "../lib/api";
+import { authHeaders } from "../lib/supabase";
 import ProcessFeed, { FeedItem, eventToItem } from "../components/ProcessFeed";
 import OutputPanel from "../components/OutputPanel";
 
@@ -146,9 +147,9 @@ export default function Home() {
       doGenerate();
     }
   };
-  const approve = () => fetch(`${process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"}/api/feedback`, {
+  const approve = async () => fetch(`${process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"}/api/feedback`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeaders()) },
     body: JSON.stringify({ action: "approve", theme, age, milestone_code: milestoneCode, theme_code: themeCode }),
   });
   const rerun = (phase: string = "all") =>

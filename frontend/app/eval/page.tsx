@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { authHeaders } from "../../lib/supabase";
 
 const API = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
@@ -64,14 +65,14 @@ export default function EvalPage() {
 
   async function fetchRuns() {
     try {
-      const res = await fetch(`${API}/api/eval/results`);
+      const res = await fetch(`${API}/api/eval/results`, { headers: await authHeaders() });
       if (res.ok) setRuns(await res.json());
     } catch {}
   }
 
   async function loadRunDetail(id: string) {
     try {
-      const res = await fetch(`${API}/api/eval/results/${id}`);
+      const res = await fetch(`${API}/api/eval/results/${id}`, { headers: await authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setSelectedRun(data);
@@ -89,7 +90,7 @@ export default function EvalPage() {
     try {
       const res = await fetch(`${API}/api/eval/run/stream`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(await authHeaders()) },
         body: JSON.stringify({
           prompt_version: promptVersion,
           skip_images: skipImages,

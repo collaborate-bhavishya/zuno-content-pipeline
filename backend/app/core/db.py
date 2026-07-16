@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 _client: Optional[Client] = None
 
 
-def _get_client() -> Client:
+def get_client() -> Client:
     global _client
     if _client is None:
         url = os.getenv("SUPABASE_URL", "")
@@ -39,7 +39,7 @@ def lookup_existing(image_names: list[str]) -> dict[str, dict]:
     """Return {image_name: row_dict} for every name already in the DB with status=1."""
     if not image_names:
         return {}
-    client = _get_client()
+    client = get_client()
     # Supabase 'in' filter
     result = client.table("image_assets").select("*").in_("image_name", image_names).eq("status", 1).execute()
     return {row["image_name"]: row for row in (result.data or [])}
@@ -49,7 +49,7 @@ def upsert_pending(assets: list[dict]):
     """Insert new image rows as status=0 (pending).  Skip if name already exists."""
     if not assets:
         return
-    client = _get_client()
+    client = get_client()
     rows = [
         {
             "image_name": a["filename"],
@@ -72,7 +72,7 @@ def upsert_pending(assets: list[dict]):
 
 def mark_generated(image_name: str, image_url: str = ""):
     """Set status=1 and optionally store the URL/path."""
-    client = _get_client()
+    client = get_client()
     try:
         client.table("image_assets").update(
             {"status": 1, "image_url": image_url}
@@ -91,7 +91,7 @@ def mark_failed(image_name: str):
 def mark_wrong_generation(image_name: str, image_url: str = ""):
     """Image was generated but REJECTED by the vision critic. Status 2 =
     wrong_generation; image_url points to the stored (rejected) image for review."""
-    client = _get_client()
+    client = get_client()
     try:
         client.table("image_assets").update(
             {"status": 2, "image_url": image_url}
@@ -102,7 +102,7 @@ def mark_wrong_generation(image_name: str, image_url: str = ""):
 
 def get_all_assets(milestone_code: str = "", theme_code: str = "") -> list[dict]:
     """Fetch all rows, optionally filtered by milestone/theme."""
-    client = _get_client()
+    client = get_client()
     q = client.table("image_assets").select("*")
     if milestone_code:
         q = q.eq("milestone_code", milestone_code)
@@ -110,3 +110,86 @@ def get_all_assets(milestone_code: str = "", theme_code: str = "") -> list[dict]
         q = q.eq("theme_code", theme_code)
     result = q.order("created_at").execute()
     return result.data or []
+
+
+# ── question storage (runs + questions tables) ─────────────────────────
+# See backend/supabase/schema_questions.sql for DDL.
+
+def save_run(run: dict) -> None:
+    """Upsert a run's metadata row into `runs`. Safe to call more than once for
+    the same id (e.g. a partial/error save followed by a full completion)."""
+    client = get_client()
+    eval_result = run.get("eval") or {}
+    row = {
+        "id": run["id"],
+        "theme": run.get("theme", ""),
+        "target_age": run.get("age", 0),
+        "milestone_code": run.get("milestone_code", ""),
+        "theme_code": run.get("theme_code", ""),
+        "status": "failed" if run.get("error") else "completed",
+        "blueprint_text": run.get("blueprint", ""),
+        "eval_grade": eval_result.get("grade"),
+        "eval_score": eval_result.get("total_score"),
+        "eval_result": eval_result,
+        "metrics": run.get("metrics"),
+        "evaluator_history": run.get("history", []),
+        "play_url": run.get("play_url", ""),
+        "s3_uri": run.get("s3_uri", ""),
+        "error": run.get("error"),
+    }
+    client.table("runs").upsert(row, on_conflict="id").execute()
+
+
+def _clean(value) -> Optional[str]:
+    """'—' and blank strings mean 'not applicable' upstream — store as NULL."""
+    s = str(value if value is not None else "").strip()
+    return None if (not s or s == "—") else s
+
+
+def _split(value) -> list[str]:
+    """Comma-joined matrix cell (e.g. distractor text/files) -> string array."""
+    s = _clean(value)
+    return [t.strip() for t in s.split(",")] if s else []
+
+
+def save_questions(run_id: str, matrix: list[dict]) -> None:
+    """Replace this run's question rows with the current matrix (handles reruns)."""
+    if not matrix:
+        return
+    client = get_client()
+    rows = [
+        {
+            "run_id": run_id,
+            "row_index": i,
+            "playable_code": _clean(r.get("Playable Code")) or "",
+            "playable_name": _clean(r.get("Playable Name")),
+            "layer": _clean(r.get("Layer")),
+            "template": _clean(r.get("Template")),
+            "instruction_text": _clean(r.get("Instruction Text")),
+            "instruction_vo": _clean(r.get("Instruction VO")),
+            "instruction_vo_file": _clean(r.get("Instruction VO — File")),
+            "text_in_question": _clean(r.get("Text in Question")),
+            "audio_in_question": _clean(r.get("Audio in Question")),
+            "audio_in_question_file": _clean(r.get("Audio in Question — File")),
+            "vo_for_question": _clean(r.get("VO for Question")),
+            "vo_for_question_file": _clean(r.get("VO for Question — File")),
+            "image_in_question_detail": _clean(r.get("Image in Question — Detail")),
+            "image_in_question_name": _clean(r.get("Image in Question — Name")),
+            "correct_answer": _clean(r.get("Correct Answer")),
+            "correct_answer_vo_file": _clean(r.get("Correct Answer VO — File")),
+            "correct_answer_image": _clean(r.get("Correct Answer — Image")),
+            "correct_answer_image_detail": _clean(r.get("Correct Answer — Image Detail")),
+            "other_options": _split(r.get("Other Options")),
+            "other_options_vo_file": _split(r.get("Other Options VO — File")),
+            "other_options_image": _split(r.get("Other Options — Image")),
+            "other_options_image_detail": _split(r.get("Other Options — Image Detail")),
+            "stt_expectation": _clean(r.get("STT Expectation")),
+            "concept": _clean(r.get("Concept (bucket / skill)")),
+            "pattern": _clean(r.get("Pattern")),
+            "notes": _clean(r.get("Notes")),
+        }
+        for i, r in enumerate(matrix)
+    ]
+    # Replace-on-save so re-runs/partial re-saves don't leave stale rows behind.
+    client.table("questions").delete().eq("run_id", run_id).execute()
+    client.table("questions").insert(rows).execute()

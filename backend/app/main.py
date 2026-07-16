@@ -19,7 +19,7 @@ from PIL import Image
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)s  %(message)s")
 
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -29,6 +29,8 @@ from app.core.config import CONFIG, ADMIN_PASSWORD, persist_keys_to_env
 from app.core.graph import build_graph
 from app.core.scorer import score_run as _score_run
 from app.core.metrics import init_collector, get_collector, clear_collector
+from app.core.db import save_run as _db_save_run, save_questions as _db_save_questions
+from app.core.auth import require_user
 
 RUNS_FILE = os.path.join(os.path.dirname(__file__), "..", "storage", "runs.json")
 RUNS_FILE = os.path.normpath(RUNS_FILE)
@@ -232,7 +234,15 @@ def _save_run(run: dict):
             log.warning("S3 upload failed (file still saved locally): %s", e)
     except Exception as e:
         log.warning("Failed to write _s3 file: %s", e)
-    # 2) Append to the aggregate runs.json (powers the history list).
+    # 3) Supabase: run metadata + normalized question rows (best-effort — the
+    # local JSON files above remain the source of truth if this fails).
+    try:
+        _db_save_run(run)
+        _db_save_questions(run["id"], run.get("matrix") or [])
+    except Exception as e:
+        log.warning("Supabase question/run save failed (non-fatal): %s", e)
+
+    # 4) Append to the aggregate runs.json (powers the history list).
     runs = _load_runs()
     runs.insert(0, run)
     os.makedirs(os.path.dirname(RUNS_FILE), exist_ok=True)
@@ -259,8 +269,6 @@ NODE_LABELS = {
     "fabricator": ("Fabricator agent", "Building the question matrix"),
     "matrix_evaluator": ("Matrix evaluator", "Validating structure"),
     "asset_planner": ("Asset planner", "Listing images to generate"),
-    "image_factory": ("Image factory", "Rendering an illustration"),
-    "vision_critic": ("Vision critic", "Auditing the image pixels"),
     "eval": ("Eval scorer", "Scoring output against SpeakX rubric"),
 }
 
@@ -424,7 +432,7 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
                                 if k not in ("id", "timestamp", "feed")})
 
 
-@app.post("/api/generate")
+@app.post("/api/generate", dependencies=[Depends(require_user)])
 async def generate(req: GenerateRequest):
     return StreamingResponse(
         run_stream(req.theme, req.age, req.milestone_code, req.theme_code),
@@ -443,7 +451,7 @@ class FeedbackRequest(BaseModel):
     theme_code: str = "T01"
 
 
-@app.post("/api/feedback")
+@app.post("/api/feedback", dependencies=[Depends(require_user)])
 async def feedback(req: FeedbackRequest):
     """
     Approve just records acceptance. Feedback/rerun re-invoke the pipeline.
@@ -514,19 +522,17 @@ async def feedback(req: FeedbackRequest):
             from app.nodes.graph_nodes import (
                 fabricator_node, matrix_evaluator_node, route_matrix,
                 asset_planner_node, eval_node,
-                image_factory_node, vision_critic_node, route_image,
-                route_after_factory,
             )
             wf = StateGraph(LessonState)
             final = dict(seed)
 
+            # Image generation/critique intentionally not wired in — see
+            # app/core/graph.py for why.
             if entry_node == "fabricator":
                 wf.add_node("fabricator", fabricator_node)
                 wf.add_node("matrix_evaluator", matrix_evaluator_node)
                 wf.add_node("asset_planner", asset_planner_node)
                 wf.add_node("eval", eval_node)
-                wf.add_node("image_factory", image_factory_node)
-                wf.add_node("vision_critic", vision_critic_node)
                 wf.set_entry_point("fabricator")
                 wf.add_edge("fabricator", "matrix_evaluator")
                 wf.add_conditional_edges("matrix_evaluator", route_matrix, {
@@ -535,33 +541,13 @@ async def feedback(req: FeedbackRequest):
                     "trigger_assets": "asset_planner",
                 })
                 wf.add_edge("asset_planner", "eval")
-                wf.add_edge("eval", "image_factory")
-                wf.add_conditional_edges("image_factory", route_after_factory, {
-                    "critic": "vision_critic",
-                    "all_done": END,
-                })
-                wf.add_conditional_edges("vision_critic", route_image, {
-                    "retry": "image_factory",
-                    "next": "image_factory",
-                    "all_done": END,
-                })
+                wf.add_edge("eval", END)
             elif entry_node == "asset_planner":
                 wf.add_node("asset_planner", asset_planner_node)
                 wf.add_node("eval", eval_node)
-                wf.add_node("image_factory", image_factory_node)
-                wf.add_node("vision_critic", vision_critic_node)
                 wf.set_entry_point("asset_planner")
                 wf.add_edge("asset_planner", "eval")
-                wf.add_edge("eval", "image_factory")
-                wf.add_conditional_edges("image_factory", route_after_factory, {
-                    "critic": "vision_critic",
-                    "all_done": END,
-                })
-                wf.add_conditional_edges("vision_critic", route_image, {
-                    "retry": "image_factory",
-                    "next": "image_factory",
-                    "all_done": END,
-                })
+                wf.add_edge("eval", END)
 
             graph = wf.compile()
             yield _event("start", theme=req.theme, age=req.age, rerun=True,
@@ -611,7 +597,7 @@ async def feedback(req: FeedbackRequest):
 
 # ===================== RETRY IMAGES =====================
 
-@app.post("/api/retry-images/{run_id}")
+@app.post("/api/retry-images/{run_id}", dependencies=[Depends(require_user)])
 async def retry_images(run_id: str):
     """Retry pending images for a run whose image quota was exhausted."""
     runs = _load_runs()
@@ -742,7 +728,7 @@ class ImageReviewRequest(BaseModel):
     action: str   # "use" | "reject"
 
 
-@app.post("/api/image-review/{run_id}")
+@app.post("/api/image-review/{run_id}", dependencies=[Depends(require_user)])
 async def image_review(run_id: str, body: ImageReviewRequest):
     """Manually resolve a vision-critic-rejected image: 'use' promotes it to the
     real asset (Supabase status -> 1), 'reject' discards it."""
@@ -793,13 +779,13 @@ def _check_admin(pw: Optional[str]):
         raise HTTPException(status_code=401, detail="Bad admin password")
 
 
-@app.get("/api/admin/config")
+@app.get("/api/admin/config", dependencies=[Depends(require_user)])
 async def get_config(x_admin_password: Optional[str] = Header(None)):
     _check_admin(x_admin_password)
     return CONFIG.public_dict()
 
 
-@app.get("/api/run-mode")
+@app.get("/api/run-mode", dependencies=[Depends(require_user)])
 async def get_run_mode():
     """Public (no-auth) trial-mode status, so the UI can warn before a run."""
     used = _runs_today()
@@ -821,7 +807,7 @@ class AdminUpdate(BaseModel):
     output: Optional[dict] = None
 
 
-@app.post("/api/admin/config")
+@app.post("/api/admin/config", dependencies=[Depends(require_user)])
 async def update_config(body: AdminUpdate,
                         x_admin_password: Optional[str] = Header(None)):
     _check_admin(x_admin_password)
@@ -855,7 +841,7 @@ async def update_config(body: AdminUpdate,
     return CONFIG.public_dict()
 
 
-@app.get("/api/runs")
+@app.get("/api/runs", dependencies=[Depends(require_user)])
 async def get_runs():
     return _load_runs()
 
@@ -873,7 +859,7 @@ class ScoreRequest(BaseModel):
     case_id: str = "adhoc"
 
 
-@app.post("/api/eval/run")
+@app.post("/api/eval/run", dependencies=[Depends(require_user)])
 async def run_eval_endpoint(req: EvalRequest):
     """Run the eval suite. This is synchronous and may take minutes."""
     from app.core.eval_runner import run_eval
@@ -885,7 +871,7 @@ async def run_eval_endpoint(req: EvalRequest):
     return result.to_dict()
 
 
-@app.post("/api/eval/run/stream")
+@app.post("/api/eval/run/stream", dependencies=[Depends(require_user)])
 async def run_eval_stream(req: EvalRequest):
     """Run the eval suite with SSE progress updates."""
     from app.core.eval_runner import load_dataset, _run_single_case, _save_eval_result, EvalRunResult
@@ -947,7 +933,7 @@ async def run_eval_stream(req: EvalRequest):
     return StreamingResponse(_stream(), media_type="text/event-stream")
 
 
-@app.post("/api/eval/score")
+@app.post("/api/eval/score", dependencies=[Depends(require_user)])
 async def score_existing_run(req: ScoreRequest):
     """Score an already-completed pipeline run against the eval rubric."""
     from app.core.scorer import score_run
@@ -984,13 +970,13 @@ async def score_existing_run(req: ScoreRequest):
     return result.to_dict()
 
 
-@app.get("/api/eval/results")
+@app.get("/api/eval/results", dependencies=[Depends(require_user)])
 async def list_eval_results():
     from app.core.eval_runner import list_eval_results as _list
     return _list()
 
 
-@app.get("/api/eval/results/{run_id}")
+@app.get("/api/eval/results/{run_id}", dependencies=[Depends(require_user)])
 async def get_eval_result(run_id: str):
     from app.core.eval_runner import get_eval_result as _get
     result = _get(run_id)
@@ -999,7 +985,7 @@ async def get_eval_result(run_id: str):
     return result
 
 
-@app.get("/api/eval/dataset")
+@app.get("/api/eval/dataset", dependencies=[Depends(require_user)])
 async def get_eval_dataset():
     """Return the eval dataset for the frontend to display."""
     from app.core.eval_runner import load_dataset
