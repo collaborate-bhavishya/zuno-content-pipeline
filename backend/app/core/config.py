@@ -85,7 +85,8 @@ draft (numbered), not just the first one. Never hold an issue back for a later
 review. FAIL only on clear violations of the four criteria above — do not fail
 for stylistic preferences or hypothetical improvements.
 
-Output ONLY raw JSON, no markdown:
+Output ONLY raw JSON, no markdown. "critique" MUST be a single plain STRING
+(numbered lines separated by newlines) — never an array or object:
 {"verdict": "PASS" | "FAIL", "critique": "<numbered list of ALL issues + technical fix instructions if FAIL>"}"""
 
 DEFAULT_MATRIX_COLUMNS = [

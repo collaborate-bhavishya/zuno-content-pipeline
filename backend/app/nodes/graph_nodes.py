@@ -139,6 +139,31 @@ def planner_node(state: dict) -> dict:
     return {"blueprint_text": resp.content, "blueprint_retry_count": retry + 1}
 
 
+def _critique_to_text(critique) -> str:
+    """The judge is told to return critique as a string, but structured output
+    sometimes comes back as a list/dict of issues (e.g. [{number, issue,
+    technical_fix_instructions}]). Flatten anything non-string to numbered
+    lines so downstream consumers (repair prompt, feed, UI) always get text."""
+    if isinstance(critique, str):
+        return critique
+    if isinstance(critique, list):
+        lines = []
+        for i, item in enumerate(critique, 1):
+            if isinstance(item, dict):
+                n = item.get("number", i)
+                issue = str(item.get("issue", "")).strip()
+                fix = str(item.get("technical_fix_instructions",
+                                   item.get("fix", ""))).strip()
+                lines.append(f"{n}. {issue}" + (f" — FIX: {fix}" if fix else ""))
+            else:
+                lines.append(f"{i}. {item}")
+        return "\n".join(lines)
+    try:
+        return json.dumps(critique, ensure_ascii=False)
+    except Exception:
+        return str(critique)
+
+
 def blueprint_evaluator_node(state: dict) -> dict:
     bp = state.get("blueprint_text", "")
     history = list(state.get("evaluator_history", []))
@@ -161,7 +186,8 @@ def blueprint_evaluator_node(state: dict) -> dict:
         try:
             data = json.loads(clean)
             if data.get("verdict") == "FAIL":
-                decision, err = "fail", data.get("critique", "Quality fail.")
+                decision = "fail"
+                err = _critique_to_text(data.get("critique", "Quality fail."))
         except Exception as e:
             decision, err = "fail", f"Judge JSON parse error: {e}"
 

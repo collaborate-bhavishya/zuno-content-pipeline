@@ -14,6 +14,18 @@ export interface FeedItem {
   metrics?: NodeMetrics;
 }
 
+// Older runs (and misbehaving judges) can put structured objects where text
+// is expected; React can't render objects as children, so always flatten.
+function asText(v: unknown): string | undefined {
+  if (v === undefined || v === null) return undefined;
+  if (typeof v === "string") return v;
+  try {
+    return JSON.stringify(v);
+  } catch {
+    return String(v);
+  }
+}
+
 export function eventToItem(e: Extract<FeedEvent, { kind: "node" }>, id: number): FeedItem {
   const d = e.detail || {};
   let status: FeedItem["status"] = "info";
@@ -37,10 +49,10 @@ export function eventToItem(e: Extract<FeedEvent, { kind: "node" }>, id: number)
 
   return {
     id,
-    label: e.label,
-    action: e.action,
-    decision: d.decision,
-    critique: d.critique,
+    label: asText(e.label) || "",
+    action: asText(e.action) || "",
+    decision: asText(d.decision),
+    critique: asText(d.critique),
     note,
     status,
     metrics: (d as any).metrics,
