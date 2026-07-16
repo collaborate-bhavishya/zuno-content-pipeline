@@ -8,6 +8,7 @@ on the next run. Each LLM call is instrumented with the MetricsCollector for
 token/cost/latency tracking.
 """
 import json
+import re
 import time
 import logging
 
@@ -217,6 +218,18 @@ def _format_template_rules() -> str:
     return "\n".join(lines)
 
 
+def _flagged_row_indices(err: str, n_rows: int) -> set:
+    """0-based row indices named in a validator error log.
+
+    Validator messages start with 'Q<n>:' or 'Row <n> (Q<n>):'. If nothing
+    parses (e.g. a global error like a bad JSON shape), fall back to every row
+    so the repair still has the full picture.
+    """
+    idx = {int(m) - 1 for m in re.findall(r"\bQ(\d+)\b", err)}
+    idx = {i for i in idx if 0 <= i < n_rows}
+    return idx or set(range(n_rows))
+
+
 def fabricator_node(state: dict) -> dict:
     retry = state.get("matrix_retry_count", 0)
     err = state.get("matrix_error_log", "")
@@ -225,15 +238,21 @@ def fabricator_node(state: dict) -> dict:
     # tell it to change ONLY the flagged cells — not regenerate from scratch (which
     # caused errors to shuffle around / "whack-a-mole").
     if err and prev_matrix:
+        # Only the FLAGGED rows go to the model, and only those come back —
+        # regenerating all 80+ rows to fix a handful of cells burned enough
+        # output tokens per retry to exhaust the API quota mid-run.
+        flagged = _flagged_row_indices(err, len(prev_matrix))
+        subset = {str(i + 1): prev_matrix[i] for i in sorted(flagged)}
         correction = (
             f"\n\n=== REPAIR PASS — fix ONLY what is flagged ===\n"
-            f"Here is the EXACT matrix you produced last time (JSON):\n"
-            f"{json.dumps(prev_matrix, ensure_ascii=False)}\n\n"
-            f"The validator flagged ONLY these problems:\n{err}\n\n"
-            f"Return the SAME matrix with ONLY those specific cells corrected. "
-            f"Keep every other row, column, and value EXACTLY as-is — do not change, "
-            f"re-order, rename, or regenerate anything that was not flagged. "
-            f"Output the complete corrected JSON array."
+            f"Below are ONLY the rows the validator flagged, keyed by question "
+            f"number, exactly as you produced them:\n"
+            f"{json.dumps(subset, ensure_ascii=False)}\n\n"
+            f"Every problem found:\n{err}\n\n"
+            f"Fix EVERY listed problem. Return ONLY these same rows as a JSON "
+            f"object keyed by the SAME question numbers — do not return the "
+            f"other rows, do not renumber, and change nothing that was not "
+            f"flagged. Output raw JSON only."
         )
     elif err:
         correction = f"\n\nCORRECTION: previous output failed. Fix: {err}"
@@ -343,12 +362,33 @@ def fabricator_node(state: dict) -> dict:
             f"{age_block}\n"
             f"Output ONLY a raw JSON array, no markdown.\n\n"
             f"Blueprint:\n{state.get('blueprint_text','')}{correction}")
+    is_repair = bool(err and prev_matrix)
     llm = get_generator()
     resp = _tracked_invoke(llm, [("system", CONFIG.prompts.generator_system), ("user", user)],
                            node="fabricator", role="generator")
     clean = resp.content.replace("```json", "").replace("```", "").strip()
     try:
-        rows = json.loads(clean)[: CONFIG.max_questions]
+        parsed = json.loads(clean)
+        if is_repair:
+            # Repair returns ONLY the flagged rows, keyed by question number —
+            # splice them back over the previous matrix.
+            rows = [dict(r) for r in prev_matrix]
+            if isinstance(parsed, dict):
+                patched = 0
+                for key, row in parsed.items():
+                    i = int(re.sub(r"\D", "", str(key)) or -1) - 1
+                    if 0 <= i < len(rows) and isinstance(row, dict):
+                        rows[i] = row
+                        patched += 1
+                log.info("Fabricator repair: patched %d/%d flagged rows (matrix stays %d rows)",
+                         patched, len(parsed), len(rows))
+            elif isinstance(parsed, list):
+                # Model ignored the keyed-object instruction and returned the
+                # whole array anyway — accept it rather than fail the run.
+                rows = parsed[: CONFIG.max_questions]
+                log.info("Fabricator repair returned a full array (%d rows)", len(rows))
+        else:
+            rows = parsed[: CONFIG.max_questions]
     except Exception as e:
         rows = []
         err = f"JSON parse failed: {e}"
@@ -357,8 +397,7 @@ def fabricator_node(state: dict) -> dict:
         out["matrix_error_log"] = err or "Empty matrix."
         log.warning("Fabricator produced no rows: %s", err)
     else:
-        img_cols = [r.get("Image in Question — Name", "") for r in rows]
-        log.info("Fabricator produced %d rows. Image columns: %s", len(rows), img_cols)
+        log.info("Fabricator matrix now %d rows", len(rows))
     return out
 
 

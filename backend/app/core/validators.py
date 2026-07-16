@@ -164,12 +164,29 @@ def _is_valid_png(val: str) -> bool:
     return bool(re.match(r'^[a-z0-9_]+$', name))
 
 
+# Cap only as a prompt-size guard — high enough that a normal run reports
+# everything in one pass. Truncating lower caused whack-a-mole: the fabricator
+# fixed the reported errors, regenerated the whole (80+ row) matrix, and the
+# validator surfaced the NEXT batch — burning a full LLM call per 3 fixes and
+# exhausting both retries and API quota without ever converging.
+_MAX_REPORTED_ERRORS = 60
+
+
+def _format_errors(errors: List[str]) -> str:
+    """Numbered list of EVERY violation, so one repair pass can fix them all."""
+    shown = errors[:_MAX_REPORTED_ERRORS]
+    out = "\n".join(f"{i}. {e}" for i, e in enumerate(shown, 1))
+    if len(errors) > len(shown):
+        out += f"\n(+{len(errors) - len(shown)} more — fix these first.)"
+    return out
+
+
 def validate_matrix(rows: List[dict], age: int = None) -> Tuple[bool, Optional[str]]:
     """Comprehensive SpeakX matrix validation.
 
-    Returns (True, None) on success, or (False, "error description") on the
-    first rule violation found. Checks are ordered from most critical to least
-    so the fabricator gets the most actionable fix instruction first.
+    Returns (True, None) on success, or (False, "<numbered list of every
+    violation>"). Reporting all errors at once is deliberate — see
+    _MAX_REPORTED_ERRORS.
     """
     if not rows:
         return False, "Matrix is empty — no question rows generated."
@@ -193,7 +210,7 @@ def validate_matrix(rows: List[dict], age: int = None) -> Tuple[bool, Optional[s
 
     if errors:
         # Schema errors are fatal — return immediately so fabricator fixes structure
-        return False, " | ".join(errors[:3])
+        return False, _format_errors(errors)
 
     # ── 1b. Child-facing safety + age-vocab gate (authoritative) ──
     safety_err = scan_matrix_safety(rows)
@@ -465,6 +482,5 @@ def validate_matrix(rows: List[dict], age: int = None) -> Tuple[bool, Optional[s
 
     # ── Return ──
     if errors:
-        # Return first 3 errors to keep the correction notice actionable
-        return False, " | ".join(errors[:3])
+        return False, _format_errors(errors)
     return True, None
