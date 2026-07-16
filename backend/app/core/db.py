@@ -84,6 +84,60 @@ def mark_generated(image_name: str, image_url: str = ""):
         log.warning("mark_generated(%s): %s", image_name, e)
 
 
+# ── audio/voice ledger (audio_assets table) ─────────────────────────
+# See backend/supabase/audio_assets.sql for DDL. Dedupe key: exact
+# dialogue text (stripped). audio_code = first-seen filename.
+
+def lookup_existing_audio(dialogues: list[str]) -> dict[str, str]:
+    """Return {dialogue_text: audio_code} for every dialogue already in the
+    ledger — pending OR generated (a pending row already owns a code, so
+    reusing it means the line is only ever generated once)."""
+    if not dialogues:
+        return {}
+    client = get_client()
+    result = (client.table("audio_assets").select("dialogue_text, audio_code")
+              .in_("dialogue_text", dialogues).execute())
+    return {row["dialogue_text"]: row["audio_code"] for row in (result.data or [])}
+
+
+def upsert_pending_audio(entries: list[dict]):
+    """Insert new dialogue rows as status=0 (pending). Skip existing dialogues."""
+    if not entries:
+        return
+    client = get_client()
+    rows = [
+        {
+            "audio_code": e["audio_code"],
+            "dialogue_text": e["dialogue_text"],
+            "status": 0,
+            "milestone_code": e.get("milestone_code", ""),
+            "theme_code": e.get("theme_code", ""),
+            "playable_code": e.get("playable_code", ""),
+        }
+        for e in entries
+    ]
+    try:
+        client.table("audio_assets").upsert(
+            rows, on_conflict="dialogue_text", ignore_duplicates=True
+        ).execute()
+    except Exception as e:
+        log.warning("upsert_pending_audio: %s", e)
+
+
+def mark_audio_generated(dialogue_text: str, audio_url: str = ""):
+    """Set status=1 and store the URL.
+
+    No in-repo callers: this is the ledger's write-back hook for the external
+    TTS process that renders pending (status=0) dialogues."""
+    client = get_client()
+    try:
+        client.table("audio_assets").update(
+            {"status": 1, "audio_url": audio_url}
+        ).eq("dialogue_text", dialogue_text).execute()
+    except Exception as e:
+        log.warning("mark_audio_generated: %s", e)
+
+
 def get_all_assets(milestone_code: str = "", theme_code: str = "") -> list[dict]:
     """Fetch all rows, optionally filtered by milestone/theme."""
     client = get_client()

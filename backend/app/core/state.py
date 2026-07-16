@@ -26,6 +26,11 @@ class LessonState(TypedDict, total=False):
     completed_assets: list       # kept for output-shape compat (always [] now)
     failed_assets: list          # kept for output-shape compat (always [] now)
 
+    # Phase 3b: audio planning (dedupe voice lines against the audio_assets
+    # ledger; file cells in the matrix are rewritten to reused codes)
+    pending_audio: list          # new dialogues registered this run
+    audio_reused: int            # dialogues that matched an existing ledger row
+
     # Eval (runs after asset_planner)
     eval_result: Optional[dict]
 

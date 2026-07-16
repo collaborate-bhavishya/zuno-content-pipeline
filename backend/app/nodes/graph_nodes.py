@@ -19,7 +19,8 @@ from app.core.storage import STORAGE
 from app.core.validators import scan_for_unsafe_content, validate_blueprint, validate_matrix
 from app.core.metrics import get_collector
 from app.core.scorer import score_run as _score_run
-from app.core.db import lookup_existing, upsert_pending
+from app.core.db import (lookup_existing, upsert_pending,
+                         lookup_existing_audio, upsert_pending_audio)
 
 
 def _extract_tokens(resp) -> tuple:
@@ -446,6 +447,103 @@ def asset_planner_node(state: dict) -> dict:
     log.info("  PENDING  (registered):  %s", ", ".join(need) if need else "(none)")
     log.info("  EXISTING (reused/skip): %s", ", ".join(have) if have else "(none)")
     return {"asset_queue": queue, "completed_assets": [], "failed_assets": []}
+
+
+# ===================== PHASE 3b: AUDIO PLANNING =====================
+# Same idea as image planning, for voice lines. Every dialogue↔file column
+# pair in the matrix is deduplicated against the Supabase audio_assets ledger
+# (exact text match, stripped): a dialogue already in the ledger gets its
+# EXISTING audio_code written back into the sheet's file cell; a new dialogue
+# keeps the fabricator-assigned filename and is registered as pending
+# (status=0) for the external TTS process. No audio is generated here.
+
+# (dialogue column, file column, is comma-separated multi-value)
+AUDIO_PAIRS = [
+    ("Instruction VO", "Instruction VO — File", False),
+    ("Audio in Question", "Audio in Question — File", False),
+    ("VO for Question", "VO for Question — File", False),
+    ("Correct Answer", "Correct Answer VO — File", False),
+    ("Other Options", "Other Options VO — File", True),
+]
+
+_DASH = "—"
+
+
+def audio_planner_node(state: dict) -> dict:
+    matrix = state.get("raw_question_matrix") or []
+    milestone = state.get("milestone_code", "")
+    theme = state.get("theme_code", "")
+
+    def _cells(row, content_col, file_col, multi):
+        """Yield (dialogue, file_token) pairs from one row's column pair."""
+        content = str(row.get(content_col, "")).strip()
+        files = str(row.get(file_col, "")).strip()
+        if not content or content == _DASH:
+            return []
+        if not multi:
+            return [(content, files)]
+        # Other Options: pairwise split. Distractor text itself never contains
+        # commas (single words/short phrases per the template rules).
+        dialogues = [d.strip() for d in content.split(",")]
+        file_list = ([f.strip() for f in files.split(",")]
+                     if files and files != _DASH else [])
+        return [(d, file_list[i] if i < len(file_list) else "")
+                for i, d in enumerate(dialogues) if d and d != _DASH]
+
+    # ── One batched ledger lookup for every dialogue in the matrix ──
+    all_dialogues = []
+    for row in matrix:
+        for content_col, file_col, multi in AUDIO_PAIRS:
+            all_dialogues += [d for d, _ in _cells(row, content_col, file_col, multi)]
+    try:
+        code_by_dialogue = lookup_existing_audio(sorted(set(all_dialogues)))
+    except Exception as e:
+        log.warning("Audio ledger lookup failed, treating all as new: %s", e)
+        code_by_dialogue = {}
+    reused_from_db = set(code_by_dialogue)
+
+    # ── Rewrite file cells + collect new dialogues ──
+    new_entries = []
+    rewrites = 0
+    for row in matrix:
+        pc = str(row.get("Playable Code", "")).strip()
+        for content_col, file_col, multi in AUDIO_PAIRS:
+            pairs = _cells(row, content_col, file_col, multi)
+            if not pairs:
+                continue
+            out_tokens = []
+            for dialogue, token in pairs:
+                known = code_by_dialogue.get(dialogue)
+                if known:
+                    if token != known:
+                        rewrites += 1
+                    out_tokens.append(known)
+                    continue
+                # First sighting: keep the fabricator-assigned filename as the
+                # canonical code (existing naming scheme) and register it.
+                if not token or token == _DASH:
+                    out_tokens.append(token)   # nothing to register without a name
+                    continue
+                code_by_dialogue[dialogue] = token
+                new_entries.append({
+                    "audio_code": token, "dialogue_text": dialogue,
+                    "milestone_code": milestone, "theme_code": theme,
+                    "playable_code": pc,
+                })
+                out_tokens.append(token)
+            row[file_col] = ", ".join(out_tokens) if multi else out_tokens[0]
+
+    try:
+        upsert_pending_audio(new_entries)
+    except Exception as e:
+        log.warning("DB upsert_pending_audio failed (non-fatal): %s", e)
+
+    log.info("Audio planner: %d distinct lines — %d new (registered pending), "
+             "%d reused from ledger, %d file cells rewritten",
+             len(code_by_dialogue), len(new_entries), len(reused_from_db), rewrites)
+    return {"raw_question_matrix": matrix,
+            "pending_audio": new_entries,
+            "audio_reused": len(reused_from_db)}
 
 
 def eval_node(state: dict) -> dict:

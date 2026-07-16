@@ -4,7 +4,7 @@ from app.core.state import LessonState
 from app.nodes.graph_nodes import (
     planner_node, blueprint_evaluator_node, route_blueprint,
     fabricator_node, matrix_evaluator_node, route_matrix,
-    asset_planner_node, eval_node,
+    asset_planner_node, audio_planner_node, eval_node,
 )
 
 # The pipeline plans images but does not render them: asset_planner lists
@@ -22,6 +22,7 @@ def build_graph():
     wf.add_node("fabricator", fabricator_node)
     wf.add_node("matrix_evaluator", matrix_evaluator_node)
     wf.add_node("asset_planner", asset_planner_node)
+    wf.add_node("audio_planner", audio_planner_node)
     wf.add_node("eval", eval_node)
 
     wf.set_entry_point("planner")
@@ -39,6 +40,7 @@ def build_graph():
         "trigger_assets": "asset_planner",
     })
 
-    wf.add_edge("asset_planner", "eval")
+    wf.add_edge("asset_planner", "audio_planner")
+    wf.add_edge("audio_planner", "eval")
     wf.add_edge("eval", END)
     return wf.compile()

@@ -232,6 +232,7 @@ NODE_LABELS = {
     "fabricator": ("Fabricator agent", "Building the question matrix"),
     "matrix_evaluator": ("Matrix evaluator", "Validating structure"),
     "asset_planner": ("Asset planner", "Listing images to generate"),
+    "audio_planner": ("Audio planner", "Deduplicating voice lines against the audio ledger"),
     "eval": ("Eval scorer", "Scoring output against SpeakX rubric"),
 }
 
@@ -265,6 +266,9 @@ def _summarize(node: str, update: dict) -> dict:
         safe["rows"] = len(update["raw_question_matrix"])
     if "asset_queue" in update:
         safe["pending_images"] = [a.get("filename", "") for a in update["asset_queue"]]
+    if "pending_audio" in update:
+        safe["pending_audio_count"] = len(update["pending_audio"])
+        safe["audio_reused"] = update.get("audio_reused", 0)
     if "eval_result" in update:
         ev = update["eval_result"]
         safe["decision"] = f"grade {ev.get('grade', '?')} — {ev.get('total_score', 0)}/100"
@@ -335,6 +339,7 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
                 "images": final_state.get("completed_assets", []),
                 "failed": final_state.get("failed_assets", []),
                 "pending_images": final_state.get("asset_queue", []),
+                "pending_audio": final_state.get("pending_audio", []),
                 "history": final_state.get("evaluator_history", []),
                 "eval": final_state.get("eval_result") or {},
                 "metrics": None,
@@ -372,6 +377,7 @@ async def run_stream(theme: str, age: int, milestone_code: str = "AG05", theme_c
         "images": final_state.get("completed_assets", []),
         "failed": final_state.get("failed_assets", []),
         "pending_images": final_state.get("asset_queue", []),
+        "pending_audio": final_state.get("pending_audio", []),
         "history": final_state.get("evaluator_history", []),
         "eval": eval_result,
         "metrics": metrics,
@@ -472,7 +478,7 @@ async def feedback(req: FeedbackRequest):
             from app.core.state import LessonState
             from app.nodes.graph_nodes import (
                 fabricator_node, matrix_evaluator_node, route_matrix,
-                asset_planner_node, eval_node,
+                asset_planner_node, audio_planner_node, eval_node,
             )
             wf = StateGraph(LessonState)
             final = dict(seed)
@@ -483,6 +489,7 @@ async def feedback(req: FeedbackRequest):
                 wf.add_node("fabricator", fabricator_node)
                 wf.add_node("matrix_evaluator", matrix_evaluator_node)
                 wf.add_node("asset_planner", asset_planner_node)
+                wf.add_node("audio_planner", audio_planner_node)
                 wf.add_node("eval", eval_node)
                 wf.set_entry_point("fabricator")
                 wf.add_edge("fabricator", "matrix_evaluator")
@@ -491,13 +498,16 @@ async def feedback(req: FeedbackRequest):
                     "hard_fail": END,
                     "trigger_assets": "asset_planner",
                 })
-                wf.add_edge("asset_planner", "eval")
+                wf.add_edge("asset_planner", "audio_planner")
+                wf.add_edge("audio_planner", "eval")
                 wf.add_edge("eval", END)
             elif entry_node == "asset_planner":
                 wf.add_node("asset_planner", asset_planner_node)
+                wf.add_node("audio_planner", audio_planner_node)
                 wf.add_node("eval", eval_node)
                 wf.set_entry_point("asset_planner")
-                wf.add_edge("asset_planner", "eval")
+                wf.add_edge("asset_planner", "audio_planner")
+                wf.add_edge("audio_planner", "eval")
                 wf.add_edge("eval", END)
 
             graph = wf.compile()
@@ -533,6 +543,7 @@ async def feedback(req: FeedbackRequest):
             "images": final.get("completed_assets", []),
             "failed": final.get("failed_assets", []),
             "pending_images": final.get("asset_queue", []),
+            "pending_audio": final.get("pending_audio", []),
             "history": final.get("evaluator_history", []),
             "eval": eval_result,
             "metrics": metrics,

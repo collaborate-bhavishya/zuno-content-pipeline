@@ -19,6 +19,8 @@ export type FeedEvent =
         critique?: string;
         rows?: number;
         pending_images?: string[];
+        pending_audio_count?: number;
+        audio_reused?: number;
         metrics?: NodeMetrics;
       };
     }

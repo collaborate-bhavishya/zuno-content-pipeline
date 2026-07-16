@@ -30,6 +30,9 @@ export function eventToItem(e: Extract<FeedEvent, { kind: "node" }>, id: number)
   if (d.pending_images?.length) {
     note = `${d.pending_images.length} image${d.pending_images.length > 1 ? "s" : ""} registered for generation: ${d.pending_images.join(", ")}`;
   }
+  if (d.pending_audio_count !== undefined) {
+    note = `${d.pending_audio_count} new voice line${d.pending_audio_count !== 1 ? "s" : ""} registered for generation · ${d.audio_reused || 0} reused from the audio ledger`;
+  }
   if (d.preview) note = d.preview;
 
   return {
