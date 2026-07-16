@@ -102,8 +102,14 @@ Evaluate:
 3. ANTONYM / NEGATION INTERFERENCE — no competing binary opposites.
 4. CONTENT SAFETY — absolutely no scary/dark/violent words.
 
+IMPORTANT — audit exhaustively in ONE pass: the generator gets a limited number
+of repair attempts, so your critique MUST list EVERY issue you can find in this
+draft (numbered), not just the first one. Never hold an issue back for a later
+review. FAIL only on clear violations of the four criteria above — do not fail
+for stylistic preferences or hypothetical improvements.
+
 Output ONLY raw JSON, no markdown:
-{"verdict": "PASS" | "FAIL", "critique": "<technical fix instructions if FAIL>"}"""
+{"verdict": "PASS" | "FAIL", "critique": "<numbered list of ALL issues + technical fix instructions if FAIL>"}"""
 
 DEFAULT_VISION_CRITIC_SYSTEM = """You are a Lead Preschool UI Auditor. Inspect the
 ATTACHED IMAGE for design-system compliance. Looking at the ACTUAL PIXELS, check:
@@ -418,7 +424,7 @@ class RuntimeConfig:
     # Caps (system decides count, these are upper bounds)
     max_questions: int = 100
     max_images: int = 100
-    max_retries: int = 3
+    max_retries: int = 5
     max_total_llm_calls: int = 60      # hard cutoff across entire pipeline
     max_image_loop_iterations: int = 50 # max image_factory+vision_critic cycles
     image_backoff_base_s: int = 12     # 429 backoff: waits 12s, 24s, 36s before deferring

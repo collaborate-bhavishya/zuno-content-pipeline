@@ -95,6 +95,18 @@ def planner_node(state: dict) -> dict:
     # Incremental repair: hand the model its OWN previous blueprint and fix ONLY the
     # flagged issue, keeping everything else intact.
     prev_bp = state.get("blueprint_text", "")
+    # Critiques from EARLIER cycles (already addressed) — reminded so the model
+    # doesn't reintroduce a fixed problem while repairing the current one.
+    # Safety-cycle entries are excluded: they may quote the flagged words, which
+    # must never be echoed back into the prompt.
+    prior = [h for h in state.get("evaluator_history", [])
+             if h.startswith("Blueprint cycle") and "Safety:" not in h]
+    prior_block = ""
+    if len(prior) > 1:
+        prior_block = (
+            "\n\nIssues flagged and FIXED in earlier review cycles — do NOT "
+            "reintroduce any of these:\n" + "\n".join(prior[:-1])
+        )
     if not err:
         correction = ""
     elif err.startswith("Safety:"):
@@ -114,10 +126,10 @@ def planner_node(state: dict) -> dict:
         correction = (
             f"\n\n=== REPAIR PASS — fix ONLY what is flagged ===\n"
             f"Here is your PREVIOUS blueprint:\n\n{prev_bp}\n\n"
-            f"The reviewer flagged ONLY this issue:\n{err}\n\n"
-            f"Return the SAME blueprint with ONLY that issue fixed. Keep all other "
-            f"sections, wording, and structure EXACTLY as-is — change nothing that was "
-            f"not flagged."
+            f"The reviewer flagged these issues:\n{err}\n\n"
+            f"Return the SAME blueprint with ALL of those issues fixed (and nothing "
+            f"else changed). Keep all other sections, wording, and structure EXACTLY "
+            f"as-is — change nothing that was not flagged.{prior_block}"
         )
 
     age_context = ""
