@@ -115,9 +115,13 @@ BACKOFF_MAX = 600
 MAX_LESSON_ATTEMPTS = 6
 
 
-def build_queue(themes, reg, ages_by_theme, ages_override=None):
+def build_queue(themes, reg, ages_by_theme, ages_override=None, milestone_by_theme=None):
+    milestone_by_theme = milestone_by_theme or {}
     return [
-        {"theme": t, "age": a, "milestone_code": f"AG{a:02d}", "theme_code": reg[t]}
+        {"theme": t, "age": a,
+         # catalog override if set, else derived from age (AG03 for age 3, ...)
+         "milestone_code": milestone_by_theme.get(t) or f"AG{a:02d}",
+         "theme_code": reg[t]}
         for t in themes
         for a in (ages_override or ages_by_theme.get(t, AGES))
     ]
@@ -200,12 +204,14 @@ def main():
     # Registry: Supabase `themes` table is the source of truth (survives
     # container rebuilds and is fed by the admin CSV upload). The local CSV is
     # only a fallback if the table is missing/empty.
-    reg, ages_by_theme = {}, {}
+    reg, ages_by_theme, milestone_by_theme = {}, {}, {}
     try:
         from app.core.themes import list_themes, register_themes, parse_ages, slugify
         rows = list_themes()
         reg = {r["theme"]: r["theme_code"] for r in rows if r.get("active", True)}
         ages_by_theme = {r["theme"]: parse_ages(r.get("ages", "")) for r in rows}
+        milestone_by_theme = {r["theme"]: r.get("milestone_code") for r in rows
+                              if r.get("milestone_code")}
         if args.themes:
             themes = [slugify(t) for t in args.themes.split(",") if t.strip()]
             reg.update(register_themes(themes))   # auto-register any new names
@@ -221,7 +227,7 @@ def main():
         reg = ensure_codes(reg, themes, args.themes_file)
 
     ages_override = [int(a) for a in args.ages.split(",")] if args.ages else None
-    queue = build_queue(themes, reg, ages_by_theme, ages_override)
+    queue = build_queue(themes, reg, ages_by_theme, ages_override, milestone_by_theme)
 
     runs = _load_runs()
     pending = [c for c in queue if not already_done(c, runs)]

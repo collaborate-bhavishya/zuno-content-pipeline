@@ -3,13 +3,18 @@
 -- reference it). Run once in the Supabase SQL Editor.
 
 create table if not exists themes (
-    theme       text primary key,          -- normalized name, e.g. 'jungle'
-    theme_code  text not null unique,      -- stable code, e.g. 'T07'
-    ages        text not null default '3-7',   -- '3-7' | '4,5' | ...
-    active      boolean not null default true, -- false = keep but skip in batch
-    notes       text,
-    created_at  timestamptz not null default now()
+    theme          text primary key,          -- normalized name, e.g. 'jungle'
+    theme_code     text not null unique,      -- stable code, e.g. 'T07'
+    ages           text not null default '3-7',   -- '3-7' | '4,5' | ...
+    milestone_code text,                      -- optional override, e.g. 'AG05';
+                                              -- blank = derived per age (AG03 for age 3, ...)
+    active         boolean not null default true, -- false = keep but skip in batch
+    notes          text,
+    created_at     timestamptz not null default now()
 );
+
+-- Migration for tables created before milestone_code existed:
+alter table themes add column if not exists milestone_code text;
 
 -- Default-deny RLS: only the backend (secret key) reads/writes.
 alter table themes enable row level security;

@@ -5,8 +5,12 @@ theme_codes, and which ages each generates for. The admin UI uploads a CSV
 here; the batch runner reads it. Codes are assigned once and never change.
 
 CSV format (only `theme` is required):
-    theme,theme_code,ages,active,notes
-    dinosaurs,,4-6,true,friendly dinos only
+    theme,theme_code,ages,milestone_code,active,notes
+    dinosaurs,,4-6,,true,friendly dinos only
+
+milestone_code is an optional override (e.g. AG05) used for EVERY lesson of the
+theme; blank derives it per age (age 3 -> AG03, ...), matching the app form's
+default behavior.
 """
 import csv
 import io
@@ -104,17 +108,23 @@ def upsert_csv(csv_text: str) -> dict:
         if code and not re.fullmatch(r"T\d{1,4}", code):
             errors.append(f"line {i}: '{theme}' has invalid theme_code '{code}' (expected T<number>)")
             continue
+        milestone = row.get("milestone_code", "").upper()
+        if milestone and not re.fullmatch(r"AG\d{1,4}", milestone):
+            errors.append(f"line {i}: '{theme}' has invalid milestone_code "
+                          f"'{milestone}' (expected AG<number>, or blank to derive from age)")
+            continue
         ages = ",".join(str(a) for a in parse_ages(row.get("ages", "")))
         active = row.get("active", "true").lower() not in ("false", "0", "no")
         notes = row.get("notes", "")
+        fields = {"ages": ages, "milestone_code": milestone or None,
+                  "active": active, "notes": notes}
 
         if theme in current:
             kept = current[theme]["theme_code"]
             if code and code != kept:
                 warnings.append(f"line {i}: '{theme}' already has code {kept}; "
                                 f"ignored CSV's {code} (codes never change)")
-            rows_out.append({"theme": theme, "theme_code": kept,
-                             "ages": ages, "active": active, "notes": notes})
+            rows_out.append({"theme": theme, "theme_code": kept, **fields})
             updated.append(theme)
         else:
             if code:
@@ -125,8 +135,7 @@ def upsert_csv(csv_text: str) -> dict:
             else:
                 code = _next_code(used_codes)
             used_codes.add(code)
-            rows_out.append({"theme": theme, "theme_code": code,
-                             "ages": ages, "active": active, "notes": notes})
+            rows_out.append({"theme": theme, "theme_code": code, **fields})
             added.append(f"{theme} -> {code}")
 
     if rows_out:

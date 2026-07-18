@@ -137,7 +137,7 @@ export default function Admin() {
       </Section>
 
       {/* THEMES */}
-      <Section title="Theme catalog" subtitle="The themes the batch generator produces lessons for. Upload a CSV to add or update — columns: theme (required), theme_code (blank = auto-assigned, never changes once set), ages (e.g. 3-7 or 4,5), active, notes.">
+      <Section title="Theme catalog" subtitle="The themes the batch generator produces lessons for. Upload a CSV to add or update — columns: theme (required), theme_code (blank = auto-assigned, never changes once set), ages (e.g. 3-7 or 4,5), milestone_code (blank = derived from age, e.g. AG03 for age 3), active, notes.">
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
           <input
             type="file"
@@ -175,7 +175,7 @@ export default function Admin() {
           <table style={{ width: "100%", fontSize: 12.5, borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--line)", textAlign: "left" }}>
-                {["Code", "Theme", "Ages", "Active", "Notes"].map((h) => (
+                {["Code", "Theme", "Ages", "Milestone", "Active", "Notes"].map((h) => (
                   <th key={h} style={{ padding: "6px 8px", fontWeight: 600 }}>{h}</th>
                 ))}
               </tr>
@@ -187,6 +187,9 @@ export default function Admin() {
                   <td style={{ padding: "5px 8px", fontFamily: "monospace" }}>{t.theme_code}</td>
                   <td style={{ padding: "5px 8px", fontWeight: 500 }}>{t.theme}</td>
                   <td style={{ padding: "5px 8px" }}>{t.ages}</td>
+                  <td style={{ padding: "5px 8px", fontFamily: "monospace" }}>
+                    {t.milestone_code || "auto (by age)"}
+                  </td>
                   <td style={{ padding: "5px 8px" }}>{t.active ? "✓" : "—"}</td>
                   <td style={{ padding: "5px 8px", color: "var(--ink-faint)" }}>{t.notes || ""}</td>
                 </tr>
