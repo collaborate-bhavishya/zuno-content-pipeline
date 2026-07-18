@@ -4,6 +4,10 @@ __pycache__/
 .venv/
 backend/.env
 backend/storage/images/*.png
+# Run outputs are data, not source (they also break server pulls when cleaned)
+backend/storage/runs/
+backend/storage/runs.json
+backend/storage/*.log
 
 # Node
 node_modules/
