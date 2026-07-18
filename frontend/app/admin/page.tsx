@@ -175,7 +175,7 @@ export default function Admin() {
           <table style={{ width: "100%", fontSize: 12.5, borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--line)", textAlign: "left" }}>
-                {["Code", "Theme", "Ages", "Milestone", "Active", "Notes"].map((h) => (
+                {["Code", "Theme", "Ages", "Milestone", "Status", "Done ages", "Active", "Notes"].map((h) => (
                   <th key={h} style={{ padding: "6px 8px", fontWeight: 600 }}>{h}</th>
                 ))}
               </tr>
@@ -190,6 +190,18 @@ export default function Admin() {
                   <td style={{ padding: "5px 8px", fontFamily: "monospace" }}>
                     {t.milestone_code || "auto (by age)"}
                   </td>
+                  <td style={{ padding: "5px 8px" }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4,
+                      background: t.status === "done" ? "#22c55e22"
+                        : t.status === "in_progress" ? "#fef08a" : "var(--cream-deep)",
+                      color: t.status === "done" ? "#16a34a"
+                        : t.status === "in_progress" ? "#854d0e" : "var(--ink-faint)",
+                    }}>
+                      {t.status || "pending"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "5px 8px", fontFamily: "monospace" }}>{t.generated_ages || "—"}</td>
                   <td style={{ padding: "5px 8px" }}>{t.active ? "✓" : "—"}</td>
                   <td style={{ padding: "5px 8px", color: "var(--ink-faint)" }}>{t.notes || ""}</td>
                 </tr>

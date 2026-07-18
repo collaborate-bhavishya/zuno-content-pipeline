@@ -258,11 +258,15 @@ def main():
     # container rebuilds and is fed by the admin CSV upload). The local CSV is
     # only a fallback if the table is missing/empty.
     reg, ages_by_theme, milestone_by_theme = {}, {}, {}
+    catalog_live = False
     try:
-        from app.core.themes import list_themes, register_themes, parse_ages, slugify
+        from app.core.themes import (list_themes, register_themes, parse_ages,
+                                     slugify, ages_remaining)
         rows = list_themes()
         reg = {r["theme"]: r["theme_code"] for r in rows if r.get("active", True)}
-        ages_by_theme = {r["theme"]: parse_ages(r.get("ages", "")) for r in rows}
+        # Only ages NOT already marked done in the catalog (durable resume —
+        # survives container rebuilds, unlike local runs.json).
+        ages_by_theme = {r["theme"]: ages_remaining(r) for r in rows}
         milestone_by_theme = {r["theme"]: r.get("milestone_code") for r in rows
                               if r.get("milestone_code")}
         if args.themes:
@@ -270,7 +274,10 @@ def main():
             reg.update(register_themes(themes))   # auto-register any new names
         else:
             themes = list(reg.keys())
-        log.info("Theme catalog: Supabase (%d themes, %d active)", len(rows), len(reg))
+        n_done = sum(1 for r in rows if r.get("status") == "done")
+        log.info("Theme catalog: Supabase (%d themes, %d active, %d already done)",
+                 len(rows), len(reg), n_done)
+        catalog_live = True
     except Exception as e:
         log.warning("Supabase theme catalog unavailable (%s) — falling back to %s",
                     e, args.themes_file)
@@ -315,6 +322,14 @@ def main():
                 ok += 1
                 log.info("[%d/%d] %s — DONE: %d rows, grade %s, ~$%.4f",
                          i, len(pending), label, rows, grade, cost)
+                if catalog_live:
+                    try:
+                        from app.core.themes import mark_age_done
+                        status = mark_age_done(combo["theme"], combo["age"])
+                        log.info("  catalog: '%s' age %d marked done (theme status: %s)",
+                                 combo["theme"], combo["age"], status)
+                    except Exception as e2:
+                        log.warning("  catalog progress update failed (non-fatal): %s", e2)
                 pace = max(PACE_MIN, pace * PACE_DECAY)   # speed up after a clean run
                 break
             except Exception as e:

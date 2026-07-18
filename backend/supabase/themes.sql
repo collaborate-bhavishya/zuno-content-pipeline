@@ -13,8 +13,12 @@ create table if not exists themes (
     created_at     timestamptz not null default now()
 );
 
--- Migration for tables created before milestone_code existed:
+-- Migrations for tables created before these columns existed:
 alter table themes add column if not exists milestone_code text;
+-- Batch progress tracking (written by batch_generate.py after each lesson):
+alter table themes add column if not exists status text not null default 'pending';        -- pending | in_progress | done
+alter table themes add column if not exists generated_ages text not null default '';       -- ages completed, e.g. '3,4'
+alter table themes add column if not exists last_generated_at timestamptz;
 
 -- Default-deny RLS: only the backend (secret key) reads/writes.
 alter table themes enable row level security;

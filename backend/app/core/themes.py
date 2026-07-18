@@ -82,6 +82,34 @@ def register_themes(names: list) -> dict:
     return existing
 
 
+def mark_age_done(theme: str, age: int) -> str:
+    """Record that one (theme, age) lesson completed. Updates generated_ages
+    and derives status: done when every configured age is generated,
+    in_progress otherwise. Returns the new status."""
+    from datetime import datetime, timezone
+    client = get_client()
+    row = client.table("themes").select("ages, generated_ages").eq("theme", theme).execute().data
+    if not row:
+        return "unknown"
+    configured = set(parse_ages(row[0].get("ages", "")))
+    done_ages = {int(a) for a in str(row[0].get("generated_ages") or "").split(",") if a.strip().isdigit()}
+    done_ages.add(int(age))
+    status = "done" if configured <= done_ages else "in_progress"
+    client.table("themes").update({
+        "generated_ages": ",".join(str(a) for a in sorted(done_ages)),
+        "status": status,
+        "last_generated_at": datetime.now(timezone.utc).isoformat(),
+    }).eq("theme", theme).execute()
+    return status
+
+
+def ages_remaining(row: dict) -> list:
+    """Configured ages for a catalog row minus the ones already generated."""
+    configured = parse_ages(row.get("ages", ""))
+    done = {int(a) for a in str(row.get("generated_ages") or "").split(",") if a.strip().isdigit()}
+    return [a for a in configured if a not in done]
+
+
 def upsert_csv(csv_text: str) -> dict:
     """Merge an uploaded CSV into the catalog.
 
