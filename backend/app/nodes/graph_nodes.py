@@ -15,7 +15,7 @@ import logging
 log = logging.getLogger("pipeline")
 
 from app.core.config import CONFIG, TEMPLATE_COLUMN_RULES
-from app.core.llm import get_generator, get_judge
+from app.core.llm import get_generator, get_judge, invoke_with_limit
 from app.core.storage import STORAGE
 from app.core.validators import scan_for_unsafe_content, validate_blueprint, validate_matrix
 from app.core.metrics import get_collector
@@ -44,9 +44,9 @@ def _get_model_name(resp) -> str:
 
 
 def _tracked_invoke(llm, messages, node: str, role: str):
-    """Invoke an LLM and record metrics. Returns the response."""
+    """Invoke an LLM (rate-gated) and record metrics. Returns the response."""
     t0 = time.time()
-    resp = llm.invoke(messages)
+    resp = invoke_with_limit(llm, messages)
     elapsed_ms = int((time.time() - t0) * 1000)
 
     mc = get_collector()

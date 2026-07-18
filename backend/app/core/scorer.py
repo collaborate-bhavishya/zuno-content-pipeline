@@ -479,11 +479,11 @@ Output ONLY raw JSON, no markdown:
 
     try:
         import time as _time
-        from app.core.llm import get_judge
+        from app.core.llm import get_judge, invoke_with_limit
         from app.core.metrics import get_collector
         judge = get_judge()
         _t0 = _time.time()
-        resp = judge.invoke([("user", prompt)])
+        resp = invoke_with_limit(judge, [("user", prompt)])
         _elapsed = int((_time.time() - _t0) * 1000)
 
         # Record metrics

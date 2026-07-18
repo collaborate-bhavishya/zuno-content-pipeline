@@ -391,6 +391,12 @@ class RuntimeConfig:
     max_images: int = 100
     max_retries: int = 5
 
+    # LLM rate limiting (see app/core/llm.py). Vertex gemini-2.5-flash default is
+    # ~10 req/min; ~7s spacing keeps us at ~8.5/min, under the ceiling.
+    llm_min_interval_s: float = 7.0   # min seconds between the start of any two calls
+    llm_429_backoff_s: int = 35       # if a 429 slips through, sleep this * attempt
+    llm_max_429_retries: int = 4
+
     # Hard stop: max full pipeline runs allowed per (UTC) day. Editable in admin.
     max_runs_per_day: int = 10
 
