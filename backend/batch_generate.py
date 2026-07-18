@@ -14,10 +14,15 @@ that guards the UI endpoint. Built to be left running unattended:
   * Resume: skips any (theme, age, milestone, theme_code) already saved with a
     non-empty matrix, so you can stop/restart or survive a reboot freely.
 
+Themes live in a registry CSV (themes.csv: theme,theme_code). Add themes there
+(code optional — a stable one is auto-assigned and written back) and they get
+generated across all ages. Codes never change once assigned.
+
 Run from the backend/ directory:
 
-    python batch_generate.py                 # full grid, all themes x ages 3-7
-    python batch_generate.py --themes jungle,space --ages 4,5
+    python batch_generate.py                 # every theme in themes.csv x ages 3-7
+    python batch_generate.py --themes jungle,space --ages 4,5   # subset
+    python batch_generate.py --themes dragons,castles           # new themes: auto-registered
     python batch_generate.py --dry-run       # print the queue, generate nothing
 
 On the EC2 box, launch detached and watch the log:
@@ -27,7 +32,10 @@ On the EC2 box, launch detached and watch the log:
     tail -f storage/batch.log
 """
 import argparse
+import csv
 import logging
+import os
+import re
 import time
 from datetime import datetime, timezone
 
@@ -38,11 +46,61 @@ from app.main import _save_run, _load_runs
 
 log = logging.getLogger("batch")
 
-# The theme library (matches evals/dataset.json). Theme codes are assigned by
-# position so the same theme always gets the same T-code across runs.
-THEMES = ["animals", "bus", "colors", "family", "food",
-          "fruits", "jungle", "ocean", "space", "weather"]
 AGES = [3, 4, 5, 6, 7]
+
+# Persistent theme registry (theme -> stable theme_code). This CSV is the single
+# source of truth for the growing catalog: add a theme to it (with or without a
+# code) and it gets generated across all ages. A code, once assigned, never
+# changes — so already-generated content keeps pointing at the right files.
+THEMES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.csv")
+
+
+def _slugify_theme(theme: str) -> str:
+    """Normalize a theme name: lowercase, trimmed, single spaces."""
+    return re.sub(r"\s+", " ", str(theme or "").strip().lower())
+
+
+def load_registry(path: str = THEMES_FILE) -> dict:
+    """Read {theme: theme_code} from the CSV. Missing file => empty registry."""
+    reg = {}
+    if not os.path.exists(path):
+        return reg
+    with open(path, newline="") as f:
+        for row in csv.DictReader(f):
+            theme = _slugify_theme(row.get("theme", ""))
+            code = str(row.get("theme_code", "")).strip().upper()
+            if theme and code:
+                reg[theme] = code
+    return reg
+
+
+def _next_code(reg: dict) -> str:
+    """Lowest unused T-code (T01, T02, …)."""
+    used = {int(m.group(1)) for c in reg.values()
+            if (m := re.fullmatch(r"T(\d+)", c))}
+    n = 1
+    while n in used:
+        n += 1
+    return f"T{n:02d}"
+
+
+def ensure_codes(reg: dict, themes: list, path: str = THEMES_FILE) -> dict:
+    """Assign a stable code to any theme not yet in the registry and persist.
+    Returns the (possibly grown) registry."""
+    added = False
+    for t in themes:
+        t = _slugify_theme(t)
+        if t and t not in reg:
+            reg[t] = _next_code(reg)
+            log.info("Registered new theme '%s' -> %s", t, reg[t])
+            added = True
+    if added:
+        with open(path, "w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["theme", "theme_code"])
+            for t, c in sorted(reg.items(), key=lambda kv: int(kv[1][1:])):
+                w.writerow([t, c])
+    return reg
 
 # Adaptive pacing bounds (seconds between lessons).
 PACE_MIN = 5.0
@@ -57,13 +115,9 @@ BACKOFF_MAX = 600
 MAX_LESSON_ATTEMPTS = 6
 
 
-def theme_code(theme: str) -> str:
-    return f"T{THEMES.index(theme) + 1:02d}" if theme in THEMES else "T01"
-
-
-def build_queue(themes, ages):
+def build_queue(themes, ages, reg):
     return [
-        {"theme": t, "age": a, "milestone_code": f"AG{a:02d}", "theme_code": theme_code(t)}
+        {"theme": t, "age": a, "milestone_code": f"AG{a:02d}", "theme_code": reg[t]}
         for t in themes for a in ages
     ]
 
@@ -131,7 +185,9 @@ def run_one(combo) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--themes", help="comma-separated (default: all)")
+    ap.add_argument("--themes", help="comma-separated subset (default: every theme in the registry)")
+    ap.add_argument("--themes-file", default=THEMES_FILE,
+                    help=f"theme registry CSV (default: {THEMES_FILE})")
     ap.add_argument("--ages", help="comma-separated (default: 3,4,5,6,7)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
@@ -140,9 +196,14 @@ def main():
         level=logging.INFO,
         format="%(asctime)s %(name)-8s %(levelname)s  %(message)s")
 
-    themes = args.themes.split(",") if args.themes else THEMES
+    reg = load_registry(args.themes_file)
+    if args.themes:
+        themes = [_slugify_theme(t) for t in args.themes.split(",") if t.strip()]
+    else:
+        themes = list(reg.keys())          # whole catalog
+    reg = ensure_codes(reg, themes, args.themes_file)   # register + persist any new ones
     ages = [int(a) for a in args.ages.split(",")] if args.ages else AGES
-    queue = build_queue(themes, ages)
+    queue = build_queue(themes, ages, reg)
 
     runs = _load_runs()
     pending = [c for c in queue if not already_done(c, runs)]
