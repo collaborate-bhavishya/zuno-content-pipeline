@@ -145,13 +145,66 @@ def _is_quota_error(exc: Exception) -> bool:
     return "429" in s or "resource_exhausted" in s or "quota" in s
 
 
-def run_one(combo) -> dict:
+# ── LLM error triage ──────────────────────────────────────────────────
+# On any non-quota failure, ask the judge model to read the error and decide:
+# retry (with an optional hint injected into the next attempt) or hold (a
+# problem retrying can't fix — bad credentials, schema mismatch, code bug).
+# After DIAG_MAX_TRIALS failed attempts for one lesson, the whole batch puts
+# itself ON HOLD (exits with a clear log) rather than burning the night on a
+# systemic fault.
+DIAG_MAX_TRIALS = 3
+
+
+def diagnose(error_text: str, combo: dict) -> dict:
+    """Returns {cause, action: 'retry'|'hold', hint}. Never raises."""
+    import json as _json
+    from app.core.llm import get_judge, invoke_with_limit
+    prompt = (
+        "You are the on-call engineer for an automated lesson-generation batch.\n"
+        f"Generating lesson theme='{combo['theme']}' age={combo['age']} failed with:\n\n"
+        f"{error_text[:3000]}\n\n"
+        "Decide what the batch should do:\n"
+        "- 'retry'  if another attempt could plausibly succeed (transient API issue, "
+        "malformed model output, validation that a regeneration may pass).\n"
+        "- 'hold'   if retrying cannot help (authentication/permission errors, missing "
+        "tables or columns, code bugs like ImportError/AttributeError/KeyError in our "
+        "own modules, exhausted daily quotas).\n"
+        "If retrying, optionally give ONE short hint (<50 words) to steer the next "
+        "generation attempt away from the failure. Empty hint is fine.\n\n"
+        'Output ONLY raw JSON, no markdown: {"cause": "<one line>", '
+        '"action": "retry" | "hold", "hint": "<optional>"}'
+    )
+    try:
+        r = invoke_with_limit(get_judge(), [("user", prompt)])
+        clean = r.content.replace("```json", "").replace("```", "").strip()
+        d = _json.loads(clean)
+        return {"cause": str(d.get("cause", "?"))[:300],
+                "action": "hold" if str(d.get("action", "")).lower() == "hold" else "retry",
+                "hint": str(d.get("hint", "") or "")[:400]}
+    except Exception as e:   # diagnosis must never take the batch down
+        return {"cause": f"(diagnosis itself failed: {e})", "action": "retry", "hint": ""}
+
+
+def hold_batch(reason: str, ok: int, fail: int):
+    log.error("=" * 62)
+    log.error("SYSTEM ON HOLD: %s", reason)
+    log.error("Progress so far: %d lessons succeeded, %d failed.", ok, fail)
+    log.error("Fix the issue, then rerun batch_generate.py — completed lessons "
+              "are skipped automatically.")
+    log.error("=" * 62)
+    raise SystemExit(2)
+
+
+def run_one(combo, hint: str = "") -> dict:
     """Drive the graph once for a single combo and return the saved run dict.
-    Raises on a quota error so the caller can back off and retry the lesson."""
+    Raises on a quota error so the caller can back off and retry the lesson.
+    A non-empty hint is injected the same way human reviewer feedback is."""
     mc = init_collector()
     graph = build_graph()
     inputs = {"theme": combo["theme"], "target_age": combo["age"],
               "milestone_code": combo["milestone_code"], "theme_code": combo["theme_code"]}
+    if hint:
+        inputs["blueprint_error_log"] = f"Human reviewer feedback: {hint}"
     final = {}
     try:
         for step in graph.stream(inputs, {"recursion_limit": 100}, stream_mode="updates"):
@@ -246,38 +299,58 @@ def main():
         label = f"{combo['theme']} age {combo['age']}"
         log.info("[%d/%d] %s — starting", i, len(pending), label)
 
-        for attempt in range(1, MAX_LESSON_ATTEMPTS + 1):
+        quota_attempts = 0
+        trials = 0            # non-quota failures for THIS lesson (LLM-triaged)
+        hint = ""
+        while True:
             try:
-                run = run_one(combo)
+                run = run_one(combo, hint)
                 rows = len(run.get("matrix") or [])
+                if not rows:
+                    raise RuntimeError(
+                        "pipeline completed but produced an EMPTY question matrix "
+                        f"(history: {(run.get('history') or ['none'])[-1]})")
                 grade = (run.get("eval") or {}).get("grade", "?")
                 cost = (run.get("metrics") or {}).get("total_cost", 0)
-                if rows:
-                    ok += 1
-                    log.info("[%d/%d] %s — DONE: %d rows, grade %s, ~$%.4f",
-                             i, len(pending), label, rows, grade, cost)
-                else:
-                    fail += 1
-                    log.warning("[%d/%d] %s — completed but EMPTY matrix (saved for review)",
-                                i, len(pending), label)
+                ok += 1
+                log.info("[%d/%d] %s — DONE: %d rows, grade %s, ~$%.4f",
+                         i, len(pending), label, rows, grade, cost)
                 pace = max(PACE_MIN, pace * PACE_DECAY)   # speed up after a clean run
                 break
             except Exception as e:
                 if _is_quota_error(e):
-                    wait = min(BACKOFF_MAX, BACKOFF_BASE * (2 ** (attempt - 1)))
+                    quota_attempts += 1
+                    if quota_attempts >= MAX_LESSON_ATTEMPTS:
+                        hold_batch(f"quota still exhausted after {quota_attempts} "
+                                   f"backoffs on '{label}'", ok, fail)
+                    wait = min(BACKOFF_MAX, BACKOFF_BASE * (2 ** (quota_attempts - 1)))
                     pace = min(PACE_MAX, pace * PACE_GROW)   # slow the whole batch down
                     log.warning("[%d/%d] %s — 429 quota (attempt %d/%d). Backing off %ds; "
-                                "inter-lesson pace now %ds.",
-                                i, len(pending), label, attempt, MAX_LESSON_ATTEMPTS, wait, int(pace))
+                                "inter-lesson pace now %ds.", i, len(pending), label,
+                                quota_attempts, MAX_LESSON_ATTEMPTS, wait, int(pace))
                     time.sleep(wait)
                     continue
-                fail += 1
-                log.exception("[%d/%d] %s — FAILED (non-quota): %s", i, len(pending), label, e)
-                break
-        else:
-            fail += 1
-            log.error("[%d/%d] %s — gave up after %d quota retries.",
-                      i, len(pending), label, MAX_LESSON_ATTEMPTS)
+
+                # Non-quota failure: let the LLM read the error and decide.
+                # (No 'fail' tally here — a lesson either eventually succeeds
+                # or the whole batch holds; nothing is silently skipped.)
+                trials += 1
+                import traceback as _tb
+                err_text = f"{type(e).__name__}: {e}\n{_tb.format_exc()[-2000:]}"
+                diag = diagnose(err_text, combo)
+                log.warning("[%d/%d] %s — trial %d/%d failed. LLM diagnosis: %s "
+                            "(action=%s%s)", i, len(pending), label, trials,
+                            DIAG_MAX_TRIALS, diag["cause"], diag["action"],
+                            f", hint={diag['hint']!r}" if diag["hint"] else "")
+                if diag["action"] == "hold":
+                    hold_batch(f"'{label}' failed and the diagnosis says retrying "
+                               f"can't fix it: {diag['cause']}", ok, fail)
+                if trials >= DIAG_MAX_TRIALS:
+                    hold_batch(f"'{label}' failed {trials} trials in a row "
+                               f"(last cause: {diag['cause']})", ok, fail)
+                hint = diag["hint"]
+                log.info("[%d/%d] %s — re-running (trial %d)…",
+                         i, len(pending), label, trials + 1)
 
         if i < len(pending):
             log.info("Pacing %ds before next lesson…", int(pace))
