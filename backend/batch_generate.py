@@ -115,10 +115,11 @@ BACKOFF_MAX = 600
 MAX_LESSON_ATTEMPTS = 6
 
 
-def build_queue(themes, ages, reg):
+def build_queue(themes, reg, ages_by_theme, ages_override=None):
     return [
         {"theme": t, "age": a, "milestone_code": f"AG{a:02d}", "theme_code": reg[t]}
-        for t in themes for a in ages
+        for t in themes
+        for a in (ages_override or ages_by_theme.get(t, AGES))
     ]
 
 
@@ -196,20 +197,37 @@ def main():
         level=logging.INFO,
         format="%(asctime)s %(name)-8s %(levelname)s  %(message)s")
 
-    reg = load_registry(args.themes_file)
-    if args.themes:
-        themes = [_slugify_theme(t) for t in args.themes.split(",") if t.strip()]
-    else:
-        themes = list(reg.keys())          # whole catalog
-    reg = ensure_codes(reg, themes, args.themes_file)   # register + persist any new ones
-    ages = [int(a) for a in args.ages.split(",")] if args.ages else AGES
-    queue = build_queue(themes, ages, reg)
+    # Registry: Supabase `themes` table is the source of truth (survives
+    # container rebuilds and is fed by the admin CSV upload). The local CSV is
+    # only a fallback if the table is missing/empty.
+    reg, ages_by_theme = {}, {}
+    try:
+        from app.core.themes import list_themes, register_themes, parse_ages, slugify
+        rows = list_themes()
+        reg = {r["theme"]: r["theme_code"] for r in rows if r.get("active", True)}
+        ages_by_theme = {r["theme"]: parse_ages(r.get("ages", "")) for r in rows}
+        if args.themes:
+            themes = [slugify(t) for t in args.themes.split(",") if t.strip()]
+            reg.update(register_themes(themes))   # auto-register any new names
+        else:
+            themes = list(reg.keys())
+        log.info("Theme catalog: Supabase (%d themes, %d active)", len(rows), len(reg))
+    except Exception as e:
+        log.warning("Supabase theme catalog unavailable (%s) — falling back to %s",
+                    e, args.themes_file)
+        reg = load_registry(args.themes_file)
+        themes = ([_slugify_theme(t) for t in args.themes.split(",") if t.strip()]
+                  if args.themes else list(reg.keys()))
+        reg = ensure_codes(reg, themes, args.themes_file)
+
+    ages_override = [int(a) for a in args.ages.split(",")] if args.ages else None
+    queue = build_queue(themes, reg, ages_by_theme, ages_override)
 
     runs = _load_runs()
     pending = [c for c in queue if not already_done(c, runs)]
     done = len(queue) - len(pending)
-    log.info("Grid: %d lessons (%d themes x %d ages). %d already done, %d to generate.",
-             len(queue), len(themes), len(ages), done, len(pending))
+    log.info("Grid: %d lessons across %d themes. %d already done, %d to generate.",
+             len(queue), len(themes), done, len(pending))
 
     if args.dry_run:
         for c in pending:

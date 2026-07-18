@@ -613,6 +613,24 @@ async def get_runs():
     return _load_runs()
 
 
+# ===================== THEMES =====================
+
+class ThemesUploadRequest(BaseModel):
+    csv_text: str    # raw CSV read client-side; columns: theme[,theme_code,ages,active,notes]
+
+
+@app.get("/api/themes", dependencies=[Depends(require_user)])
+async def get_themes():
+    from app.core.themes import list_themes
+    return list_themes()
+
+
+@app.post("/api/themes/upload", dependencies=[Depends(require_user)])
+async def upload_themes(body: ThemesUploadRequest):
+    from app.core.themes import upsert_csv
+    return upsert_csv(body.csv_text)
+
+
 # ===================== EVALS =====================
 
 class EvalRequest(BaseModel):

@@ -11,6 +11,8 @@ export default function Admin() {
   const [config, setConfig] = useState<any>(null);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [themes, setThemes] = useState<any[]>([]);
+  const [themeUpload, setThemeUpload] = useState<any>(null); // last upload result
 
   async function login() {
     const res = await fetch(`${API}/api/admin/config`, {
@@ -20,9 +22,29 @@ export default function Admin() {
       setConfig(await res.json());
       setAuthed(true);
       setError("");
+      loadThemes();
     } else {
       setError("Wrong password");
     }
+  }
+
+  async function loadThemes() {
+    try {
+      const res = await fetch(`${API}/api/themes`, { headers: await authHeaders() });
+      if (res.ok) setThemes(await res.json());
+    } catch {}
+  }
+
+  async function uploadThemesCsv(file: File) {
+    const csv_text = await file.text();
+    const res = await fetch(`${API}/api/themes/upload`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(await authHeaders()) },
+      body: JSON.stringify({ csv_text }),
+    });
+    const data = await res.json();
+    setThemeUpload(data);
+    if (data.themes) setThemes(data.themes);
   }
 
   async function save() {
@@ -112,6 +134,66 @@ export default function Admin() {
       <Section title="Models" subtitle="Generator and judge roles. Cross-family judging reduces self-preference bias.">
         <ModelRow label="Generator (text)" prefix="generator" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
         <ModelRow label="Blueprint judge" prefix="judge" config={config} providers={providers} onProvider={setModel} onModel={setModel} onTemp={setModel} />
+      </Section>
+
+      {/* THEMES */}
+      <Section title="Theme catalog" subtitle="The themes the batch generator produces lessons for. Upload a CSV to add or update — columns: theme (required), theme_code (blank = auto-assigned, never changes once set), ages (e.g. 3-7 or 4,5), active, notes.">
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+          <input
+            type="file"
+            accept=".csv,text/csv"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) uploadThemesCsv(f);
+              e.target.value = "";
+            }}
+          />
+          <span style={{ fontSize: 12, color: "var(--ink-faint)" }}>
+            {themes.length} theme{themes.length !== 1 ? "s" : ""} registered
+          </span>
+        </div>
+
+        {themeUpload && (
+          <div style={{
+            padding: "10px 14px", borderRadius: 9, marginBottom: 14, fontSize: 12.5,
+            background: themeUpload.error || themeUpload.errors?.length ? "#fef2f2" : "#f0fdf4",
+            border: `1px solid ${themeUpload.error || themeUpload.errors?.length ? "#fecaca" : "#bbf7d0"}`,
+          }}>
+            {themeUpload.error && <div style={{ color: "#b91c1c" }}>{themeUpload.error}</div>}
+            {themeUpload.added?.length > 0 && <div>Added: {themeUpload.added.join(", ")}</div>}
+            {themeUpload.updated?.length > 0 && <div>Updated: {themeUpload.updated.join(", ")}</div>}
+            {themeUpload.warnings?.map((w: string, i: number) => (
+              <div key={i} style={{ color: "#a16207" }}>{w}</div>
+            ))}
+            {themeUpload.errors?.map((e2: string, i: number) => (
+              <div key={i} style={{ color: "#b91c1c" }}>{e2}</div>
+            ))}
+          </div>
+        )}
+
+        {themes.length > 0 && (
+          <table style={{ width: "100%", fontSize: 12.5, borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--line)", textAlign: "left" }}>
+                {["Code", "Theme", "Ages", "Active", "Notes"].map((h) => (
+                  <th key={h} style={{ padding: "6px 8px", fontWeight: 600 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {themes.map((t) => (
+                <tr key={t.theme} style={{ borderBottom: "1px solid var(--line)",
+                  opacity: t.active ? 1 : 0.45 }}>
+                  <td style={{ padding: "5px 8px", fontFamily: "monospace" }}>{t.theme_code}</td>
+                  <td style={{ padding: "5px 8px", fontWeight: 500 }}>{t.theme}</td>
+                  <td style={{ padding: "5px 8px" }}>{t.ages}</td>
+                  <td style={{ padding: "5px 8px" }}>{t.active ? "✓" : "—"}</td>
+                  <td style={{ padding: "5px 8px", color: "var(--ink-faint)" }}>{t.notes || ""}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </Section>
 
       {/* LIMITS */}
