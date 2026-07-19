@@ -188,7 +188,9 @@ def blueprint_evaluator_node(state: dict) -> dict:
             f"Review this draft for AGE {age}.\n"
             f"Templates ALLOWED at this age: {', '.join(g.get('allowed_templates', [])) or 'all'}\n"
             f"Templates FORBIDDEN at this age (their absence is correct): "
-            f"{', '.join(g.get('forbidden_templates', [])) or 'none'}\n\n{bp}"
+            f"{', '.join(g.get('forbidden_templates', [])) or 'none'}\n"
+            f"Sentence rules at this age: max {g.get('max_words_per_sentence', 'N/A')} words; "
+            f"forbidden structures: {g.get('forbidden_structures', 'none')}\n\n{bp}"
         )
         r = _tracked_invoke(judge,
                             [("system", CONFIG.prompts.blueprint_judge_system),

@@ -82,6 +82,12 @@ Evaluate:
 2. PEDAGOGICAL STAIRCASE — does difficulty climb naturally through the steps
    ALLOWED FOR THIS AGE (listed in the review request)? A template that is
    forbidden at this age is CORRECTLY absent — its omission is never a fault.
+
+Judge the draft ONLY against the age rules given in the review request — never
+against the blueprint's own boilerplate self-check lines (e.g. "Forbidden
+Structures Check: Pass"): if such a line conflicts with content that the age
+rules allow, the content wins and it is NOT a failure. Short parenthetical
+glosses next to vocabulary words are internal notes, not child-facing text.
 3. ANTONYM / NEGATION INTERFERENCE — no competing binary opposites.
 4. CONTENT SAFETY — absolutely no scary/dark/violent words.
 
