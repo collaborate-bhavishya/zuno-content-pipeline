@@ -179,9 +179,20 @@ def blueprint_evaluator_node(state: dict) -> dict:
         decision, err = "fail", msg
     if decision != "fail":
         judge = get_judge()
+        # The judge must know the age gates: a template forbidden at this age
+        # is correctly absent from the blueprint (see fruits-age-3 hold, where
+        # an age-blind judge demanded T7 that age 3 forbids).
+        age = state.get("target_age", 5)
+        g = CONFIG.output.age_guidelines.get(age, {})
+        review_req = (
+            f"Review this draft for AGE {age}.\n"
+            f"Templates ALLOWED at this age: {', '.join(g.get('allowed_templates', [])) or 'all'}\n"
+            f"Templates FORBIDDEN at this age (their absence is correct): "
+            f"{', '.join(g.get('forbidden_templates', [])) or 'none'}\n\n{bp}"
+        )
         r = _tracked_invoke(judge,
                             [("system", CONFIG.prompts.blueprint_judge_system),
-                             ("user", f"Review this draft:\n\n{bp}")],
+                             ("user", review_req)],
                             node="blueprint_evaluator", role="judge")
         clean = r.content.replace("```json", "").replace("```", "").strip()
         try:

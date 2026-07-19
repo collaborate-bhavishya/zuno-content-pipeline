@@ -74,8 +74,14 @@ Audit the generated LESSON BLUEPRINT against the SpeakX framework.
 
 Evaluate:
 1. PRESCHOOL TEACHER SPOKEN TONE — warm, engaging, age-appropriate; catch any
-   sterile dictionary definitions.
-2. PEDAGOGICAL STAIRCASE — does difficulty climb naturally (F1 -> F2 -> F3 -> T7)?
+   sterile dictionary definitions. Tone applies ONLY to child-facing text
+   (vocabulary words, target sentences, spoken lines). The blueprint itself is
+   an internal planning document: template codes (T4, F2, T6.2...), section
+   headers, file keys (.png/.mp3), and pedagogical notation like "Speaking
+   Urgency met by Q14" are REQUIRED by the SpeakX spec — never fail for them.
+2. PEDAGOGICAL STAIRCASE — does difficulty climb naturally through the steps
+   ALLOWED FOR THIS AGE (listed in the review request)? A template that is
+   forbidden at this age is CORRECTLY absent — its omission is never a fault.
 3. ANTONYM / NEGATION INTERFERENCE — no competing binary opposites.
 4. CONTENT SAFETY — absolutely no scary/dark/violent words.
 
