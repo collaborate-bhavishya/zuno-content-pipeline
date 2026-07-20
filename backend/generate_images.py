@@ -276,20 +276,20 @@ def main():
             log.info("[%d/%d] %s — DONE -> %s  (avg %.0fs/img, ~%.1fh for the rest)",
                      i, len(pending), name, url, rate, rate * (len(pending) - i) / 3600)
         elif img is not None:
-            # QC rejected all attempts but we HAVE a render: keep it for manual
-            # review under a wrong_ name (so it never shadows the real asset)
-            # and tag the row status=2 with the failing QC parameter.
-            wrong_name = f"wrong_{name}"
+            # QC rejected all attempts but we HAVE a render: upload it under
+            # its REAL name (there is no approved asset to shadow) and tag the
+            # row status=2. Approval is then just a status flip — no file
+            # renaming; rejection flips back to 0 and a rerun overwrites the key.
             try:
-                wrong_url = STORAGE.save_image(img, wrong_name)
+                url = STORAGE.save_image(img, name)
             except Exception as e:
-                wrong_url = ""
-                log.warning("  could not store %s: %s", wrong_name, e)
-            mark_wrong_generation(name, image_url=wrong_url, reason=reason)
+                url = ""
+                log.warning("  could not store %s: %s", name, e)
+            mark_wrong_generation(name, image_url=url, reason=reason)
             review += 1
             log.warning("[%d/%d] %s — QC failed %d attempts -> status=2 for review "
                         "(%s) reason: %s", i, len(pending), name, MAX_QC_ATTEMPTS,
-                        wrong_url or "no upload", reason)
+                        url or "no upload", reason)
         else:
             # nothing rendered at all — leave status=0 so a rerun retries
             failed += 1

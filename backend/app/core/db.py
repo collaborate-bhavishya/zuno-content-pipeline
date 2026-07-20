@@ -139,9 +139,10 @@ def mark_audio_generated(dialogue_text: str, audio_url: str = ""):
 
 
 def mark_wrong_generation(image_name: str, image_url: str = "", reason: str = ""):
-    """Image failed all QC attempts: keep the LAST rejected render for manual
-    review. Status 2 = wrong_generation; image_url points to the stored
-    'wrong_' copy; qc_reason records which QC parameter failed."""
+    """Image failed all QC attempts: the LAST render is uploaded under its
+    real name and held for manual review. Status 2 = awaiting verdict;
+    qc_reason records which QC parameter failed. Approve = status -> 1
+    (file already in place); reject = status -> 0 (rerun regenerates)."""
     client = get_client()
     upd = {"status": 2, "image_url": image_url, "qc_reason": (reason or "")[:500]}
     try:
