@@ -257,26 +257,32 @@ def main():
     # Registry: Supabase `themes` table is the source of truth (survives
     # container rebuilds and is fed by the admin CSV upload). The local CSV is
     # only a fallback if the table is missing/empty.
-    reg, ages_by_theme, milestone_by_theme = {}, {}, {}
+    # The catalog holds ONE ROW PER (theme, age) with an explicit milestone —
+    # so each active, not-yet-done row IS one lesson in the queue.
     catalog_live = False
+    queue = []
     try:
-        from app.core.themes import (list_themes, register_themes, parse_ages,
-                                     slugify, ages_remaining)
+        from app.core.themes import list_themes, register_themes, slugify, row_age
         rows = list_themes()
-        reg = {r["theme"]: r["theme_code"] for r in rows if r.get("active", True)}
-        # Only ages NOT already marked done in the catalog (durable resume —
-        # survives container rebuilds, unlike local runs.json).
-        ages_by_theme = {r["theme"]: ages_remaining(r) for r in rows}
-        milestone_by_theme = {r["theme"]: r.get("milestone_code") for r in rows
-                              if r.get("milestone_code")}
         if args.themes:
-            themes = [slugify(t) for t in args.themes.split(",") if t.strip()]
-            reg.update(register_themes(themes))   # auto-register any new names
-        else:
-            themes = list(reg.keys())
-        n_done = sum(1 for r in rows if r.get("status") == "done")
-        log.info("Theme catalog: Supabase (%d themes, %d active, %d already done)",
-                 len(rows), len(reg), n_done)
+            wanted = {slugify(t) for t in args.themes.split(",") if t.strip()}
+            unknown = wanted - {r["theme"] for r in rows}
+            if unknown:
+                register_themes(sorted(unknown))
+                rows = list_themes()
+            rows = [r for r in rows if r["theme"] in wanted]
+        active = [r for r in rows if r.get("active", True)]
+        if args.ages:
+            want = {int(a) for a in args.ages.split(",")}
+            active = [r for r in active if row_age(r) in want]
+        queue = [{"theme": r["theme"], "age": row_age(r),
+                  "milestone_code": r["milestone_code"],
+                  "theme_code": r["theme_code"],
+                  "_done": r.get("status") == "done"}
+                 for r in active]
+        n_done = sum(1 for c in queue if c["_done"])
+        log.info("Theme catalog: Supabase (%d rows, %d active in scope, %d already done)",
+                 len(rows), len(queue), n_done)
         catalog_live = True
     except Exception as e:
         log.warning("Supabase theme catalog unavailable (%s) — falling back to %s",
@@ -285,15 +291,16 @@ def main():
         themes = ([_slugify_theme(t) for t in args.themes.split(",") if t.strip()]
                   if args.themes else list(reg.keys()))
         reg = ensure_codes(reg, themes, args.themes_file)
-
-    ages_override = [int(a) for a in args.ages.split(",")] if args.ages else None
-    queue = build_queue(themes, reg, ages_by_theme, ages_override, milestone_by_theme)
+        ages_override = [int(a) for a in args.ages.split(",")] if args.ages else None
+        queue = build_queue(themes, reg, {}, ages_override, {})
 
     runs = _load_runs()
-    pending = [c for c in queue if not already_done(c, runs)]
+    # A row marked done in the catalog is skipped; the local runs history is a
+    # secondary guard (covers a catalog write that didn't land).
+    pending = [c for c in queue if not c.get("_done") and not already_done(c, runs)]
     done = len(queue) - len(pending)
-    log.info("Grid: %d lessons across %d themes. %d already done, %d to generate.",
-             len(queue), len(themes), done, len(pending))
+    log.info("Grid: %d lesson slots. %d already done, %d to generate.",
+             len(queue), done, len(pending))
 
     if args.dry_run:
         for c in pending:
@@ -324,10 +331,10 @@ def main():
                          i, len(pending), label, rows, grade, cost)
                 if catalog_live:
                     try:
-                        from app.core.themes import mark_age_done
-                        status = mark_age_done(combo["theme"], combo["age"])
-                        log.info("  catalog: '%s' age %d marked done (theme status: %s)",
-                                 combo["theme"], combo["age"], status)
+                        from app.core.themes import mark_row_done
+                        mark_row_done(combo["theme"], combo["milestone_code"], combo["age"])
+                        log.info("  catalog: '%s' %s (age %d) marked done",
+                                 combo["theme"], combo["milestone_code"], combo["age"])
                     except Exception as e2:
                         log.warning("  catalog progress update failed (non-fatal): %s", e2)
                 pace = max(PACE_MIN, pace * PACE_DECAY)   # speed up after a clean run

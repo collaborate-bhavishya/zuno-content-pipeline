@@ -56,77 +56,86 @@ def _next_code(used: set) -> str:
 
 
 def list_themes() -> list:
-    """All catalog rows, ordered by code."""
+    """All catalog rows (ONE per theme+age), ordered by code then milestone."""
     rows = get_client().table("themes").select("*").execute().data or []
-    return sorted(rows, key=lambda r: (len(r["theme_code"]), r["theme_code"]))
+    return sorted(rows, key=lambda r: (len(r["theme_code"]), r["theme_code"],
+                                       r.get("milestone_code") or ""))
 
 
-def register_themes(names: list) -> dict:
-    """Ensure each named theme exists (auto-assigning codes). Returns
-    {theme: theme_code}. Used by the batch for --themes with new names."""
-    existing = {r["theme"]: r["theme_code"] for r in list_themes()}
-    used = set(existing.values())
+def row_age(row: dict) -> int:
+    """The single age a catalog row represents."""
+    ages = parse_ages(row.get("ages", ""))
+    return ages[0] if ages else AGE_MIN
+
+
+def register_themes(names: list, ages: list = None) -> dict:
+    """Ensure each named theme exists, one row per age (auto-assigning a
+    theme_code shared by all its rows). Returns {theme: theme_code}."""
+    current = list_themes()
+    code_by_theme = {r["theme"]: r["theme_code"] for r in current}
+    have_keys = {(r["theme"], r["milestone_code"]) for r in current}
+    used = set(code_by_theme.values())
+    ages = ages or list(DEFAULT_AGES)
     new_rows = []
     for name in names:
         t = slugify(name)
-        if t and t not in existing:
-            code = _next_code(used)
-            used.add(code)
-            existing[t] = code
-            new_rows.append({"theme": t, "theme_code": code})
+        if not t:
+            continue
+        if t not in code_by_theme:
+            code_by_theme[t] = _next_code(used)
+            used.add(code_by_theme[t])
+            log.info("Registered new theme '%s' -> %s", t, code_by_theme[t])
+        for a in ages:
+            ms = f"AG{a:02d}"
+            if (t, ms) not in have_keys:
+                new_rows.append({"theme": t, "theme_code": code_by_theme[t],
+                                 "ages": str(a), "milestone_code": ms,
+                                 "active": True, "status": "pending",
+                                 "generated_ages": ""})
     if new_rows:
-        get_client().table("themes").upsert(
-            new_rows, on_conflict="theme", ignore_duplicates=True).execute()
-        for r in new_rows:
-            log.info("Registered new theme '%s' -> %s", r["theme"], r["theme_code"])
-    return existing
+        get_client().table("themes").insert(new_rows).execute()
+    return code_by_theme
 
 
-def mark_age_done(theme: str, age: int) -> str:
-    """Record that one (theme, age) lesson completed. Updates generated_ages
-    and derives status: done when every configured age is generated,
-    in_progress otherwise. Returns the new status."""
+def mark_row_done(theme: str, milestone_code: str, age: int = None) -> str:
+    """Mark the single (theme, milestone_code) row as generated."""
     from datetime import datetime, timezone
-    client = get_client()
-    row = client.table("themes").select("ages, generated_ages").eq("theme", theme).execute().data
-    if not row:
-        return "unknown"
-    configured = set(parse_ages(row[0].get("ages", "")))
-    done_ages = {int(a) for a in str(row[0].get("generated_ages") or "").split(",") if a.strip().isdigit()}
-    done_ages.add(int(age))
-    status = "done" if configured <= done_ages else "in_progress"
-    client.table("themes").update({
-        "generated_ages": ",".join(str(a) for a in sorted(done_ages)),
-        "status": status,
-        "last_generated_at": datetime.now(timezone.utc).isoformat(),
-    }).eq("theme", theme).execute()
-    return status
+    upd = {"status": "done",
+           "last_generated_at": datetime.now(timezone.utc).isoformat()}
+    if age is not None:
+        upd["generated_ages"] = str(age)
+    (get_client().table("themes").update(upd)
+     .eq("theme", theme).eq("milestone_code", milestone_code).execute())
+    return "done"
 
 
 def ages_remaining(row: dict) -> list:
-    """Configured ages for a catalog row minus the ones already generated."""
-    configured = parse_ages(row.get("ages", ""))
-    done = {int(a) for a in str(row.get("generated_ages") or "").split(",") if a.strip().isdigit()}
-    return [a for a in configured if a not in done]
+    """[] once the row is generated, else its single age."""
+    return [] if row.get("status") == "done" else [row_age(row)]
 
 
 def upsert_csv(csv_text: str) -> dict:
     """Merge an uploaded CSV into the catalog.
 
-    Rules: existing themes keep their code no matter what the CSV says (ages/
-    active/notes are updated); new themes take the provided code if it's free,
-    else it's an error row; blank codes are auto-assigned.
+    The catalog holds ONE ROW PER (theme, age), each with an explicit
+    milestone_code — so a CSV line listing several ages expands into one row
+    per age (colors, ages 3-4 -> a row at AG03 and a row at AG04). Rules:
+    a theme keeps one theme_code across all its rows; an existing row keeps
+    its code and its generated status; a milestone may only be given
+    explicitly for a single-age line.
     """
-    current = {r["theme"]: r for r in list_themes()}
-    used_codes = {r["theme_code"] for r in current.values()}
+    current = list_themes()
+    by_key = {(r["theme"], r["milestone_code"]): r for r in current}
+    code_by_theme = {r["theme"]: r["theme_code"] for r in current}
+    used_codes = set(code_by_theme.values())
     added, updated, errors, warnings = [], [], [], []
 
     reader = csv.DictReader(io.StringIO(csv_text.strip()))
     if not reader.fieldnames or "theme" not in [f.strip().lower() for f in reader.fieldnames]:
         return {"error": "CSV must have a header row including a 'theme' column.",
-                "expected_columns": "theme,theme_code,ages,active,notes"}
+                "expected_columns": "theme,theme_code,ages,milestone_code,active,notes"}
 
-    rows_out = []
+    to_insert, to_update = [], []
     for i, raw in enumerate(reader, 2):   # 2 = first data line in the file
         row = {str(k).strip().lower(): str(v or "").strip() for k, v in raw.items() if k}
         theme = slugify(row.get("theme", ""))
@@ -141,33 +150,48 @@ def upsert_csv(csv_text: str) -> dict:
             errors.append(f"line {i}: '{theme}' has invalid milestone_code "
                           f"'{milestone}' (expected AG<number>, or blank to derive from age)")
             continue
-        ages = ",".join(str(a) for a in parse_ages(row.get("ages", "")))
+        ages_list = parse_ages(row.get("ages", ""))
+        if milestone and len(ages_list) > 1:
+            errors.append(f"line {i}: '{theme}' lists {len(ages_list)} ages with a single "
+                          f"milestone_code {milestone}; use one line per age, or leave "
+                          f"milestone blank to derive it from each age")
+            continue
         active = row.get("active", "true").lower() not in ("false", "0", "no")
         notes = row.get("notes", "")
-        fields = {"ages": ages, "milestone_code": milestone or None,
-                  "active": active, "notes": notes}
 
-        if theme in current:
-            kept = current[theme]["theme_code"]
+        # One theme_code per theme, shared by all its age rows.
+        if theme in code_by_theme:
+            kept = code_by_theme[theme]
             if code and code != kept:
                 warnings.append(f"line {i}: '{theme}' already has code {kept}; "
                                 f"ignored CSV's {code} (codes never change)")
-            rows_out.append({"theme": theme, "theme_code": kept, **fields})
-            updated.append(theme)
+            code = kept
         else:
-            if code:
-                if code in used_codes:
-                    errors.append(f"line {i}: code {code} is already taken; "
-                                  f"leave blank to auto-assign")
-                    continue
-            else:
-                code = _next_code(used_codes)
+            if code and code in used_codes:
+                errors.append(f"line {i}: code {code} is already taken; leave blank to auto-assign")
+                continue
+            code = code or _next_code(used_codes)
             used_codes.add(code)
-            rows_out.append({"theme": theme, "theme_code": code, **fields})
-            added.append(f"{theme} -> {code}")
+            code_by_theme[theme] = code
 
-    if rows_out:
-        get_client().table("themes").upsert(rows_out, on_conflict="theme").execute()
+        for a in ages_list:
+            ms = milestone or f"AG{a:02d}"
+            fields = {"theme": theme, "theme_code": code, "ages": str(a),
+                      "milestone_code": ms, "active": active, "notes": notes}
+            if (theme, ms) in by_key:
+                to_update.append(fields)          # progress columns preserved
+                updated.append(f"{theme} {ms}")
+            else:
+                to_insert.append({**fields, "status": "pending", "generated_ages": ""})
+                added.append(f"{theme} {ms} -> {code}")
+
+    client = get_client()
+    if to_insert:
+        client.table("themes").insert(to_insert).execute()
+    for f in to_update:
+        (client.table("themes")
+         .update({k: v for k, v in f.items() if k not in ("theme", "milestone_code")})
+         .eq("theme", f["theme"]).eq("milestone_code", f["milestone_code"]).execute())
 
     return {"added": added, "updated": updated,
             "warnings": warnings, "errors": errors,
