@@ -47,9 +47,14 @@ BACKOFF_BASE_S = 30          # 429 backoff: 30s, 60s, 90s... capped
 BACKOFF_MAX_S = 300
 MAX_429_RETRIES = 6
 
-# Known INANIMATE objects -> rendered with NO face. Everything else (animals,
-# people, characters, or anything ambiguous) defaults to friendly eyes — the
-# notebook's is_living CSV column, derived from the filename instead.
+# THE EYE RULE (from content review): eyes exist ONLY when a living creature's
+# face is shown. Objects/symbols never get faces; an isolated body part (a
+# nose, a mouth) is drawn ALONE with no other features added; even a living
+# being shown without its face gets no eyes.
+#
+# Known-inanimate and body-part word lists give a hard, deterministic verdict;
+# everything else gets the conditional rule, which the model applies and the
+# critic then verifies from the pixels.
 INANIMATE_WORDS = {
     "ball", "block", "blocks", "cube", "cup", "mug", "plate", "bowl", "spoon",
     "fork", "knife", "box", "bag", "basket", "bottle", "jar", "can",
@@ -60,22 +65,45 @@ INANIMATE_WORDS = {
     "cap", "hat", "shoe", "shoes", "sock", "socks", "shirt", "dress", "coat",
     "star", "moon", "sun", "cloud", "circle", "square", "triangle", "heart",
     "tree", "leaf", "leaves", "flower", "plant", "grass", "rock", "stone",
-    "house", "home", "door", "window", "wall", "roof",
+    "house", "home", "door", "window", "wall", "roof", "barn",
     "key", "drum", "bell", "kite", "balloon", "clock", "lamp", "light",
     "chair", "table", "bed", "sofa", "brush", "comb", "umbrella", "ring",
     "coin", "phone", "tv", "guitar", "flag", "wheel", "button",
     "tent", "map", "menu", "ticket", "castle", "tower", "bridge", "pyramid",
     "rocket", "robot", "computer", "swing", "slide",
+    "checkmark", "check", "mark", "tick", "cross", "icon", "sign", "symbol",
+    "arrow", "blanket", "pillow", "towel", "soap", "toothbrush",
+}
+
+# Body parts are named subjects that must be drawn ALONE — never given eyes,
+# a mouth, or composed into a face (review finding: 'small nose' was rendered
+# as a whole face; feet were given eyes).
+BODY_PART_WORDS = {
+    "nose", "mouth", "ear", "ears", "eye", "eyes", "hand", "hands",
+    "foot", "feet", "leg", "legs", "arm", "arms", "finger", "fingers",
+    "toe", "toes", "tummy", "belly", "hair", "teeth", "tooth", "tongue",
+    "chin", "knee", "elbow", "shoulder", "cheek", "lips",
 }
 
 
-def eye_rule(object_name: str) -> str:
-    """Whole-word match so 'starfish' isn't caught by 'star'. Ambiguity
-    defaults to friendly eyes (an unknown subject is usually a creature)."""
+def face_rule(object_name: str) -> str:
+    """Deterministic verdict for known words; conditional rule otherwise."""
     words = set(object_name.lower().replace("_", " ").split())
+    if words & BODY_PART_WORDS:
+        return (f"This is an ISOLATED BODY PART illustration. Draw ONLY the "
+                f"{object_name} by itself — do NOT add eyes, a mouth, a face, "
+                f"or any other body part or feature to it.")
     if words & INANIMATE_WORDS:
-        return "no eyes and no face"
-    return "two simple black circle eyes with a white glimmer"
+        return ("This is an OBJECT, not a living creature: absolutely NO eyes, "
+                "NO face, NO facial features anywhere in the image.")
+    return (f"Apply this rule: IF the {object_name} is a living creature "
+            f"(animal, person, character) depicted with its face visible, give "
+            f"it two simple black circle eyes with a white glimmer on its face. "
+            f"OTHERWISE — if it is an object, symbol, food, plant, building, or "
+            f"a living being shown without its face — add NO eyes and NO facial "
+            f"features at all. Eyes may ONLY ever appear on a living creature's "
+            f"face — never on feet, hands, body, clothing, objects, or anywhere "
+            f"else.")
 
 
 # ── Gemini client (new google-genai SDK; the notebook's google.generativeai
@@ -158,14 +186,16 @@ def produce(asset: dict):
     object_name = asset["image_name"][:-4].replace("_", " ") \
         if asset["image_name"].endswith(".png") else asset["image_name"]
     detail = (asset.get("image_detail") or "").strip()
-    eye = eye_rule(object_name)
+    eye = face_rule(object_name)
     color_style = "bright colors"          # notebook default
 
     base_prompt = f"""
     Generate a flat 2D cartoon illustration of a {object_name}.
     Style: soft rounded shapes, no outlines, {color_style}.
-    Face Rule: {eye}.
-    Composition: Centered on a solid white background.
+    Face Rule: {eye}
+    Composition: Centered on a solid white background. Show ONLY the
+    {object_name} itself — no extra objects, characters, props, or added
+    features beyond what is named and described.
     Lighting: 100% flat, no shading, no gradients.
     """
     if detail and detail != "—":
@@ -191,8 +221,8 @@ def produce(asset: dict):
             continue
         last_img = img
 
-        # Vision critic — same criteria as the notebook, plus the ledger's
-        # own description as the color/appearance check.
+        # Vision critic — the notebook's criteria plus the eye-placement law
+        # and only-the-named-subject check from content review.
         if detail and detail != "—":
             color_check = f"- Does the image match this description: {detail}?"
         else:
@@ -202,7 +232,12 @@ def produce(asset: dict):
         Criteria:
         - Is the background 100% white?
         - Are there ANY outlines? (Should be NO)
-        - If it's a {object_name}, does it follow the rule: {eye}?
+        - EYE PLACEMENT LAW: eyes are allowed ONLY on the face of a living
+          creature. FAIL if there are eyes or facial features on any object,
+          symbol, building, food, body part, clothing, feet, hands, or
+          anywhere that is not a living creature's face.
+        - Subject rule for this image: {eye}
+        - Does the image show ONLY the {object_name} (plus nothing extra)?
         {color_check}
 
         Return ONLY a JSON object: {{"pass": true/false, "reason": "string"}}
