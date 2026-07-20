@@ -138,6 +138,25 @@ def mark_audio_generated(dialogue_text: str, audio_url: str = ""):
         log.warning("mark_audio_generated: %s", e)
 
 
+def mark_wrong_generation(image_name: str, image_url: str = "", reason: str = ""):
+    """Image failed all QC attempts: keep the LAST rejected render for manual
+    review. Status 2 = wrong_generation; image_url points to the stored
+    'wrong_' copy; qc_reason records which QC parameter failed."""
+    client = get_client()
+    upd = {"status": 2, "image_url": image_url, "qc_reason": (reason or "")[:500]}
+    try:
+        client.table("image_assets").update(upd).eq("image_name", image_name).execute()
+    except Exception as e:
+        # qc_reason column may not exist yet — retry without it so the status
+        # flip still lands.
+        log.warning("mark_wrong_generation(%s) with reason failed (%s); retrying without", image_name, e)
+        upd.pop("qc_reason", None)
+        try:
+            client.table("image_assets").update(upd).eq("image_name", image_name).execute()
+        except Exception as e2:
+            log.warning("mark_wrong_generation(%s): %s", image_name, e2)
+
+
 def get_all_assets(milestone_code: str = "", theme_code: str = "") -> list[dict]:
     """Fetch all rows, optionally filtered by milestone/theme."""
     client = get_client()

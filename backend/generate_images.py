@@ -28,7 +28,7 @@ import time
 
 import PIL.Image
 
-from app.core.db import get_client, mark_generated
+from app.core.db import get_client, mark_generated, mark_wrong_generation
 from app.core.storage import STORAGE
 
 log = logging.getLogger("imgworker")
@@ -138,14 +138,23 @@ def _text_from(resp) -> str:
 # ── The notebook's preschool_agent, fed from the ledger row ──────────────
 
 def produce(asset: dict):
-    """Generate + audit one asset. Returns (PIL image | None, last_reason)."""
+    """Generate + audit one asset.
+
+    Returns (passed, last_img, last_reason): passed=True with the approved
+    image, or passed=False with the LAST rejected render (for the status=2
+    manual-review path) and the QC reason it failed on.
+
+    Each retry is a REPAIR, not a blind re-roll: the critic's rejection
+    reason is fed back into the next generation prompt so the model fixes
+    the specific QC parameter that failed.
+    """
     object_name = asset["image_name"][:-4].replace("_", " ") \
         if asset["image_name"].endswith(".png") else asset["image_name"]
     detail = (asset.get("image_detail") or "").strip()
     eye = eye_rule(object_name)
     color_style = "bright colors"          # notebook default
 
-    prompt = f"""
+    base_prompt = f"""
     Generate a flat 2D cartoon illustration of a {object_name}.
     Style: soft rounded shapes, no outlines, {color_style}.
     Face Rule: {eye}.
@@ -153,10 +162,19 @@ def produce(asset: dict):
     Lighting: 100% flat, no shading, no gradients.
     """
     if detail and detail != "—":
-        prompt += f"    Appearance: {detail}.\n"
+        base_prompt += f"    Appearance: {detail}.\n"
 
     last_reason = "no attempts"
+    last_img = None
     for attempt in range(1, MAX_QC_ATTEMPTS + 1):
+        prompt = base_prompt
+        if last_img is not None or last_reason != "no attempts":
+            # Feed the failed QC parameter back so this attempt fixes THAT.
+            prompt += (
+                f"    REPAIR: the previous attempt was rejected by quality "
+                f"control for exactly this reason: \"{last_reason}\". Fix that "
+                f"specific issue while keeping the same subject and style.\n"
+            )
         log.info("  generating '%s' (attempt %d/%d)…", object_name, attempt, MAX_QC_ATTEMPTS)
         resp = _call_model(prompt)
         img = _image_from(resp)
@@ -164,6 +182,7 @@ def produce(asset: dict):
             last_reason = "no image data in response"
             log.warning("  no image data returned")
             continue
+        last_img = img
 
         # Vision critic — same criteria as the notebook, plus the ledger's
         # own description as the color/appearance check.
@@ -193,11 +212,11 @@ def produce(asset: dict):
 
         if result.get("pass"):
             log.info("  ✅ passed QC")
-            return img, "ok"
+            return True, img, "ok"
         last_reason = str(result.get("reason", "rejected"))[:300]
         log.info("  ❌ rejected: %s", last_reason)
 
-    return None, last_reason
+    return False, last_img, last_reason
 
 
 def fetch_pending(limit=None):
@@ -236,32 +255,49 @@ def main():
                      (a.get("image_detail") or "")[:60])
         return
 
-    ok = failed = 0
+    ok = review = failed = 0
     t0 = time.time()
     for i, asset in enumerate(pending, 1):
         name = asset["image_name"]
         log.info("[%d/%d] %s", i, len(pending), name)
         try:
-            img, reason = produce(asset)
+            passed, img, reason = produce(asset)
         except Exception as e:
             log.exception("[%d/%d] %s — unrecoverable error: %s", i, len(pending), name, e)
             failed += 1
             continue
-        if img is None:
-            failed += 1
-            log.warning("[%d/%d] %s — FAILED QC after %d attempts (%s); left pending",
-                        i, len(pending), name, MAX_QC_ATTEMPTS, reason)
-            continue
-        url = STORAGE.save_image(img, name)
-        mark_generated(name, image_url=url)
-        ok += 1
-        elapsed = time.time() - t0
-        rate = elapsed / max(ok + failed, 1)
-        log.info("[%d/%d] %s — DONE -> %s  (avg %.0fs/img, ~%.1fh for the rest)",
-                 i, len(pending), name, url, rate, rate * (len(pending) - i) / 3600)
 
-    log.info("Worker finished: %d generated+uploaded, %d left pending (rerun retries them).",
-             ok, failed)
+        if passed:
+            url = STORAGE.save_image(img, name)
+            mark_generated(name, image_url=url)
+            ok += 1
+            elapsed = time.time() - t0
+            rate = elapsed / max(i, 1)
+            log.info("[%d/%d] %s — DONE -> %s  (avg %.0fs/img, ~%.1fh for the rest)",
+                     i, len(pending), name, url, rate, rate * (len(pending) - i) / 3600)
+        elif img is not None:
+            # QC rejected all attempts but we HAVE a render: keep it for manual
+            # review under a wrong_ name (so it never shadows the real asset)
+            # and tag the row status=2 with the failing QC parameter.
+            wrong_name = f"wrong_{name}"
+            try:
+                wrong_url = STORAGE.save_image(img, wrong_name)
+            except Exception as e:
+                wrong_url = ""
+                log.warning("  could not store %s: %s", wrong_name, e)
+            mark_wrong_generation(name, image_url=wrong_url, reason=reason)
+            review += 1
+            log.warning("[%d/%d] %s — QC failed %d attempts -> status=2 for review "
+                        "(%s) reason: %s", i, len(pending), name, MAX_QC_ATTEMPTS,
+                        wrong_url or "no upload", reason)
+        else:
+            # nothing rendered at all — leave status=0 so a rerun retries
+            failed += 1
+            log.warning("[%d/%d] %s — no render produced (%s); left pending",
+                        i, len(pending), name, reason)
+
+    log.info("Worker finished: %d approved+uploaded, %d sent to manual review "
+             "(status=2), %d left pending.", ok, review, failed)
 
 
 if __name__ == "__main__":
