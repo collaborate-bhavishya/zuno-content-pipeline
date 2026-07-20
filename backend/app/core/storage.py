@@ -39,6 +39,7 @@ class LocalStorage(Storage):
 
     def save_image(self, pil_image: Image.Image, filename: str) -> str:
         path = os.path.join(self.img_dir, filename)
+        os.makedirs(os.path.dirname(path), exist_ok=True)   # allow lowres/x.png
         pil_image.save(path, format="PNG")
         return f"{self.public_base}/images/{filename}"
 

@@ -35,6 +35,13 @@ log = logging.getLogger("imgworker")
 
 MODEL = "gemini-2.5-flash-image"
 MAX_QC_ATTEMPTS = 3          # same as the notebook
+
+# Every approved (or review-held) image is stored in TWO sizes:
+#   {name}.png          1024x1024 native render
+#   lowres/{name}.png   512x512 optimized copy (same filename, lowres/ prefix,
+#                       so consumers just prepend a path segment)
+LOWRES_SIZE = 512
+LOWRES_PREFIX = "lowres/"
 THROTTLE_S = 8.0             # pause before every API call (gen AND audit)
 BACKOFF_BASE_S = 30          # 429 backoff: 30s, 60s, 90s... capped
 BACKOFF_MAX_S = 300
@@ -219,6 +226,54 @@ def produce(asset: dict):
     return False, last_img, last_reason
 
 
+def save_both_sizes(img, name: str) -> str:
+    """Upload the native 1024 render at {name} and a 512 copy at lowres/{name}.
+    Returns the full-size URL (the one stored in the ledger)."""
+    url = STORAGE.save_image(img, name)
+    try:
+        small = img.resize((LOWRES_SIZE, LOWRES_SIZE), PIL.Image.LANCZOS)
+        STORAGE.save_image(small, f"{LOWRES_PREFIX}{name}")
+    except Exception as e:
+        log.warning("  lowres save failed for %s (non-fatal): %s", name, e)
+    return url
+
+
+def backfill_lowres():
+    """Create lowres/ copies for already-generated images that lack one.
+    Pure download+resize — no model calls."""
+    import urllib.request
+    c = get_client()
+    rows, page = [], 0
+    while True:
+        batch = (c.table("image_assets").select("image_name,image_url,status")
+                 .in_("status", [1, 2]).order("created_at")
+                 .range(page * 1000, page * 1000 + 999).execute().data)
+        rows += batch
+        if len(batch) < 1000:
+            break
+        page += 1
+    made = skipped = failed = 0
+    for r in rows:
+        name, url = r["image_name"], r.get("image_url") or ""
+        if not url.startswith("http"):
+            continue
+        if STORAGE.exists(f"{LOWRES_PREFIX}{name}"):
+            skipped += 1
+            continue
+        try:
+            with urllib.request.urlopen(url, timeout=30) as resp:
+                img = PIL.Image.open(io.BytesIO(resp.read()))
+            small = img.resize((LOWRES_SIZE, LOWRES_SIZE), PIL.Image.LANCZOS)
+            STORAGE.save_image(small, f"{LOWRES_PREFIX}{name}")
+            made += 1
+            log.info("  lowres created: %s", name)
+        except Exception as e:
+            failed += 1
+            log.warning("  lowres backfill failed for %s: %s", name, e)
+    log.info("Backfill done: %d created, %d already had one, %d failed.",
+             made, skipped, failed)
+
+
 def fetch_pending(limit=None):
     c = get_client()
     out, page = [], 0
@@ -238,10 +293,15 @@ def main():
     ap.add_argument("--limit", type=int, help="only process this many (smoke test)")
     ap.add_argument("--throttle", type=float, help="seconds before each API call")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--backfill-lowres", action="store_true",
+                    help="create 512px lowres/ copies for already-generated images")
     args = ap.parse_args()
 
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s %(name)-9s %(levelname)s  %(message)s")
+    if args.backfill_lowres:
+        backfill_lowres()
+        return
     if args.throttle:
         global THROTTLE_S
         THROTTLE_S = args.throttle
@@ -268,7 +328,7 @@ def main():
             continue
 
         if passed:
-            url = STORAGE.save_image(img, name)
+            url = save_both_sizes(img, name)
             mark_generated(name, image_url=url)
             ok += 1
             elapsed = time.time() - t0
@@ -281,7 +341,7 @@ def main():
             # row status=2. Approval is then just a status flip — no file
             # renaming; rejection flips back to 0 and a rerun overwrites the key.
             try:
-                url = STORAGE.save_image(img, name)
+                url = save_both_sizes(img, name)
             except Exception as e:
                 url = ""
                 log.warning("  could not store %s: %s", name, e)
