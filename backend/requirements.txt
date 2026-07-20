@@ -16,6 +16,7 @@ google-cloud-aiplatform==1.154.0
 supabase==2.31.0                    # image_assets / runs / questions tables
 boto3==1.43.26                      # S3 run-JSON upload + image storage backend
 Pillow==12.2.0
+google-genai                        # gemini-2.5-flash-image (generate_images.py worker)
 
 # Optional — only if you switch a role to another provider in the admin panel:
 # langchain-anthropic==1.4.4
