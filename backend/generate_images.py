@@ -309,13 +309,15 @@ def backfill_lowres():
              made, skipped, failed)
 
 
-def fetch_pending(limit=None):
+def fetch_pending(limit=None, names=None):
     c = get_client()
     out, page = [], 0
     while True:
-        batch = (c.table("image_assets").select("image_name,image_detail")
-                 .eq("status", 0).order("created_at")
-                 .range(page * 1000, page * 1000 + 999).execute().data)
+        q = (c.table("image_assets").select("image_name,image_detail")
+             .eq("status", 0).order("created_at"))
+        if names:
+            q = q.in_("image_name", names)
+        batch = q.range(page * 1000, page * 1000 + 999).execute().data
         out += batch
         if len(batch) < 1000:
             break
@@ -326,6 +328,7 @@ def fetch_pending(limit=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, help="only process this many (smoke test)")
+    ap.add_argument("--names", help="comma-separated filenames to process (targeted rerun)")
     ap.add_argument("--throttle", type=float, help="seconds before each API call")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--backfill-lowres", action="store_true",
@@ -341,7 +344,8 @@ def main():
         global THROTTLE_S
         THROTTLE_S = args.throttle
 
-    pending = fetch_pending(args.limit)
+    names = [n.strip() for n in args.names.split(",")] if args.names else None
+    pending = fetch_pending(args.limit, names)
     log.info("Image queue: %d pending%s", len(pending),
              f" (limited to {args.limit})" if args.limit else "")
     if args.dry_run:
