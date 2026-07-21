@@ -200,6 +200,11 @@ def produce(asset: dict):
     """
     if detail and detail != "—":
         base_prompt += f"    Appearance: {detail}.\n"
+    feedback = (asset.get("human_feedback") or "").strip()
+    if feedback:
+        base_prompt += (f"    HUMAN REVIEWER FEEDBACK — this instruction is "
+                        f"mandatory and overrides style defaults where they "
+                        f"conflict: {feedback}\n")
 
     last_reason = "no attempts"
     last_img = None
@@ -227,6 +232,8 @@ def produce(asset: dict):
             color_check = f"- Does the image match this description: {detail}?"
         else:
             color_check = f"- Does the {object_name} use bright colors?"
+        feedback_check = (f"\n        - Does the image comply with this human "
+                          f"reviewer instruction: {feedback}?") if feedback else ""
         critic_prompt = f"""
         Inspect this image for a preschool app.
         Criteria:
@@ -238,7 +245,7 @@ def produce(asset: dict):
           anywhere that is not a living creature's face.
         - Subject rule for this image: {eye}
         - Does the image show ONLY the {object_name} (plus nothing extra)?
-        {color_check}
+        {color_check}{feedback_check}
 
         Return ONLY a JSON object: {{"pass": true/false, "reason": "string"}}
         """
@@ -311,13 +318,19 @@ def backfill_lowres():
 
 def fetch_pending(limit=None, names=None):
     c = get_client()
+    cols = "image_name,image_detail,human_feedback"
     out, page = [], 0
     while True:
-        q = (c.table("image_assets").select("image_name,image_detail")
-             .eq("status", 0).order("created_at"))
+        q = c.table("image_assets").select(cols).eq("status", 0).order("created_at")
         if names:
             q = q.in_("image_name", names)
-        batch = q.range(page * 1000, page * 1000 + 999).execute().data
+        try:
+            batch = q.range(page * 1000, page * 1000 + 999).execute().data
+        except Exception:
+            if "human_feedback" in cols:   # column not migrated yet — degrade
+                cols = "image_name,image_detail"
+                continue
+            raise
         out += batch
         if len(batch) < 1000:
             break
