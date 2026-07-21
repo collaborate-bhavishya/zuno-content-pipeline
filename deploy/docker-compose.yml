@@ -5,6 +5,7 @@
 services:
   backend:
     build: ../backend
+    image: zuno-backend          # shared by the worker services below
     env_file: ../backend/prod.env
     restart: unless-stopped
     expose:
@@ -15,6 +16,30 @@ services:
       - ../backend/gcp-key.json:/app/gcp-key.json:ro
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+
+  # Image production daemon: generates pending image_assets in 250-image
+  # chunks (QC + dual-size S3 upload), refreshing the gallery between chunks.
+  # restart: always -> container swaps RESUME it instead of killing it.
+  imageworker:
+    image: zuno-backend
+    env_file: ../backend/prod.env
+    restart: always
+    command: sh /app/run_image_batches.sh
+    volumes:
+      - ../backend/gcp-key.json:/app/gcp-key.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+    depends_on:
+      - backend
+
+  # Keeps the S3 review gallery within 30 min of live.
+  gallery:
+    image: zuno-backend
+    env_file: ../backend/prod.env
+    restart: always
+    command: sh -c 'while :; do python /app/make_gallery.py; sleep 1800; done'
+    depends_on:
+      - backend
 
   caddy:
     image: caddy:2
