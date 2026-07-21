@@ -202,9 +202,12 @@ def produce(asset: dict):
         base_prompt += f"    Appearance: {detail}.\n"
     feedback = (asset.get("human_feedback") or "").strip()
     if feedback:
-        base_prompt += (f"    HUMAN REVIEWER FEEDBACK — this instruction is "
-                        f"mandatory and overrides style defaults where they "
-                        f"conflict: {feedback}\n")
+        base_prompt += (
+            f"    HUMAN REVIEWER FEEDBACK — fix ONLY this specific issue: "
+            f"{feedback}. Change nothing else: keep the EXACT same art style "
+            f"(flat 2D cartoon, soft rounded shapes, no outlines, flat "
+            f"lighting, solid white background) and the same overall "
+            f"composition. The feedback corrects the subject, never the style.\n")
 
     last_reason = "no attempts"
     last_img = None
@@ -232,8 +235,10 @@ def produce(asset: dict):
             color_check = f"- Does the image match this description: {detail}?"
         else:
             color_check = f"- Does the {object_name} use bright colors?"
-        feedback_check = (f"\n        - Does the image comply with this human "
-                          f"reviewer instruction: {feedback}?") if feedback else ""
+        feedback_check = (f"\n        - Does the image fix this reviewer-flagged "
+                          f"issue: {feedback}? (It must address the issue while "
+                          f"still following the standard flat cartoon art style "
+                          f"above — FAIL if the style changed.)") if feedback else ""
         critic_prompt = f"""
         Inspect this image for a preschool app.
         Criteria:
