@@ -165,6 +165,9 @@ export default function Home() {
           <span style={{ fontSize: 13, color: "var(--ink-faint)" }}>SpeakX lesson pipeline</span>
         </div>
         <div style={{ display: "flex", gap: 16 }}>
+          <a href="/images" style={{ fontSize: 13, color: "var(--ink-soft)" }}>
+            Image Review
+          </a>
           <a href="/eval" style={{ fontSize: 13, color: "var(--ink-soft)" }}>
             Eval Dashboard
           </a>

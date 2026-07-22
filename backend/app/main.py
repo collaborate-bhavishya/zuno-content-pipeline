@@ -613,6 +613,54 @@ async def get_runs():
     return _load_runs()
 
 
+# ===================== IMAGE REVIEW =====================
+
+class ImageVerdictRequest(BaseModel):
+    filename: str
+    action: str                       # approve | reject | recreate
+    feedback: Optional[str] = None    # only used by recreate
+
+
+@app.get("/api/images", dependencies=[Depends(require_user)])
+async def list_images(status: int = 2, limit: int = 200, offset: int = 0):
+    """Rows for the review UI. status: 2=awaiting review, 1=approved, 0=pending."""
+    from app.core.db import get_client
+    c = get_client()
+    total = (c.table("image_assets").select("*", count="exact", head=True)
+             .eq("status", status).execute().count)
+    rows = (c.table("image_assets")
+            .select("image_name,image_url,image_detail,qc_reason,human_feedback,status")
+            .eq("status", status).order("created_at", desc=(status == 1))
+            .range(offset, offset + limit - 1).execute().data)
+    return {"total": total, "rows": rows}
+
+
+@app.post("/api/images/verdict", dependencies=[Depends(require_user)])
+async def image_verdict(body: ImageVerdictRequest):
+    """One-click verdicts from the gallery UI.
+    approve: status 2 -> 1 (file already live under its real name)
+    reject : status 2 -> 0 (worker regenerates automatically)
+    recreate: ANY status -> 0, with optional enforced human feedback
+    """
+    from app.core.db import get_client
+    c = get_client()
+    n = body.filename
+    if body.action == "approve":
+        c.table("image_assets").update({"status": 1, "qc_reason": None}
+                                       ).eq("image_name", n).eq("status", 2).execute()
+    elif body.action == "reject":
+        c.table("image_assets").update({"status": 0, "image_url": "", "qc_reason": None}
+                                       ).eq("image_name", n).eq("status", 2).execute()
+    elif body.action == "recreate":
+        c.table("image_assets").update(
+            {"status": 0, "image_url": "", "qc_reason": None,
+             "human_feedback": (body.feedback or "").strip() or None}
+        ).eq("image_name", n).execute()
+    else:
+        raise HTTPException(status_code=400, detail="action must be approve|reject|recreate")
+    return {"ok": True, "filename": n, "action": body.action}
+
+
 # ===================== THEMES =====================
 
 class ThemesUploadRequest(BaseModel):
