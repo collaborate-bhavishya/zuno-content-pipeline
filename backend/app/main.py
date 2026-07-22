@@ -613,6 +613,59 @@ async def get_runs():
     return _load_runs()
 
 
+# ===================== LESSON BROWSER =====================
+
+@app.get("/api/lessons", dependencies=[Depends(require_user)])
+async def list_lessons():
+    """All generated lessons (from Supabase), newest first."""
+    from app.core.db import get_client
+    rows = (get_client().table("runs")
+            .select("id,theme,target_age,milestone_code,theme_code,eval_grade,created_at")
+            .order("created_at", desc=True).execute().data)
+    return rows
+
+
+@app.get("/api/lessons/{run_id}/view", dependencies=[Depends(require_user)])
+async def lesson_view(run_id: str):
+    """One lesson's questions with every referenced asset resolved to a URL —
+    the 'playable view': images from image_assets, audio from audio_assets."""
+    from app.core.db import get_client
+    c = get_client()
+    qs = (c.table("questions").select("*").eq("run_id", run_id)
+          .order("row_index").execute().data)
+
+    img_names, aud_codes = set(), set()
+    for q in qs:
+        for col in ("image_in_question_name", "correct_answer_image"):
+            v = q.get(col)
+            if v and v != "—":
+                img_names.add(v)
+        for v in (q.get("other_options_image") or []):
+            if v and v != "—":
+                img_names.add(v)
+        for col in ("instruction_vo_file", "audio_in_question_file",
+                    "vo_for_question_file", "correct_answer_vo_file"):
+            v = q.get(col)
+            if v and v != "—":
+                aud_codes.add(v)
+        for v in (q.get("other_options_vo_file") or []):
+            if v and v != "—":
+                aud_codes.add(v)
+
+    images, audio = {}, {}
+    if img_names:
+        for r in (c.table("image_assets").select("image_name,image_url,status")
+                  .in_("image_name", sorted(img_names)).execute().data):
+            images[r["image_name"]] = {"url": r.get("image_url") or "",
+                                       "status": r["status"]}
+    if aud_codes:
+        for r in (c.table("audio_assets").select("audio_code,audio_url,status")
+                  .in_("audio_code", sorted(aud_codes)).execute().data):
+            audio[r["audio_code"]] = {"url": r.get("audio_url") or "",
+                                      "status": r["status"]}
+    return {"questions": qs, "images": images, "audio": audio}
+
+
 # ===================== IMAGE REVIEW =====================
 
 class ImageVerdictRequest(BaseModel):
