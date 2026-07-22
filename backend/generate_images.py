@@ -75,6 +75,18 @@ INANIMATE_WORDS = {
     "arrow", "blanket", "pillow", "towel", "soap", "toothbrush",
 }
 
+# Children/people (content guideline): when a person's face or head is
+# visible, it must have BOTH eyes and clearly visible hair — a bald or
+# eyeless kid reads as unfinished/creepy in preschool art.
+PERSON_WORDS = {
+    "child", "children", "kid", "kids", "boy", "girl", "baby", "babies",
+    "toddler", "son", "daughter", "brother", "sister", "friend", "friends",
+    "man", "woman", "person", "people", "mom", "mother", "dad", "father",
+    "grandma", "grandpa", "grandmother", "grandfather", "teacher", "doctor",
+    "nurse", "farmer", "firefighter", "police", "chef", "waiter", "astronaut",
+    "explorer", "detective", "family",
+}
+
 # Body parts are named subjects that must be drawn ALONE — never given eyes,
 # a mouth, or composed into a face (review finding: 'small nose' was rendered
 # as a whole face; feet were given eyes).
@@ -93,6 +105,13 @@ def face_rule(object_name: str) -> str:
         return (f"This is an ISOLATED BODY PART illustration. Draw ONLY the "
                 f"{object_name} by itself — do NOT add eyes, a mouth, a face, "
                 f"or any other body part or feature to it.")
+    if words & PERSON_WORDS:
+        return (f"This depicts a person/child. IF the face or head is visible, "
+                f"it MUST have BOTH: two simple black circle eyes with a white "
+                f"glimmer on the face, AND clearly visible hair on the head — "
+                f"never bald, never eyeless. If the face is not shown (e.g. "
+                f"only hands or feet), add NO eyes and no facial features. "
+                f"Eyes only ever on the face, never anywhere else.")
     if words & INANIMATE_WORDS:
         return ("This is an OBJECT, not a living creature: absolutely NO eyes, "
                 "NO face, NO facial features anywhere in the image.")
@@ -239,6 +258,11 @@ def produce(asset: dict):
                           f"issue: {feedback}? (It must address the issue while "
                           f"still following the standard flat cartoon art style "
                           f"above — FAIL if the style changed.)") if feedback else ""
+        is_person = bool(set(object_name.lower().split()) & PERSON_WORDS)
+        person_check = ("\n        - This is a person/child: if the face or head "
+                        "is visible, it must have BOTH eyes AND clearly visible "
+                        "hair. FAIL if the face is eyeless or the head is bald."
+                        ) if is_person else ""
         critic_prompt = f"""
         Inspect this image for a preschool app.
         Criteria:
@@ -250,7 +274,7 @@ def produce(asset: dict):
           anywhere that is not a living creature's face.
         - Subject rule for this image: {eye}
         - Does the image show ONLY the {object_name} (plus nothing extra)?
-        {color_check}{feedback_check}
+        {color_check}{feedback_check}{person_check}
 
         Return ONLY a JSON object: {{"pass": true/false, "reason": "string"}}
         """
