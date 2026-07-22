@@ -25,6 +25,18 @@ def main():
     pending = (c.table("image_assets").select("*", count="exact", head=True)
                .eq("status", 0).execute().count)
 
+    # Pipeline-wide stats for the status header (phone-checkable dashboard).
+    def count(table, **eq):
+        q = c.table(table).select("*", count="exact", head=True)
+        for k, v in eq.items():
+            q = q.eq(k, v)
+        return q.execute().count
+    aud_done = count("audio_assets", status=1)
+    aud_pend = count("audio_assets", status=0)
+    themes_done = count("themes", status="done", active=True)
+    themes_all = count("themes", active=True)
+    questions = count("questions")
+
     cards = []
     for r in rows:
         name = r["image_name"]
@@ -56,11 +68,24 @@ def main():
 <title>Zuno image review — {n1 + n2}/{total}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="font-family:-apple-system,sans-serif;background:#f6f5f2;margin:0;padding:24px">
-<h2 style="margin:0 0 4px">Zuno image review</h2>
-<p style="color:#6b7280;margin:0 0 6px">
-  <b>{n1}</b> approved &nbsp;·&nbsp; <b>{n2}</b> awaiting review (yellow)
-  &nbsp;·&nbsp; <b>{pending}</b> still in the generation queue
-  &nbsp;·&nbsp; progress {n1 + n2}/{total} ({(n1 + n2) * 100 // max(total, 1)}%)</p>
+<h2 style="margin:0 0 4px">Zuno content factory — status</h2>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 6px">
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 16px">
+    <div style="font-size:11px;color:#6b7280;text-transform:uppercase">Lessons</div>
+    <div style="font-size:20px;font-weight:800">{themes_done}/{themes_all}</div></div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 16px">
+    <div style="font-size:11px;color:#6b7280;text-transform:uppercase">Questions</div>
+    <div style="font-size:20px;font-weight:800">{questions:,}</div></div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 16px">
+    <div style="font-size:11px;color:#6b7280;text-transform:uppercase">Images</div>
+    <div style="font-size:20px;font-weight:800">{n1 + n2}/{total}
+      <span style="font-size:12px;font-weight:400;color:#6b7280">({(n1 + n2) * 100 // max(total, 1)}%)</span></div>
+    <div style="font-size:11px;color:#6b7280">{n1} ok · {n2} review · {pending} queued</div></div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 16px">
+    <div style="font-size:11px;color:#6b7280;text-transform:uppercase">Audio</div>
+    <div style="font-size:20px;font-weight:800">{aud_done:,}/{aud_done + aud_pend:,}
+      <span style="font-size:12px;font-weight:400;color:#6b7280">({aud_done * 100 // max(aud_done + aud_pend, 1)}%)</span></div></div>
+</div>
 <p style="color:#9ca3af;font-size:12px;margin:0 0 20px">refreshed {stamp} —
   updated automatically after every 250-image batch. Click any image for full-size 1024.</p>
 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
