@@ -32,6 +32,21 @@ services:
     depends_on:
       - backend
 
+  # Content generation daemon: generates lessons for pending theme-catalog
+  # rows (questions + image/audio asset registration). Self-recovers from
+  # quota holds; new CSV uploads produce lessons automatically.
+  contentworker:
+    image: zuno-backend
+    env_file: ../backend/prod.env
+    restart: always
+    command: sh /app/run_content_batches.sh
+    volumes:
+      - ../backend/gcp-key.json:/app/gcp-key.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+    depends_on:
+      - backend
+
   # Audio production daemon: synthesizes pending audio_assets rows with the
   # locked bird voice (Neural2-F +5, rate 0.8) and uploads MP3s to S3.
   audioworker:
