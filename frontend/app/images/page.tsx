@@ -113,14 +113,17 @@ export default function ImagesReview() {
             {feedbackFor === r.image_name ? (
               <div style={{ marginTop: 8 }}>
                 <textarea value={feedback} onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="What should change? (art style stays the same)" rows={2} autoFocus
+                  placeholder={rows.find((x) => x.image_name === feedbackFor)?.status === 1
+                    ? "Why is this rejected? What should change? (art style stays the same)"
+                    : "What should change? (art style stays the same)"}
+                  rows={2} autoFocus
                   style={{ width: "100%", fontSize: 12, padding: 6, borderRadius: 6,
                            border: "1px solid var(--line)", background: "var(--cream)" }} />
                 <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
                   <button className="btn btn-accent" disabled={busy === r.image_name}
                     style={{ flex: 1, padding: "6px 0", fontSize: 12 }}
                     onClick={() => verdict(r.image_name, "recreate", feedback)}>
-                    Send for recreation
+                    {r.status === 1 ? "Reject & regenerate" : "Send for recreation"}
                   </button>
                   <button className="btn btn-ghost" style={{ padding: "6px 10px", fontSize: 12 }}
                     onClick={() => { setFeedbackFor(null); setFeedback(""); }}>
@@ -148,13 +151,23 @@ export default function ImagesReview() {
                     </button>
                   </>
                 )}
-                <button disabled={busy === r.image_name}
-                  onClick={() => setFeedbackFor(r.image_name)}
-                  style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600,
-                           cursor: "pointer", borderRadius: 7, border: "1px solid #7c3aed",
-                           background: "#f5f3ff", color: "#7c3aed" }}>
-                  ↻ Recreate…
-                </button>
+                {r.status === 1 ? (
+                  <button disabled={busy === r.image_name}
+                    onClick={() => setFeedbackFor(r.image_name)}
+                    style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600,
+                             cursor: "pointer", borderRadius: 7, border: "1px solid var(--accent)",
+                             background: "var(--accent-soft, #fee2e2)", color: "var(--accent)" }}>
+                    ✕ Reject & regenerate…
+                  </button>
+                ) : (
+                  <button disabled={busy === r.image_name}
+                    onClick={() => setFeedbackFor(r.image_name)}
+                    style={{ flex: 1, padding: "6px 0", fontSize: 12, fontWeight: 600,
+                             cursor: "pointer", borderRadius: 7, border: "1px solid #7c3aed",
+                             background: "#f5f3ff", color: "#7c3aed" }}>
+                    ↻ Recreate…
+                  </button>
+                )}
               </div>
             )}
           </div>
