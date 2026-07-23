@@ -11,8 +11,8 @@ applications:
           commands:
             - npm run build
       artifacts:
-        # Paths are relative to appRoot (frontend), so this is frontend/.next
-        baseDirectory: .next
+        # Static export (next.config output: "export") lands in frontend/out
+        baseDirectory: out
         files:
           - '**/*'
       cache:
