@@ -79,7 +79,8 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - /home/ec2-user/zuno-frontend:/srv/app:ro   # static frontend export
+      - /home/ec2-user/zuno-frontend:/srv/app:ro        # /app build (basePath)
+      - /home/ec2-user/zuno-frontend-flow:/srv/flow:ro  # flow.zunolearn.com build
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

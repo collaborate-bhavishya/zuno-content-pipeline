@@ -1,9 +1,7 @@
-# Caddy auto-HTTPS reverse proxy in front of the backend container.
-# {$SITE_ADDRESS} is your public hostname (e.g. flowbackend.zunolearn.com).
-# Caddy automatically obtains + renews a Let's Encrypt cert for it.
+# Caddy auto-HTTPS for the backend API host AND the app's main domain.
+# {$SITE_ADDRESS} = flowbackend.zunolearn.com (API + /app static fallback).
 {$SITE_ADDRESS} {
-    # Static frontend (Next.js export built with NEXT_PUBLIC_BASE_PATH=/app),
-    # self-hosted here after the Amplify build fleet broke account-side.
+    # Static frontend at /app (kept as a fallback URL).
     handle_path /app/* {
         root * /srv/app
         try_files {path} {path}/index.html
@@ -12,4 +10,12 @@
     redir /app /app/ 308
 
     reverse_proxy backend:8000
+}
+
+# Main app domain — served from this box after the Amplify app's build
+# pipeline corrupted account-side (2026-07-22). Root-path static export.
+flow.zunolearn.com {
+    root * /srv/flow
+    try_files {path} {path}/index.html
+    file_server
 }
