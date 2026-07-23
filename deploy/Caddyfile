@@ -1,6 +1,15 @@
 # Caddy auto-HTTPS reverse proxy in front of the backend container.
-# {$SITE_ADDRESS} is your public hostname (e.g. 13-235-1-2.nip.io).
+# {$SITE_ADDRESS} is your public hostname (e.g. flowbackend.zunolearn.com).
 # Caddy automatically obtains + renews a Let's Encrypt cert for it.
 {$SITE_ADDRESS} {
+    # Static frontend (Next.js export built with NEXT_PUBLIC_BASE_PATH=/app),
+    # self-hosted here after the Amplify build fleet broke account-side.
+    handle_path /app/* {
+        root * /srv/app
+        try_files {path} {path}/index.html
+        file_server
+    }
+    redir /app /app/ 308
+
     reverse_proxy backend:8000
 }

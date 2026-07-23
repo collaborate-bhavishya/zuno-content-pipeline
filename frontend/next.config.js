@@ -7,4 +7,7 @@ module.exports = {
   // assumption that has been failing account-side since 2026-07-21.
   output: "export",
   trailingSlash: true,   // deep links like /images/ resolve on static hosting
+  // Optional sub-path hosting (e.g. Caddy serving at /app on the backend
+  // host). Empty (default) keeps root-path behavior for Amplify/Vercel.
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
 };
