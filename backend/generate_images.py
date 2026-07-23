@@ -34,7 +34,14 @@ from app.core.storage import STORAGE
 log = logging.getLogger("imgworker")
 
 MODEL = "gemini-2.5-flash-image"
+# QC audits run on a SEPARATE vision-capable model so they don't consume the
+# image model's tight per-minute quota (audits were costing half of it).
+AUDIT_MODEL = "gemini-2.5-flash-lite"
 MAX_QC_ATTEMPTS = 3          # same as the notebook
+
+# Optional sharding for parallel workers in different regions (per-region
+# quotas): SHARD="0/2" processes half the queue, "1/2" the other half.
+SHARD = os.getenv("SHARD", "")
 
 # Every approved (or review-held) image is stored in TWO sizes:
 #   {name}.png          1024x1024 native render
@@ -150,22 +157,22 @@ def _is_429(e: Exception) -> bool:
     return "429" in s or "resource_exhausted" in s or "quota" in s
 
 
-def _call_model(contents):
+def _call_model(contents, model=MODEL, modalities=("IMAGE", "TEXT")):
     """One paced generate_content call with 429 backoff. Returns the response."""
     from google.genai import types
     for attempt in range(1, MAX_429_RETRIES + 1):
         time.sleep(THROTTLE_S)
         try:
             return genai_client().models.generate_content(
-                model=MODEL, contents=contents,
+                model=model, contents=contents,
                 config=types.GenerateContentConfig(
-                    response_modalities=["IMAGE", "TEXT"]),
+                    response_modalities=list(modalities)),
             )
         except Exception as e:
             if _is_429(e) and attempt < MAX_429_RETRIES:
                 wait = min(BACKOFF_MAX_S, BACKOFF_BASE_S * attempt)
                 log.warning("429 from %s — backing off %ds (attempt %d/%d)",
-                            MODEL, wait, attempt, MAX_429_RETRIES)
+                            model, wait, attempt, MAX_429_RETRIES)
                 time.sleep(wait)
                 continue
             raise
@@ -278,7 +285,7 @@ def produce(asset: dict):
 
         Return ONLY a JSON object: {{"pass": true/false, "reason": "string"}}
         """
-        audit = _call_model([critic_prompt, img])
+        audit = _call_model([critic_prompt, img], model=AUDIT_MODEL, modalities=("TEXT",))
         raw = _text_from(audit)
         try:
             m = re.search(r"```json\n(.*?)```", raw, re.DOTALL)
@@ -345,6 +352,14 @@ def backfill_lowres():
              made, skipped, failed)
 
 
+def _in_shard(name: str) -> bool:
+    if not SHARD:
+        return True
+    import hashlib
+    i, n = (int(x) for x in SHARD.split("/"))
+    return int(hashlib.md5(name.encode()).hexdigest(), 16) % n == i
+
+
 def fetch_pending(limit=None, names=None):
     c = get_client()
     cols = "image_name,image_detail,human_feedback"
@@ -364,6 +379,7 @@ def fetch_pending(limit=None, names=None):
         if len(batch) < 1000:
             break
         page += 1
+    out = [r for r in out if _in_shard(r["image_name"])]
     return out[:limit] if limit else out
 
 

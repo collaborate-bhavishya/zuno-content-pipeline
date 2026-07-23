@@ -29,6 +29,23 @@ services:
       - ../backend/gcp-key.json:/app/gcp-key.json:ro
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+      - SHARD=0/2
+    depends_on:
+      - backend
+
+  # Second image worker in another region: Vertex quotas are PER-REGION, so
+  # this roughly doubles image throughput. Shard split prevents row collisions.
+  imageworker2:
+    image: zuno-backend
+    env_file: ../backend/prod.env
+    restart: always
+    command: sh /app/run_image_batches.sh
+    volumes:
+      - ../backend/gcp-key.json:/app/gcp-key.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json
+      - GOOGLE_CLOUD_LOCATION=us-east4
+      - SHARD=1/2
     depends_on:
       - backend
 
